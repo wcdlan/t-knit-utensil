@@ -34,7 +34,7 @@ export const toolGroups: ToolGroup[] = [
     },
     {
         id: 'converter',
-        name: '转换器',
+        name: '数据转换',
         icon: '🔄',
         tools: [
             {id: 'timestamp', name: '时间戳转换', description: 'Unix 时间戳与日期互转', icon: '⏰'},
@@ -43,7 +43,7 @@ export const toolGroups: ToolGroup[] = [
     },
     {
         id: 'generator',
-        name: '生成器',
+        name: '数据生成',
         icon: '⚡',
         tools: [
             {id: 'uuid', name: 'UUID 生成器', description: '生成 UUID v1/v4', icon: '🆔'},
@@ -62,7 +62,7 @@ export const toolGroups: ToolGroup[] = [
     },
     {
         id: 'image',
-        name: '图片工具集',
+        name: '图片工具',
         icon: '🖼️',
         tools: [
             {
