@@ -179,7 +179,7 @@ const specialChars = [
     </div>
 
     <!-- Special Chars Reference -->
-    <details class="mt-6">
+    <details class="mt-6" open>
       <summary class="text-xs font-semibold text-gray-500 cursor-pointer hover:text-gray-700 select-none">
         特殊字符速查表
       </summary>
