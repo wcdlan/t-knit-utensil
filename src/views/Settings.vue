@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import {ref} from 'vue'
 import {useRouter} from 'vue-router'
-import {isDev, saveConfig, siteConfig} from '../data/siteConfig'
-import {useAuth} from '../data/auth'
+import {isDev, saveConfig, siteConfig} from '@/data/siteConfig'
+import {useAuth} from '@/data/auth'
 
 const router = useRouter()
 const {logout} = useAuth()

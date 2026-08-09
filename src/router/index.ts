@@ -1,5 +1,5 @@
 import {createRouter, createWebHistory} from 'vue-router'
-import Home from '../views/Home.vue'
+import Home from '@/views/Home.vue'
 
 const TOKEN_KEY = 'tku-auth-token'
 
@@ -9,15 +9,15 @@ const router = createRouter({
         {path: '/', component: Home},
         {
             path: '/tool/:toolId',
-            component: () => import('../views/ToolPage.vue'),
+            component: () => import('@/views/ToolPage.vue'),
         },
         {
             path: '/login',
-            component: () => import('../views/Login.vue'),
+            component: () => import('@/views/Login.vue'),
         },
         {
             path: '/settings',
-            component: () => import('../views/Settings.vue'),
+            component: () => import('@/views/Settings.vue'),
         },
     ],
 })

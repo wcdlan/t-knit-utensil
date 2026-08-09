@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {computed, ref} from 'vue'
-import {toolGroups} from '../data/tools'
+import {toolGroups} from '@/data/tools'
 
 const query = ref('')
 const collapsed = ref<Record<string, boolean>>({})
