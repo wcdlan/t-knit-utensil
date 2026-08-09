@@ -61,7 +61,7 @@ export const toolGroups: ToolGroup[] = [
         ],
     },
     {
-        id: 'image-tools',
+        id: 'image',
         name: '图片工具集',
         icon: '🖼️',
         tools: [
@@ -74,7 +74,7 @@ export const toolGroups: ToolGroup[] = [
         ],
     },
     {
-        id: 'text-tools',
+        id: 'text',
         name: '文本工具',
         icon: '📝',
         tools: [

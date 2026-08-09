@@ -66,11 +66,11 @@ import UuidGenerator from '@/components/tools/generator/UuidGenerator.vue'
 import HashTool from '@/components/tools/generator/HashTool.vue'
 import QrcodeTool from '@/components/tools/generator/QrcodeTool.vue'
 import PasswordTool from '@/components/tools/generator/PasswordTool.vue'
-import RegexTool from '@/components/tools/text-tools/RegexTool.vue'
-import DiffTool from '@/components/tools/text-tools/DiffTool.vue'
-import WordCount from '@/components/tools/text-tools/WordCount.vue'
+import RegexTool from '@/components/tools/text/RegexTool.vue'
+import DiffTool from '@/components/tools/text/DiffTool.vue'
+import WordCount from '@/components/tools/text/WordCount.vue'
 import SshKeyGen from '@/components/tools/ssh/SshKeyGen.vue'
-import FaviconTool from '@/components/tools/image-tools/FaviconTool.vue'
+import FaviconTool from '@/components/tools/image/FaviconTool.vue'
 
 export default {
   components: {
