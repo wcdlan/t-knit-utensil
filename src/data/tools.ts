@@ -61,6 +61,19 @@ export const toolGroups: ToolGroup[] = [
         ],
     },
     {
+        id: 'image-tools',
+        name: '图片工具集',
+        icon: '🖼️',
+        tools: [
+            {
+                id: 'favicon',
+                name: 'Favicon 生成器',
+                description: '上传图片裁剪生成多尺寸 Favicon，支持 PNG/ICO 格式与 ZIP 打包下载',
+                icon: '🎯'
+            },
+        ],
+    },
+    {
         id: 'text-tools',
         name: '文本工具',
         icon: '📝',
