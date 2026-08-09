@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {computed, onMounted, onUnmounted, ref} from 'vue'
+import {computed, nextTick, onMounted, onUnmounted, ref} from 'vue'
 import JSZip from 'jszip'
 
 // --- Types ---
@@ -88,7 +88,7 @@ function loadImageFile(file: File) {
     const url = reader.result as string
     sourceDataUrl.value = url
     const img = new Image()
-    img.onload = () => {
+    img.onload = async () => {
       sourceImage.value = img
       imageNatural.value = {w: img.naturalWidth, h: img.naturalHeight}
       // Default crop: largest centered square
@@ -99,6 +99,7 @@ function loadImageFile(file: File) {
         size: minDim,
       }
       uploading.value = false
+      await nextTick()
       drawPreview()
       generateAll()
     }
