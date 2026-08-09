@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {computed, onMounted, onUnmounted, ref, watch} from 'vue'
+import {computed, onMounted, onUnmounted, ref} from 'vue'
 import JSZip from 'jszip'
 
 // --- Types ---
@@ -19,7 +19,14 @@ const faviconSizes = ref<FaviconSize[]>([
   {size: 256, label: '256×256', selected: false},
 ])
 
-const outputFormat = ref<'png' | 'ico'>('png')
+const outputFormats = ref({png: true, ico: false})
+
+const selectedFormats = computed(() => {
+  const fmts: ('png' | 'ico')[] = []
+  if (outputFormats.value.png) fmts.push('png')
+  if (outputFormats.value.ico) fmts.push('ico')
+  return fmts
+})
 const sourceImage = ref<HTMLImageElement | null>(null)
 const sourceDataUrl = ref<string>('')
 const isDragging = ref(false)
@@ -252,11 +259,6 @@ function generateAll() {
   })
 }
 
-// Watch for format changes - regen if needed
-watch(outputFormat, () => {
-  if (sourceImage.value) generateAll()
-})
-
 // --- ICO encoding ---
 function encodeICO(pngBuffers: ArrayBuffer[]): ArrayBuffer {
   const count = pngBuffers.length
@@ -320,11 +322,11 @@ function downloadBlob(blob: Blob, filename: string) {
   URL.revokeObjectURL(url)
 }
 
-function downloadSingle(size: number) {
+function downloadSingle(size: number, format: 'png' | 'ico') {
   const dataUrl = generatedFavicons.value.get(size)
   if (!dataUrl) return
 
-  if (outputFormat.value === 'ico') {
+  if (format === 'ico') {
     dataUrlToArrayBuffer(dataUrl).then((buf) => {
       const icoBuf = encodeICO([buf])
       downloadBlob(new Blob([icoBuf]), `favicon-${size}x${size}.ico`)
@@ -341,28 +343,22 @@ function downloadSingle(size: number) {
 
 async function downloadZip() {
   const sizes = selectedSizes.value
-  if (!sizes.length) return
+  const fmts = selectedFormats.value
+  if (!sizes.length || !fmts.length) return
 
   const zip = new JSZip()
 
-  if (outputFormat.value === 'ico') {
-    // One ICO per size: favicon-16x16.ico, favicon-32x32.ico, etc.
-    for (const size of sizes) {
-      const dataUrl = generatedFavicons.value.get(size)
-      if (dataUrl) {
-        const buf = await dataUrlToArrayBuffer(dataUrl)
-        const icoBuf = encodeICO([buf])
-        zip.file(`favicon-${size}x${size}.ico`, icoBuf)
-      }
-    }
-  }
-
-  // Always include individual PNGs
   for (const size of sizes) {
     const dataUrl = generatedFavicons.value.get(size)
-    if (dataUrl) {
-      const buf = await dataUrlToArrayBuffer(dataUrl)
+    if (!dataUrl) continue
+    const buf = await dataUrlToArrayBuffer(dataUrl)
+
+    if (fmts.includes('png')) {
       zip.file(`favicon-${size}x${size}.png`, buf)
+    }
+    if (fmts.includes('ico')) {
+      const icoBuf = encodeICO([buf])
+      zip.file(`favicon-${size}x${size}.ico`, icoBuf)
     }
   }
 
@@ -497,18 +493,18 @@ onUnmounted(() => {
           <p class="text-sm text-gray-500 mb-2 font-medium">输出格式</p>
           <div class="flex gap-3">
             <label
-                :class="outputFormat === 'png' ? 'border-blue-400 bg-blue-50 text-blue-700' : 'border-gray-200 bg-white text-gray-600'"
+                :class="outputFormats.png ? 'border-blue-400 bg-blue-50 text-blue-700' : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'"
                 class="flex items-center gap-2 px-4 py-2 border rounded-lg cursor-pointer transition"
             >
-              <input v-model="outputFormat" class="sr-only" type="radio" value="png"/>
+              <input v-model="outputFormats.png" class="sr-only" type="checkbox"/>
               <span class="font-medium">PNG</span>
               <span class="text-xs opacity-70">透明背景</span>
             </label>
             <label
-                :class="outputFormat === 'ico' ? 'border-blue-400 bg-blue-50 text-blue-700' : 'border-gray-200 bg-white text-gray-600'"
+                :class="outputFormats.ico ? 'border-blue-400 bg-blue-50 text-blue-700' : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'"
                 class="flex items-center gap-2 px-4 py-2 border rounded-lg cursor-pointer transition"
             >
-              <input v-model="outputFormat" class="sr-only" type="radio" value="ico"/>
+              <input v-model="outputFormats.ico" class="sr-only" type="checkbox"/>
               <span class="font-medium">ICO</span>
               <span class="text-xs opacity-70">传统格式</span>
             </label>
@@ -520,7 +516,7 @@ onUnmounted(() => {
           <div class="flex items-center justify-between mb-2">
             <p class="text-sm text-gray-500 font-medium">预览</p>
             <button
-                v-if="selectedSizes.length"
+                v-if="selectedSizes.length && selectedFormats.length"
                 class="px-4 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition cursor-pointer"
                 @click="downloadZip"
             >
@@ -548,13 +544,22 @@ onUnmounted(() => {
                 <span v-else class="text-xs text-gray-400">生成中...</span>
               </div>
               <span class="text-xs text-gray-500">{{ s.label }}</span>
-              <button
-                  v-if="generatedFavicons.get(s.size)"
-                  class="text-xs text-blue-500 hover:text-blue-700 transition cursor-pointer"
-                  @click="downloadSingle(s.size)"
-              >
-                ↓ 下载
-              </button>
+              <div v-if="generatedFavicons.get(s.size)" class="flex gap-1.5">
+                <button
+                    v-if="outputFormats.png"
+                    class="text-xs text-blue-500 hover:text-blue-700 transition cursor-pointer"
+                    @click="downloadSingle(s.size, 'png')"
+                >
+                  ↓ PNG
+                </button>
+                <button
+                    v-if="outputFormats.ico"
+                    class="text-xs text-blue-500 hover:text-blue-700 transition cursor-pointer"
+                    @click="downloadSingle(s.size, 'ico')"
+                >
+                  ↓ ICO
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -565,8 +570,8 @@ onUnmounted(() => {
           <ul class="space-y-1 text-amber-700">
             <li>• 推荐上传至少 260×260 的图片，以确保所有尺寸清晰</li>
             <li>• PNG 格式支持透明背景，是现代浏览器推荐格式</li>
-            <li>• ICO 格式兼容旧版浏览器，单个文件可包含多尺寸</li>
-            <li>• ZIP 包内包含所有选中尺寸的 PNG 文件（ICO 模式额外包含 .ico 文件）</li>
+            <li>• ICO 格式兼容旧版浏览器，可单独或与 PNG 同时选中</li>
+            <li>• 打包下载仅包含选中的尺寸与格式</li>
           </ul>
         </div>
       </div>
