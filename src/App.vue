@@ -4,6 +4,7 @@ import {useRoute, useRouter} from 'vue-router'
 import {type MenuOption, NLayout, NLayoutContent, NLayoutSider, NMenu} from 'naive-ui'
 import {loadConfig, siteConfig} from './data/siteConfig'
 import {toolGroups} from './data/tools'
+import logoImg from './assets/TKU.png'
 
 const router = useRouter()
 const route = useRoute()
@@ -47,7 +48,7 @@ function handleMenuUpdate(key: string) {
     >
       <div class="h-14 flex items-center px-4 border-b border-gray-200">
         <router-link class="no-underline flex items-center gap-2" to="/">
-          <span class="text-lg font-bold text-gray-800">TKU</span>
+          <img :src="logoImg" alt="TKU" class="h-8"/>
         </router-link>
       </div>
       <n-menu
