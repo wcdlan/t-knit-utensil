@@ -1,9 +1,9 @@
 {
-  "siteName": "T-Utils",
-  "siteDescription": "开发者常用的在线工具集合",
+  "siteName": "TKU",
+  "siteDescription": "T Knit Utensil — 开发者在线工具集",
   "footer": {
-    "copyright": "T-Utils",
-    "icp": "",
+    "copyright": "TKU",
+    "icp": "浙ICP备2021043990号",
     "icpUrl": "https://beian.miit.gov.cn",
     "poweredBy": "AI 创建，人工少量参与"
   },

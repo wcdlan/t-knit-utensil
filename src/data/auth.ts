@@ -1,6 +1,6 @@
 import {ref} from 'vue'
 
-const TOKEN_KEY = 't-utils-auth-token'
+const TOKEN_KEY = 'tku-auth-token'
 const token = ref(localStorage.getItem(TOKEN_KEY) || '')
 const isLoggedIn = ref(!!token.value)
 

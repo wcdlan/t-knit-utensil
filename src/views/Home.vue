@@ -1,56 +1,71 @@
 <script lang="ts" setup>
+import {computed, ref} from 'vue'
 import {toolGroups} from '../data/tools'
 
-function scrollToGroup(id: string) {
-  document.getElementById(id)?.scrollIntoView({behavior: 'smooth', block: 'start'})
+const query = ref('')
+const collapsed = ref<Record<string, boolean>>({})
+
+const filteredGroups = computed(() => {
+  if (!query.value.trim()) return toolGroups
+  const q = query.value.toLowerCase()
+  return toolGroups
+      .map((g) => ({
+        ...g,
+        tools: g.tools.filter(
+            (t) => t.name.toLowerCase().includes(q) || t.description.toLowerCase().includes(q),
+        ),
+      }))
+      .filter((g) => g.tools.length > 0)
+})
+
+function toggle(id: string) {
+  collapsed.value[id] = !collapsed.value[id]
 }
 </script>
 
 <template>
   <div>
-    <!-- Hero -->
-    <div class="text-center py-12 md:py-20">
-      <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">
-        T-Utils 在线工具站
-      </h1>
-      <p class="text-lg text-gray-500 max-w-lg mx-auto mb-8">
-        开发者常用的在线工具集合，无需安装，即开即用
-      </p>
-      <div class="flex flex-wrap justify-center gap-2">
-        <button
-            v-for="group in toolGroups"
-            :key="group.id"
-            class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium bg-white border border-gray-200 text-gray-600 hover:border-gray-300 hover:text-gray-900 hover:shadow-sm transition cursor-pointer"
-            @click="scrollToGroup(group.id)"
-        >
-          <span>{{ group.icon }}</span>
-          {{ group.name }}
-        </button>
-      </div>
+    <!-- Search -->
+    <div class="mb-4">
+      <input
+          v-model="query"
+          class="w-full max-w-[320px] p-1.5 border border-gray-200 rounded-md text-xs focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+          placeholder="搜索工具..."
+          type="text"
+      />
     </div>
 
-    <!-- Tool Groups -->
-    <div v-for="group in toolGroups" :id="group.id" :key="group.id" class="mb-12 scroll-mt-20">
-      <div class="flex items-center gap-3 mb-5">
-        <span class="text-2xl">{{ group.icon }}</span>
-        <h2 class="text-2xl font-bold text-gray-800">{{ group.name }}</h2>
+    <div v-if="filteredGroups.length === 0" class="text-center py-16 text-sm text-gray-400">
+      未找到匹配的工具
+    </div>
+
+    <div
+        v-for="group in filteredGroups"
+        :key="group.id"
+        class="mb-5"
+    >
+      <div
+          class="flex items-center gap-1.5 mb-2 cursor-pointer select-none"
+          @click="toggle(group.id)"
+      >
+        <span :class="{ 'rotate-90': !collapsed[group.id] }" class="text-[10px] text-gray-300 transition-transform">&#9654;</span>
+        <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">{{ group.name }}</span>
+        <span class="text-[10px] text-gray-300 ml-1">{{ group.tools.length }}</span>
       </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+      <div
+          v-show="!collapsed[group.id]"
+          class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-1.5"
+      >
         <router-link
             v-for="tool in group.tools"
             :key="tool.id"
             :to="`/tool/${tool.id}`"
-            class="group block p-5 bg-white rounded-xl border border-gray-200 hover:border-blue-300 hover:shadow-md transition cursor-pointer"
+            :title="tool.description"
+            class="flex items-center gap-1 px-2.5 py-1.5 rounded-md text-xs border border-gray-100 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 text-gray-600 transition cursor-pointer truncate"
         >
-          <div class="flex items-start gap-3">
-            <span class="text-2xl flex-shrink-0">{{ tool.icon }}</span>
-            <div>
-              <h3 class="font-semibold text-gray-800 group-hover:text-blue-600 transition">
-                {{ tool.name }}
-              </h3>
-              <p class="text-sm text-gray-500 mt-1">{{ tool.description }}</p>
-            </div>
-          </div>
+          <span class="text-sm flex-shrink-0">{{ tool.icon }}</span>
+          <span class="truncate">{{ tool.name }}</span>
         </router-link>
       </div>
     </div>

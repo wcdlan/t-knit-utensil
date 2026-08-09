@@ -1,48 +1,91 @@
 <script lang="ts" setup>
-import {onMounted} from 'vue'
+import {computed, onMounted, ref} from 'vue'
+import {useRoute, useRouter} from 'vue-router'
+import {type MenuOption, NLayout, NLayoutContent, NLayoutSider, NMenu} from 'naive-ui'
 import {loadConfig, siteConfig} from './data/siteConfig'
+import {toolGroups} from './data/tools'
+
+const router = useRouter()
+const route = useRoute()
+const collapsed = ref(false)
 
 onMounted(() => loadConfig())
+
+const menuOptions = computed<MenuOption[]>(() => [
+  {label: '首页', key: 'home'},
+  ...toolGroups.map((g) => ({
+    label: g.icon + ' ' + g.name,
+    key: g.id,
+    type: 'group' as const,
+    children: g.tools.map((t) => ({
+      label: t.name,
+      key: '/tool/' + t.id,
+    })),
+  })),
+  {label: '设置', key: 'settings'},
+])
+
+const activeKey = computed(() => {
+  if (route.path === '/') return 'home'
+  if (route.path === '/settings') return 'settings'
+  if (route.path.startsWith('/tool/')) return '/tool/' + route.params.toolId
+  return 'home'
+})
+
+function handleMenuUpdate(key: string) {
+  if (key === 'home') router.push('/')
+  else if (key === 'settings') router.push('/settings')
+  else if (key.startsWith('/tool/')) router.push(key)
+}
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50 flex flex-col">
-    <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
-      <nav class="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-        <router-link class="flex items-center gap-2 hover:opacity-80 transition" to="/">
-          <span class="text-xl font-bold text-gray-800">{{ siteConfig.siteName }}</span>
-        </router-link>
-        <div class="flex items-center gap-4">
-          <router-link class="text-sm text-gray-500 hover:text-gray-700 transition" to="/settings">
-            设置
+  <n-layout class="h-screen" has-sider>
+    <!-- Sidebar -->
+    <n-layout-sider
+        v-model:collapsed="collapsed"
+        :collapsed-width="64"
+        :native-scrollbar="false"
+        :width="200"
+        bordered
+        class="bg-white"
+        collapse-mode="width"
+        show-trigger="bar"
+    >
+      <div class="h-full flex flex-col">
+        <div class="h-14 flex items-center px-4 border-b border-gray-100">
+          <router-link class="no-underline" to="/">
+            <span class="text-lg font-bold text-gray-800">{{ collapsed ? 'T' : 'TKU' }}</span>
           </router-link>
-          <a
-              class="text-sm text-gray-500 hover:text-gray-700 transition"
-              href="https://github.com"
-              target="_blank"
-          >
-            GitHub
-          </a>
         </div>
-      </nav>
-    </header>
-    <main class="max-w-6xl mx-auto px-4 py-6 flex-1 w-full">
-      <router-view/>
-    </main>
-    <footer class="border-t border-gray-200 bg-white mt-12">
-      <div class="max-w-6xl mx-auto px-4 py-6 text-center text-sm text-gray-400 space-y-1">
-        <p>&copy; {{ new Date().getFullYear() }} {{ siteConfig.footer.copyright || siteConfig.siteName }}</p>
-        <p v-if="siteConfig.footer.icp">
-          <a
-              :href="siteConfig.footer.icpUrl || 'https://beian.miit.gov.cn'"
-              class="hover:text-gray-600 transition"
-              target="_blank"
-          >
-            {{ siteConfig.footer.icp }}
-          </a>
-        </p>
-        <p v-if="siteConfig.footer.poweredBy">{{ siteConfig.footer.poweredBy }}</p>
+        <div class="flex-1 overflow-auto py-2">
+          <n-menu
+              :collapsed="collapsed"
+              :collapsed-width="64"
+              :indent="18"
+              :options="menuOptions"
+              :value="activeKey"
+              @update:value="handleMenuUpdate"
+          />
+        </div>
+        <div
+            v-if="!collapsed"
+            class="px-4 py-2 border-t border-gray-100 text-[11px] text-gray-400 leading-tight space-y-0.5"
+        >
+          <p>{{ siteConfig.footer.copyright }}</p>
+          <p v-if="siteConfig.footer.icp">{{ siteConfig.footer.icp }}</p>
+        </div>
       </div>
-    </footer>
-  </div>
+    </n-layout-sider>
+
+    <!-- Right: content + footer -->
+    <div class="flex-1 flex flex-col min-w-0">
+      <n-layout-content class="flex-1 p-4">
+        <router-view/>
+      </n-layout-content>
+      <footer class="text-center text-[11px] text-gray-400 py-2 border-t border-gray-100 bg-white">
+        <span v-if="siteConfig.footer.poweredBy">{{ siteConfig.footer.poweredBy }}</span>
+      </footer>
+    </div>
+  </n-layout>
 </template>

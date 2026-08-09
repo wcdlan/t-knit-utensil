@@ -10,7 +10,7 @@
 
 ## 项目架构
 
-T-Utils（在线工具站）是一个 Vue 3 + TypeScript + Vite 单页应用，使用 Tailwind CSS v4 和 Vue Router（history 模式）。
+TKU（T Knit Utensil，在线工具站）是一个 Vue 3 + TypeScript + Vite 单页应用，使用 Tailwind CSS v4 和 Vue Router（history 模式）。
 
 ### 路由
 
