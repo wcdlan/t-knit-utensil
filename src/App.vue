@@ -7,7 +7,7 @@ import {toolGroups} from './data/tools'
 
 const router = useRouter()
 const route = useRoute()
-const expandedKeys = ref<string[]>(toolGroups.map((g) => g.id))
+const expandedKeys = ref<string[]>([])
 
 onMounted(() => loadConfig())
 
