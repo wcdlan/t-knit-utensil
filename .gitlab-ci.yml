@@ -36,23 +36,25 @@ build:
     expire_in: 30 days
 
 # ============================================================
-# Docker 镜像构建 & 推送到 GitLab Container Registry
+# Docker 镜像构建 & 推送到私有仓库
 # ============================================================
 docker:
   stage: package
   image: docker:stable
   services:
     - docker:dind
+  variables:
+    REGISTRY: v4.nagioa.cn:35481
+    IMAGE_NAME: entropycrop/t-knit-utensil
   before_script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker login -u ${REGISTRY_USER} -p ${REGISTRY_PASSWORD} ${REGISTRY}
   script:
-    # 生成版本标签
     - |
       MAJOR=$(echo ${CI_COMMIT_TAG#v} | cut -d. -f1)
       MINOR=$(echo ${CI_COMMIT_TAG#v} | cut -d. -f2)
       PATCH=$(echo ${CI_COMMIT_TAG#v} | cut -d. -f3)
 
-      IMAGE=${CI_REGISTRY_IMAGE}
+      IMAGE=${REGISTRY}/${IMAGE_NAME}
 
       docker build -t ${IMAGE}:latest \
                    -t ${IMAGE}:${CI_COMMIT_TAG} \
