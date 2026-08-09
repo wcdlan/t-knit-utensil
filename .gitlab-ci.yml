@@ -8,19 +8,16 @@ stages:
 variables:
   PNPM_VERSION: '10.26.1'
   TARBALL_NAME: tku-${CI_COMMIT_TAG}.tar.gz
+  NEXUS: v4.nagioa.cn:35481   # 你的 Nexus 仓库地址
+  IMAGE_NAME: entropycrop/t-knit-utensil
 
-# ============================================================
 # 仅在推送 tag 时运行
-# ============================================================
 workflow:
   rules:
     - if: $CI_COMMIT_TAG
       when: always
     - when: never
 
-# ============================================================
-# 编译 & 打包阶段
-# ============================================================
 build:
   stage: build
   before_script:
@@ -35,26 +32,22 @@ build:
       - ${TARBALL_NAME}
     expire_in: 30 days
 
-# ============================================================
-# Docker 镜像构建 & 推送到私有仓库
-# ============================================================
 docker:
   stage: package
   image: docker:stable
   services:
-    - docker:dind
-  variables:
-    REGISTRY: v4.nagioa.cn:35481
-    IMAGE_NAME: entropycrop/t-knit-utensil
+    - name: docker:dind
+      command: [ "--insecure-registry=NEXUS" ]   # 若 Nexus 使用 HTTP 则必须添加
   before_script:
-    - docker login -u ${REGISTRY_USER} -p ${REGISTRY_PASSWORD} ${REGISTRY}
+    # 使用 --password-stdin 安全登录
+    - echo "$NEXUS_PASSWORD" | docker login "NEXUS" -u "$NEXUS_USER" --password-stdin
   script:
     - |
       MAJOR=$(echo ${CI_COMMIT_TAG#v} | cut -d. -f1)
       MINOR=$(echo ${CI_COMMIT_TAG#v} | cut -d. -f2)
       PATCH=$(echo ${CI_COMMIT_TAG#v} | cut -d. -f3)
 
-      IMAGE=${REGISTRY}/${IMAGE_NAME}
+      IMAGE=${NEXUS}/${IMAGE_NAME}
 
       docker build -t ${IMAGE}:latest \
                    -t ${IMAGE}:${CI_COMMIT_TAG} \
@@ -62,6 +55,7 @@ docker:
                    -t ${IMAGE}:${MAJOR}.${MINOR} \
                    -t ${IMAGE}:${MAJOR}.${MINOR}.${PATCH} .
 
+      # 逐个推送（可合并为 docker push --all-tags，但稳妥起见逐个推）
       docker push ${IMAGE}:latest
       docker push ${IMAGE}:${CI_COMMIT_TAG}
       docker push ${IMAGE}:${MAJOR}
