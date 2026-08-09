@@ -8,7 +8,7 @@ stages:
 variables:
   PNPM_VERSION: '10.26.1'
   TARBALL_NAME: tku-${CI_COMMIT_TAG}.tar.gz
-  NEXUS: v4.nagioa.cn:35481   # 你的 Nexus 仓库地址
+  NEXUS: v4.nagioa.cn:35483   # 你的 Nexus 仓库地址
   IMAGE_NAME: entropycrop/t-knit-utensil
 
 # 仅在推送 tag 时运行
