@@ -7,7 +7,7 @@ import {toolGroups} from './data/tools'
 
 const router = useRouter()
 const route = useRoute()
-const collapsed = ref(false)
+const expandedKeys = ref<string[]>(toolGroups.map((g) => g.id))
 
 onMounted(() => loadConfig())
 
@@ -16,7 +16,6 @@ const menuOptions = computed<MenuOption[]>(() => [
   ...toolGroups.map((g) => ({
     label: g.icon + ' ' + g.name,
     key: g.id,
-    type: 'group' as const,
     children: g.tools.map((t) => ({
       label: t.name,
       key: '/tool/' + t.id,
@@ -41,50 +40,39 @@ function handleMenuUpdate(key: string) {
 
 <template>
   <n-layout class="h-screen" has-sider>
-    <!-- Sidebar -->
     <n-layout-sider
-        v-model:collapsed="collapsed"
-        :collapsed-width="64"
-        :native-scrollbar="false"
-        :width="200"
+        :width="220"
         bordered
-        class="bg-white"
-        collapse-mode="width"
-        show-trigger="bar"
+        class="bg-white border-gray-200"
     >
-      <div class="h-full flex flex-col">
-        <div class="h-14 flex items-center px-4 border-b border-gray-100">
-          <router-link class="no-underline" to="/">
-            <span class="text-lg font-bold text-gray-800">{{ collapsed ? 'T' : 'TKU' }}</span>
-          </router-link>
-        </div>
-        <div class="flex-1 overflow-auto py-2">
-          <n-menu
-              :collapsed="collapsed"
-              :collapsed-width="64"
-              :indent="18"
-              :options="menuOptions"
-              :value="activeKey"
-              @update:value="handleMenuUpdate"
-          />
-        </div>
-        <div
-            v-if="!collapsed"
-            class="px-4 py-2 border-t border-gray-100 text-[11px] text-gray-400 leading-tight space-y-0.5"
-        >
-          <p>{{ siteConfig.footer.copyright }}</p>
-          <p v-if="siteConfig.footer.icp">{{ siteConfig.footer.icp }}</p>
-        </div>
+      <div class="h-14 flex items-center px-4 border-b border-gray-200">
+        <router-link class="no-underline flex items-center gap-2" to="/">
+          <span class="text-lg font-bold text-gray-800">TKU</span>
+        </router-link>
       </div>
+      <n-menu
+          :expanded-keys="expandedKeys"
+          :indent="20"
+          :options="menuOptions"
+          :value="activeKey"
+          @update:value="handleMenuUpdate"
+          @update:expanded-keys="(keys: string[]) => expandedKeys = keys"
+      />
     </n-layout-sider>
 
-    <!-- Right: content + footer -->
-    <div class="flex-1 flex flex-col min-w-0">
+    <div class="flex-1 flex flex-col min-w-0 bg-gray-50">
       <n-layout-content class="flex-1 p-4">
         <router-view/>
       </n-layout-content>
-      <footer class="text-center text-[11px] text-gray-400 py-2 border-t border-gray-100 bg-white">
-        <span v-if="siteConfig.footer.poweredBy">{{ siteConfig.footer.poweredBy }}</span>
+      <footer class="text-center text-xs text-gray-500 py-2.5 border-t border-gray-200 bg-white">
+        <span>&copy; {{ new Date().getFullYear() }} {{ siteConfig.footer.copyright || 'TKU' }}</span>
+        <span v-if="siteConfig.footer.icp" class="ml-4">
+          <a :href="siteConfig.footer.icpUrl || 'https://beian.miit.gov.cn'" class="hover:text-gray-700 transition"
+             target="_blank">
+            {{ siteConfig.footer.icp }}
+          </a>
+        </span>
+        <span v-if="siteConfig.footer.poweredBy" class="ml-4 text-gray-400">{{ siteConfig.footer.poweredBy }}</span>
       </footer>
     </div>
   </n-layout>

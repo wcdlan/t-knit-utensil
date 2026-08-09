@@ -29,7 +29,7 @@ function toggle(id: string) {
     <div class="mb-4">
       <input
           v-model="query"
-          class="w-full max-w-[320px] p-1.5 border border-gray-200 rounded-md text-xs focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+          class="w-full max-w-[320px] p-1.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-gray-700"
           placeholder="搜索工具..."
           type="text"
       />
@@ -48,9 +48,9 @@ function toggle(id: string) {
           class="flex items-center gap-1.5 mb-2 cursor-pointer select-none"
           @click="toggle(group.id)"
       >
-        <span :class="{ 'rotate-90': !collapsed[group.id] }" class="text-[10px] text-gray-300 transition-transform">&#9654;</span>
-        <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">{{ group.name }}</span>
-        <span class="text-[10px] text-gray-300 ml-1">{{ group.tools.length }}</span>
+        <span :class="{ 'rotate-90': !collapsed[group.id] }" class="text-[10px] text-gray-400 transition-transform">&#9654;</span>
+        <span class="text-xs font-semibold text-gray-700 uppercase tracking-wider">{{ group.name }}</span>
+        <span class="text-[10px] text-gray-400 ml-1">{{ group.tools.length }}</span>
       </div>
 
       <div
@@ -62,7 +62,7 @@ function toggle(id: string) {
             :key="tool.id"
             :to="`/tool/${tool.id}`"
             :title="tool.description"
-            class="flex items-center gap-1 px-2.5 py-1.5 rounded-md text-xs border border-gray-100 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 text-gray-600 transition cursor-pointer truncate"
+            class="flex items-center gap-1 px-2.5 py-1.5 rounded-md text-sm border border-gray-200 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-600 text-gray-700 transition cursor-pointer truncate bg-white"
         >
           <span class="text-sm flex-shrink-0">{{ tool.icon }}</span>
           <span class="truncate">{{ tool.name }}</span>

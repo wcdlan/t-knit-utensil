@@ -1,8 +1,19 @@
 @import "tailwindcss";
 
+/* Prevent Tailwind preflight from breaking Naive UI */
+button, [type='button'], [type='reset'], [type='submit'] {
+    appearance: auto;
+}
+
+img, svg, video, canvas, audio, iframe, embed, object {
+    display: unset;
+    vertical-align: unset;
+}
+
 body {
     margin: 0;
     font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    color: #374151;
 }

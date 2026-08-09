@@ -23,7 +23,7 @@ const tool = computed(() => getToolById(toolId.value))
         <span class="text-3xl">{{ tool.icon }}</span>
         <h1 class="text-2xl font-bold text-gray-900">{{ tool.name }}</h1>
       </div>
-      <p class="text-gray-500">{{ tool.description }}</p>
+      <p class="text-gray-600">{{ tool.description }}</p>
     </div>
 
     <!-- Dynamic Tool Component -->
@@ -45,7 +45,7 @@ const tool = computed(() => getToolById(toolId.value))
     </div>
   </div>
   <div v-else class="text-center py-20">
-    <p class="text-gray-400 text-lg">工具未找到</p>
+    <p class="text-gray-500 text-lg">工具未找到</p>
     <router-link class="text-blue-500 hover:text-blue-700 mt-4 inline-block" to="/">
       返回首页
     </router-link>
