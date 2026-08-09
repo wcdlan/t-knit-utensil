@@ -53,6 +53,14 @@ export const toolGroups: ToolGroup[] = [
         ],
     },
     {
+        id: 'ssh',
+        name: 'OpenSSH',
+        icon: '🔑',
+        tools: [
+            {id: 'ssh-keygen', name: '密钥对生成', description: '生成 RSA / ECDSA 密钥对，支持密码与注释', icon: '🔐'},
+        ],
+    },
+    {
         id: 'text-tools',
         name: '文本工具',
         icon: '📝',
