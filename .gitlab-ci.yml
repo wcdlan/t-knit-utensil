@@ -1,0 +1,67 @@
+default:
+  image: node:22-alpine
+
+stages:
+  - build
+  - package
+
+variables:
+  PNPM_VERSION: '10.26.1'
+  TARBALL_NAME: tku-${CI_COMMIT_TAG}.tar.gz
+
+# ============================================================
+# 仅在推送 tag 时运行
+# ============================================================
+workflow:
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: always
+    - when: never
+
+# ============================================================
+# 编译 & 打包阶段
+# ============================================================
+build:
+  stage: build
+  before_script:
+    - corepack enable && corepack prepare pnpm@${PNPM_VERSION} --activate
+  script:
+    - pnpm install --frozen-lockfile
+    - pnpm build
+    - cd dist && tar czf ../${TARBALL_NAME} .
+  artifacts:
+    name: ${TARBALL_NAME%.tar.gz}
+    paths:
+      - ${TARBALL_NAME}
+    expire_in: 30 days
+
+# ============================================================
+# Docker 镜像构建 & 推送到 GitLab Container Registry
+# ============================================================
+docker:
+  stage: package
+  image: docker:stable
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    # 生成版本标签
+    - |
+      MAJOR=$(echo ${CI_COMMIT_TAG#v} | cut -d. -f1)
+      MINOR=$(echo ${CI_COMMIT_TAG#v} | cut -d. -f2)
+      PATCH=$(echo ${CI_COMMIT_TAG#v} | cut -d. -f3)
+
+      IMAGE=${CI_REGISTRY_IMAGE}
+
+      docker build -t ${IMAGE}:latest \
+                   -t ${IMAGE}:${CI_COMMIT_TAG} \
+                   -t ${IMAGE}:${MAJOR} \
+                   -t ${IMAGE}:${MAJOR}.${MINOR} \
+                   -t ${IMAGE}:${MAJOR}.${MINOR}.${PATCH} .
+
+      docker push ${IMAGE}:latest
+      docker push ${IMAGE}:${CI_COMMIT_TAG}
+      docker push ${IMAGE}:${MAJOR}
+      docker push ${IMAGE}:${MAJOR}.${MINOR}
+      docker push ${IMAGE}:${MAJOR}.${MINOR}.${PATCH}
