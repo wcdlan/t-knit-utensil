@@ -1,0 +1,13 @@
+{
+  "siteName": "T-Utils",
+  "siteDescription": "开发者常用的在线工具集合",
+  "footer": {
+    "copyright": "T-Utils",
+    "icp": "",
+    "icpUrl": "https://beian.miit.gov.cn",
+    "poweredBy": "AI 创建，人工少量参与"
+  },
+  "auth": {
+    "password": "admin"
+  }
+}
