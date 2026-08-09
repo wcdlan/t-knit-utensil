@@ -12,7 +12,7 @@ const expandedKeys = ref<string[]>([])
 onMounted(() => loadConfig())
 
 const menuOptions = computed<MenuOption[]>(() => [
-  {label: '首页', key: 'home'},
+  {label: '🏠 首页', key: 'home'},
   ...toolGroups.map((g) => ({
     label: g.icon + ' ' + g.name,
     key: g.id,
@@ -21,7 +21,7 @@ const menuOptions = computed<MenuOption[]>(() => [
       key: '/tool/' + t.id,
     })),
   })),
-  {label: '设置', key: 'settings'},
+  {label: '⚙️ 设置', key: 'settings'},
 ])
 
 const activeKey = computed(() => {
