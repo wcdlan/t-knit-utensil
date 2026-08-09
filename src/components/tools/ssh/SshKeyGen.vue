@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import {ref} from 'vue'
+import JSZip from 'jszip'
 import {generateKeyPair, KEY_TYPES, type KeyType} from '@/utils/ssh'
 
 const keyType = ref<KeyType>('rsa-2048')
@@ -63,6 +64,27 @@ function downloadPrivate() {
 function downloadPublic() {
   const ext = keyType.value.startsWith('ecdsa') ? 'ecdsa' : 'rsa'
   download(`id_${ext}.pub`, publicKey.value)
+}
+
+function sanitizeFilename(name: string): string {
+  return name.replace(/[^a-zA-Z0-9一-鿿._@-]/g, '_').slice(0, 64) || 'key'
+}
+
+async function downloadZip() {
+  const ext = keyType.value.startsWith('ecdsa') ? 'ecdsa' : 'rsa'
+  const baseName = comment.value.trim() ? sanitizeFilename(comment.value.trim()) : `id_${ext}`
+
+  const zip = new JSZip()
+  zip.file(baseName, privateKey.value)
+  zip.file(`${baseName}.pub`, publicKey.value)
+
+  const blob = await zip.generateAsync({type: 'blob'})
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `${baseName}.zip`
+  a.click()
+  URL.revokeObjectURL(url)
 }
 </script>
 
@@ -133,6 +155,13 @@ function downloadPublic() {
           @click="generate"
       >
         {{ generating ? '生成中...' : '生成密钥对' }}
+      </button>
+      <button
+          :disabled="!privateKey"
+          class="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          @click="downloadZip"
+      >
+        下载 ZIP
       </button>
     </div>
 
