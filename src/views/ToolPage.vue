@@ -56,9 +56,9 @@ const tool = computed(() => getToolById(toolId.value))
 
 <script lang="ts">
 import JsonFormatter from '@/components/tools/formatter/JsonFormatter.vue'
-import Base64Tool from '@/components/tools/encode-decode/Base64Tool.vue'
-import UrlEncode from '@/components/tools/encode-decode/UrlEncode.vue'
-import UnicodeTool from '@/components/tools/encode-decode/UnicodeTool.vue'
+import Base64Tool from '@/components/tools/codec/Base64Tool.vue'
+import UrlEncode from '@/components/tools/codec/UrlEncode.vue'
+import UnicodeTool from '@/components/tools/codec/UnicodeTool.vue'
 import SqlFormatter from '@/components/tools/formatter/SqlFormatter.vue'
 import TimestampTool from '@/components/tools/converter/TimestampTool.vue'
 import ColorConverter from '@/components/tools/converter/ColorConverter.vue'

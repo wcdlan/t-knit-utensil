@@ -14,7 +14,7 @@ export interface ToolGroup {
 
 export const toolGroups: ToolGroup[] = [
     {
-        id: 'encode-decode',
+        id: 'codec',
         name: '编解码',
         icon: '🔐',
         tools: [

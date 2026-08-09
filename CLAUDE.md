@@ -38,11 +38,13 @@ src/
 │   ├── Settings.vue     # 站点配置编辑（需登录）
 │   └── Login.vue        # 登录表单
 ├── components/tools/
-│   ├── encode-decode/   # Base64、URL 编解码、Unicode
+│   ├── codec/           # Base64、URL 编解码、Unicode
 │   ├── formatter/       # JSON、SQL
 │   ├── converter/       # 时间戳、颜色
 │   ├── generator/       # UUID、哈希、二维码、密码
-│   └── text-tools/      # 正则、文本对比、字数统计
+│   ├── ssh/             # SSH 密钥对生成
+│   ├── image/           # Favicon 生成器
+│   └── text/            # 正则、文本对比、字数统计
 └── App.vue              # 外层框架：固定顶栏、<router-view>、页脚
 ```
 
@@ -66,6 +68,10 @@ src/
 | `/api/auth`   | POST | 校验密码，返回 token          |
 
 密码读取优先级：运行时 `site.db.json` → 默认 `site.config.json` → `"admin"`。
+
+### 编码规范
+
+- 系统中不要在目录名称中出现多个单词组成的文件夹名称，尽可能的使用单个单词作为文件夹名称
 
 ### TypeScript 配置说明
 
