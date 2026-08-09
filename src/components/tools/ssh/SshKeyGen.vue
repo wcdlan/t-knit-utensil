@@ -140,7 +140,7 @@ function downloadPublic() {
     <p v-if="error" class="text-sm text-red-500">{{ error }}</p>
 
     <!-- Private key output -->
-    <div v-if="privateKey">
+    <div>
       <div class="flex items-center justify-between mb-2">
         <label class="text-xs font-semibold text-gray-500">私钥</label>
         <div class="flex gap-2">
@@ -158,13 +158,14 @@ function downloadPublic() {
       </div>
       <textarea
           :value="privateKey"
-          class="w-full h-52 p-3 border border-gray-200 rounded-lg text-xs font-mono bg-gray-50 resize-y focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+          class="w-full h-120 p-3 border border-gray-200 rounded-lg text-xs font-mono bg-gray-50 resize-y focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+          placeholder="点击「生成密钥对」生成私钥"
           readonly
       />
     </div>
 
     <!-- Public key output -->
-    <div v-if="publicKey">
+    <div>
       <div class="flex items-center justify-between mb-2">
         <label class="text-xs font-semibold text-gray-500">公钥</label>
         <div class="flex gap-2">
@@ -182,7 +183,8 @@ function downloadPublic() {
       </div>
       <textarea
           :value="publicKey"
-          class="w-full h-16 p-3 border border-gray-200 rounded-lg text-xs font-mono bg-gray-50 resize-y focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+          class="w-full h-20 p-3 border border-gray-200 rounded-lg text-xs font-mono bg-gray-50 resize-y focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+          placeholder="点击「生成密钥对」生成公钥"
           readonly
       />
     </div>
