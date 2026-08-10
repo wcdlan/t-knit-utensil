@@ -1,0 +1,41 @@
+Mulan Permissive Software License，Version 2 (MulanPSL v2)
+
+Copyright (c) [Year] [name of copyright holder]
+[Software Name] is licensed under Mulan PSL v2.
+
+Mulan Permissive Software License, Version 2 (MulanPSL v2; hereinafter "this License") is granted by Contributor (as defined below) to You (as defined below) as follows.
+
+1. Definitions
+
+"Contribution" means the software licensed under this License by the Contributor.
+"Contributor" means the individual or legal entity that provides the software under this License.
+"License" means the terms and conditions between the Contributor and You regarding the use, modification and distribution of the software.
+"Software" means the source code and/or object code provided under this License.
+"Recipient" means the individual or legal entity that receives the Contribution under this License.
+"You" means the individual or legal entity exercising rights under this License, including any Recipient.
+
+2. Grant of Copyright License
+
+Subject to the terms and conditions of this License, each Contributor hereby grants You a perpetual, worldwide, non-exclusive, royalty-free, irrevocable copyright license to reproduce, use, modify, or distribute its Contribution. The above rights may be exercised in any medium or format.
+
+3. Grant of Patent License
+
+Subject to the terms and conditions of this License, each Contributor hereby grants You a perpetual, worldwide, non-exclusive, royalty-free, irrevocable (except as stated in this Section) patent license to make, have made, use, offer for sale, sell, import, or otherwise transfer its Contribution, where such license applies only to those patent claims licensable by such Contributor that are necessarily infringed by their Contribution(s) alone or by combination of their Contribution(s) with the Software to which such Contribution(s) was submitted. If You institute patent litigation (including a cross-claim or counterclaim) against any entity alleging that the Contribution or the Software constitutes direct or indirect patent infringement, then any patent licenses granted to You under this License for the Contribution or Software shall terminate as of the date such litigation is filed.
+
+4. Redistribution
+
+You may distribute the Software and its Derivative Works in any medium or format, with or without modifications, whether in source or object form, provided that You meet the following conditions:
+
+(a) You must give any other recipients of the Software a copy of this License or a link (https://license.coscl.org.cn/MulanPSL2) to this License;
+(b) You must cause any modified files that You distribute to carry prominent notices stating that You changed the files;
+(c) You must retain, in the source code of any Derivative Works that You distribute, all copyright, patent, trademark, and attribution notices from the source code of the Software.
+
+5. Disclaimer of Warranty and Limitation of Liability
+
+THE SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE. IN NO EVENT SHALL ANY CONTRIBUTOR OR COPYRIGHT HOLDER BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES.
+
+6. Language
+
+THIS LICENSE IS DRAFTED IN BOTH CHINESE AND ENGLISH, AND BOTH VERSIONS HAVE EQUAL LEGAL EFFECT. IN THE EVENT OF ANY CONFLICT BETWEEN THE CHINESE AND ENGLISH VERSIONS, THE CHINESE VERSION SHALL PREVAIL.
+
+END OF TERMS AND CONDITIONS

@@ -1,0 +1,48 @@
+Mulan Public License，Version 2 (MulanPubL v2)
+
+Copyright (c) [Year] [name of copyright holder]
+[Software Name] is licensed under Mulan PubL v2.
+
+Mulan Public License, Version 2 (MulanPubL v2; hereinafter "this License") is granted by Contributor (as defined below) to You (as defined below) as follows.
+
+1. Definitions
+
+"Contribution" means the software and its Derivative Works licensed under this License by the Contributor.
+"Contributor" means the individual or legal entity that provides the software under this License.
+"Derivative Works" means works based on the original software or combined with other software, including any modification to the original software in whole or in part.
+"License" means the terms and conditions between the Contributor and You regarding the use, modification and distribution of the software.
+"Software" means the source code and/or object code provided under this License.
+"You" means the individual or legal entity exercising rights under this License.
+
+2. Grant of Copyright License
+
+Subject to the terms and conditions of this License, each Contributor hereby grants You a perpetual, worldwide, non-exclusive, royalty-free, irrevocable copyright license to reproduce, use, modify, or distribute its Contribution, provided that when You modify or distribute the Contribution or Derivative Works, You must comply with the conditions set forth in Section 3 of this License.
+
+3. Redistribution Conditions
+
+3.1 Distribution in Source Code Form. You may distribute the Contribution or Derivative Works in source code form, provided that:
+
+(a) You must include a complete copy of this License or the URL of this License with each copy You distribute;
+(b) You must license all modifications You make under this License to the Recipient;
+(c) You must include a "Notice" in each modified file stating that You modified the file and the date of modification.
+
+3.2 Distribution in Object Code Form. If You distribute the Derivative Works in object code form, You must meet one of the following conditions:
+
+(a) Provide the complete corresponding source code of the Derivative Works together with the object code;
+(b) Provide a written offer, valid for at least three years, to provide any third party with the complete corresponding source code of the Derivative Works at a charge no more than the cost of physically performing source distribution.
+
+3.3 Notice Retention. You may not remove or alter any copyright, patent, trademark, and attribution notices contained within the Software.
+
+4. Grant of Patent License
+
+Subject to the terms and conditions of this License, each Contributor hereby grants You a perpetual, worldwide, non-exclusive, royalty-free, irrevocable (except as stated in this Section) patent license to make, have made, use, offer for sale, sell, import, or otherwise transfer its Contribution. If You institute patent litigation against any entity alleging that the Contribution constitutes direct or indirect patent infringement, then any patent licenses granted to You under this License shall terminate as of the date such litigation is filed.
+
+5. Disclaimer of Warranty and Limitation of Liability
+
+THE SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND. IN NO EVENT SHALL ANY CONTRIBUTOR OR COPYRIGHT HOLDER BE LIABLE FOR ANY DIRECT OR INDIRECT DAMAGES.
+
+6. Language
+
+THIS LICENSE IS DRAFTED IN BOTH CHINESE AND ENGLISH, AND BOTH VERSIONS HAVE EQUAL LEGAL EFFECT. IN THE EVENT OF ANY CONFLICT BETWEEN THE CHINESE AND ENGLISH VERSIONS, THE CHINESE VERSION SHALL PREVAIL.
+
+END OF TERMS AND CONDITIONS

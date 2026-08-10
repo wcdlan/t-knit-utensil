@@ -1,0 +1,75 @@
+Licencia Pública de la Unión Europea V. 1.2
+
+La presente licencia pública de la Unión Europea (en lo sucesivo, "EUPL") se aplica a la obra o al programa informático (tal como se definen a continuación) que se proporciona en las condiciones de la presente licencia. Cualquier uso de la obra distinto del autorizado en virtud de la presente licencia estará prohibido (en la medida en que dicho uso esté amparado por un derecho del titular de los derechos de autor sobre la obra).
+
+La obra original se cederá en las condiciones establecidas en la presente licencia cuando el licenciante haya colocado el siguiente aviso inmediatamente después del aviso de derechos de autor sobre la obra original:
+
+Licensed under the EUPL V.1.2
+
+o haya expresado por cualquier otro medio su voluntad de conceder la licencia EUPL.
+
+1. Definiciones
+
+En la presente licencia se entenderá por:
+
+- La licencia: la presente licencia.
+- La obra original: el programa informático distribuido y/o comunicado por el licenciante en virtud de la presente licencia, disponible en forma de código fuente o de código ejecutable, según los casos.
+- Las obras derivadas: las obras o programas informáticos que pudiera crear el licenciatario sobre la base de la obra original o de las modificaciones que se hubieran hecho en esta.
+- La obra: la obra original y/o sus obras derivadas.
+- El código fuente: la forma de la obra legible para el ser humano, que es la más adecuada para que las personas puedan estudiarla y modificarla.
+- El código ejecutable: todo código que generalmente ha sido compilado y que está destinado a ser interpretado por un ordenador como un programa.
+- El licenciante: la persona física o jurídica que distribuye y/o comunica la obra en virtud de la presente licencia.
+- El(los) colaborador(es): toda persona física o jurídica que modifique la obra en virtud de la presente licencia o que contribuya de cualquier otro modo a la creación de una obra derivada.
+- El licenciatario o "Usted": toda persona física o jurídica que haga uso del programa informático en las condiciones de la presente licencia.
+- La distribución y/o comunicación: todo acto de venta, donación, préstamo, alquiler, distribución, comunicación, transmisión o puesta a disposición de copias de la obra o del acceso a sus funcionalidades esenciales.
+
+2. Ámbito de los derechos concedidos por la licencia
+
+El licenciante le concede por la presente una licencia mundial, sin canon, no exclusiva, transferible a terceros mediante sublicencia, que le autoriza, mientras duren los derechos de autor sobre la obra original, a:
+- utilizar la obra en cualquier circunstancia y para cualquier uso,
+- reproducir la obra,
+- modificar la obra original y crear obras derivadas basadas en la obra,
+- comunicar al público la obra,
+- distribuir la obra o copias de esta a terceros,
+- prestar y alquilar la obra o copias de esta,
+- ceder en sublicencia los derechos sobre la obra o copias de esta.
+
+Los derechos anteriores se podrán ejercer en cualquier tipo de medio, soporte y formato, conocido o por inventar.
+
+3. Comunicación del código fuente
+
+El licenciante podrá proporcionar la obra como código fuente o como código ejecutable. Si la obra se proporciona como código ejecutable, el licenciante deberá proporcionar una copia del código fuente de la obra legible por máquina.
+
+4. Limitaciones de los derechos de autor
+
+La presente licencia no tiene por objeto privar al licenciatario del beneficio de ninguna excepción o limitación de los derechos exclusivos de los titulares de derechos sobre la obra.
+
+5. Obligaciones del licenciatario
+
+La concesión de los derechos mencionados está sujeta a determinadas restricciones y obligaciones impuestas al licenciatario. Son las siguientes:
+
+Derecho de atribución: el licenciatario deberá mantener intactos todos los avisos relativos a los derechos de autor, patentes o marcas registradas y todo aviso que haga referencia a la licencia y a la exclusión de garantía.
+
+Cláusula de copyleft: si el licenciatario distribuye y/o comunica copias de la obra original o de una obra derivada, esta distribución y/o comunicación se llevará a cabo en las condiciones de la presente licencia.
+
+Cláusula de compatibilidad: si el licenciatario distribuye y/o comunica obras derivadas o copias basadas en la obra original y en otra obra bajo una licencia compatible, dicha distribución y/o comunicación podrá realizarse en las condiciones de esta licencia compatible.
+
+Suministro del código fuente: el licenciatario deberá proporcionar una copia del código fuente legible por máquina o un modo de acceder a ella.
+
+Protección jurídica: la presente licencia no permite utilizar los nombres comerciales, las marcas comerciales o las marcas de servicio del licenciante.
+
+6. Exclusión de garantía
+
+La obra se proporciona "tal cual". El licenciante no concede ninguna garantía.
+
+7. Limitación de responsabilidad
+
+Ni el licenciante ni los colaboradores serán responsables de daños directos, indirectos, materiales o inmateriales.
+
+8. Finalización de la licencia
+
+La licencia finalizará automáticamente si el licenciatario infringe alguna de sus condiciones.
+
+9. Ley aplicable y jurisdicción competente
+
+La presente licencia se regirá por el Derecho del Estado miembro de la Unión Europea en que el licenciante tenga su domicilio social o su residencia habitual.

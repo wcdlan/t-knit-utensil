@@ -1,0 +1,86 @@
+Licence Publique de l'Union européenne V. 1.2
+
+La présente licence publique de l'Union européenne (ci-après dénommée «EUPL») s'applique à l'oeuvre ou au logiciel (tel que défini ci-dessous) qui est fourni aux conditions prévues par la présente licence. Toute utilisation de l'oeuvre autre que ce qu'autorise la présente licence est prohibée (dans la mesure où cette utilisation est couverte par un droit du titulaire des droits d'auteur sur l'oeuvre).
+
+L'oeuvre originale est fournie aux conditions de la présente licence lorsque le donneur de licence (tel que défini ci-dessous) a placé la mention suivante immédiatement après la déclaration relative au droit d'auteur sur l'oeuvre originale:
+
+Sous licence EUPL V.1.2
+
+ou a exprimé par tout autre moyen sa volonté de fournir l'oeuvre sous licence EUPL.
+
+1. Définitions
+
+Dans la présente licence, on entend par:
+
+- La licence: la présente licence.
+- L'oeuvre originale: le logiciel distribué et/ou communiqué par le donneur de licence en vertu de la présente licence, disponible sous forme de code source et, le cas échéant, sous forme de code exécutable.
+- Les oeuvres dérivées: les oeuvres ou logiciels qui pourraient être créés par le licencié sur la base de l'oeuvre originale ou des modifications qui y ont été apportées.
+- L'oeuvre: l'oeuvre originale ou ses oeuvres dérivées.
+- Le code source: la forme de l'oeuvre, lisible par l'homme, la plus appropriée pour que des personnes puissent l'examiner et la modifier.
+- Le code exécutable: tout code qui a généralement été compilé et qui est destiné à être interprété par un ordinateur en tant que programme.
+- Le donneur de licence: la personne physique ou morale qui distribue et/ou communique l'oeuvre sous la présente licence.
+- Le(s) contributeur(s): toute personne physique ou morale qui modifie l'oeuvre sous la présente licence ou contribue de toute autre manière à la création d'une oeuvre dérivée.
+- Le licencié ou «Vous»: toute personne physique ou morale qui fait usage du logiciel aux conditions de la présente licence.
+- La distribution et/ou la communication: tout acte de vente, don, prêt, location, distribution, communication, transmission ou autre mise à disposition, en ligne ou hors ligne, de copies de l'oeuvre ou de l'accès à ses fonctionnalités essentielles à toute autre personne physique ou morale.
+
+2. Étendue des droits accordés par la licence
+
+Le donneur de licence Vous concède, pour la durée de protection des droits d'auteur sur l'oeuvre originale, une licence mondiale, non exclusive, libre de redevance et pouvant faire l'objet de sous-licences, Vous autorisant à:
+
+- utiliser l'oeuvre en toute circonstance et pour tout usage,
+- reproduire l'oeuvre,
+- modifier l'oeuvre originale et créer des oeuvres dérivées basées sur l'oeuvre,
+- communiquer l'oeuvre au public, y compris le droit de mettre à disposition ou d'afficher l'oeuvre ou des copies de celle-ci,
+- distribuer l'oeuvre ou des copies de celle-ci,
+- prêter et louer l'oeuvre ou des copies de celle-ci,
+- concéder en sous-licence les droits sur l'oeuvre ou ses copies.
+
+Ces droits peuvent être exercés sur tout support et format, connu ou encore à inventer, dans la mesure où le droit applicable le permet.
+
+3. Communication du code source
+
+Le donneur de licence peut fournir l'oeuvre sous forme de code source ou de code exécutable. Si l'oeuvre est fournie sous forme de code exécutable, le donneur de licence doit en outre fournir une copie lisible par machine du code source de l'oeuvre en même temps que chaque copie de l'oeuvre qu'il distribue ou indiquer un moyen d'obtenir une copie lisible par machine dudit code source.
+
+4. Limitations des droits d'auteur
+
+Rien dans la présente licence n'a pour but de priver le licencié des avantages de toute exception ou limitation aux droits exclusifs des ayants droit sur l'oeuvre, de l'épuisement de ces droits ou d'autres limitations applicables.
+
+5. Obligations du licencié
+
+La concession des droits susmentionnés est soumise à certaines restrictions et obligations pour le licencié. Ces obligations sont les suivantes:
+
+Droit d'attribution: le licencié doit conserver intacts tous les avis concernant le droit d'auteur, le brevet ou les marques et tous les avis faisant référence à la licence et à l'exclusion de garantie.
+
+Clause copyleft: si le licencié distribue et/ou communique des copies de l'oeuvre originale ou d'une oeuvre dérivée, cette distribution et/ou communication sera effectuée aux conditions de la présente licence.
+
+Clause de compatibilité: si le licencié distribue et/ou communique des oeuvres dérivées ou des copies basées sur l'oeuvre originale et sur une autre oeuvre sous licence compatible, ladite distribution et/ou communication pourra se faire aux conditions de cette licence compatible. Sont considérées comme «licences compatibles»:
+
+- GNU General Public License (GPL) v. 2, v. 3
+- GNU Affero General Public License (AGPL) v. 3
+- Open Software License (OSL) v. 2.1, v. 3.0
+- Eclipse Public License (EPL) v. 1.0
+- CeCILL v. 2.0, v. 2.1
+- Mozilla Public Licence (MPL) v. 2
+- GNU Lesser General Public Licence (LGPL) v. 2.1, v. 3
+- Creative Commons Attribution-ShareAlike v. 3.0 Unported (CC BY-SA 3.0)
+- Creative Commons Attribution-ShareAlike v. 4.0 International (CC BY-SA 4.0)
+
+Fourniture du code source: le licencié doit fournir une copie lisible par machine du code source ou indiquer un moyen d'y accéder.
+
+Protection juridique: la présente licence ne donne pas la permission d'utiliser les noms commerciaux, marques commerciales, marques de service ou noms du donneur de licence.
+
+6. Exclusion de garantie
+
+L'oeuvre est fournie en l'état. Sauf disposition contraire du droit applicable, le donneur de licence n'offre aucune garantie, expresse ou tacite, y compris, mais sans s'y limiter, en ce qui concerne la qualité marchande, l'adéquation à un usage particulier et le respect des droits de propriété intellectuelle.
+
+7. Limitation de responsabilité
+
+Sauf disposition contraire du droit applicable, ni le donneur de licence ni les contributeurs ne pourront en aucun cas être tenus pour responsables de tout dommage direct, indirect, matériel, moral ou accidentel.
+
+8. Fin de la licence
+
+La licence prend fin automatiquement dès lors que le licencié ne respecte pas les conditions de celle-ci.
+
+9. Droit applicable et juridiction compétente
+
+La présente licence est régie par le droit de l'Union européenne ainsi que par le droit de l'État membre dans lequel le donneur de licence a son siège social ou sa résidence habituelle. Tout litige relatif à la présente licence relève de la compétence des juridictions de cet État membre.

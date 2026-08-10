@@ -1,0 +1,75 @@
+Öffentliche Lizenz der Europäischen Union V. 1.2
+
+Diese öffentliche Lizenz der Europäischen Union (im Folgenden "EUPL") gilt für das Werk oder die Software (wie nachstehend definiert), die unter den Bedingungen dieser Lizenz bereitgestellt wird. Jede Nutzung des Werkes, die nicht nach dieser Lizenz erlaubt ist, ist untersagt (soweit diese Nutzung unter ein Recht des Urheberrechtsinhabers des Werkes fällt).
+
+Das ursprüngliche Werk wird unter den Bedingungen dieser Lizenz bereitgestellt, wenn der Lizenzgeber (wie nachstehend definiert) den folgenden Hinweis unmittelbar im Anschluss an den Urheberrechtshinweis für das ursprüngliche Werk angebracht hat:
+
+Lizenziert unter der EUPL V.1.2
+
+oder auf andere Weise seine Bereitschaft zur Lizenzierung unter der EUPL bekundet hat.
+
+1. Begriffsbestimmungen
+
+In dieser Lizenz haben die folgenden Begriffe die folgende Bedeutung:
+
+- Die Lizenz: diese Lizenz.
+- Das ursprüngliche Werk: die Software, die vom Lizenzgeber unter dieser Lizenz verteilt und/oder übermittelt wird und je nach Fall als Quellcode oder auch als ausführbarer Code verfügbar ist.
+- Abgeleitete Werke: die Werke oder Software, die vom Lizenznehmer auf der Grundlage des ursprünglichen Werkes oder von daran vorgenommenen Änderungen geschaffen werden könnten.
+- Das Werk: das ursprüngliche Werk und/oder seine abgeleiteten Werke.
+- Der Quellcode: die für Menschen lesbare Form des Werkes, die am besten geeignet ist, um von Personen untersucht und geändert zu werden.
+- Der ausführbare Code: jeder Code, der im Allgemeinen kompiliert wurde und dazu bestimmt ist, von einem Computer als Programm interpretiert zu werden.
+- Der Lizenzgeber: die natürliche oder juristische Person, die das Werk unter der Lizenz verteilt und/oder übermittelt.
+- Beitragende(r): jede natürliche oder juristische Person, die das Werk unter der Lizenz ändert oder anderweitig zur Schaffung eines abgeleiteten Werks beiträgt.
+- Der Lizenznehmer oder "Sie": jede natürliche oder juristische Person, die die Software unter den Bedingungen der Lizenz nutzt.
+- Verteilung und/oder Übermittlung: jeder Akt des Verkaufs, der Schenkung, der Leihe, der Vermietung, der Verteilung, der Übermittlung oder der anderweitigen Bereitstellung von Kopien des Werkes oder des Zugangs zu seinen wesentlichen Funktionen.
+
+2. Umfang der durch die Lizenz gewährten Rechte
+
+Der Lizenzgeber erteilt Ihnen für die Dauer des am ursprünglichen Werk bestehenden Urheberrechts eine weltweite, unentgeltliche, nicht ausschließliche, unterlizenzierbare Lizenz, die Sie berechtigt:
+- das Werk unter allen Umständen und für alle Nutzungen zu verwenden,
+- das Werk zu vervielfältigen,
+- das ursprüngliche Werk zu ändern und abgeleitete Werke auf der Grundlage des Werkes zu schaffen,
+- das Werk öffentlich zugänglich zu machen,
+- das Werk oder Kopien davon zu verbreiten,
+- das Werk oder Kopien davon zu verleihen und zu vermieten,
+- Rechte am Werk oder an Kopien davon unterzulizenzieren.
+
+Diese Rechte können auf allen Medien, Trägern und in allen Formaten ausgeübt werden.
+
+3. Zugänglichmachung des Quellcodes
+
+Der Lizenzgeber kann das Werk entweder in Form des Quellcodes oder als ausführbaren Code bereitstellen. Wird das Werk als ausführbarer Code bereitgestellt, muss der Lizenzgeber eine maschinenlesbare Kopie des Quellcodes zusammen mit jeder Kopie des Werkes bereitstellen.
+
+4. Urheberrechtliche Schranken
+
+Keine Bestimmung dieser Lizenz hat den Zweck, den Lizenznehmer der Vorteile von Ausnahmen oder Beschränkungen der ausschließlichen Rechte der Rechtsinhaber an dem Werk zu berauben.
+
+5. Pflichten des Lizenznehmers
+
+Die Einräumung der oben genannten Rechte unterliegt bestimmten Beschränkungen und Pflichten für den Lizenznehmer. Diese Pflichten sind:
+
+Namensnennungsrecht: Der Lizenznehmer muss alle Hinweise auf Urheberrechte, Patente oder Marken sowie alle Hinweise auf die Lizenz und den Haftungsausschluss unverändert lassen.
+
+Copyleft-Klausel: Wenn der Lizenznehmer Kopien des ursprünglichen Werkes oder eines abgeleiteten Werkes verteilt und/oder übermittelt, muss diese Verteilung und/oder Übermittlung unter den Bedingungen dieser Lizenz erfolgen.
+
+Kompatibilitätsklausel: Wenn der Lizenznehmer abgeleitete Werke oder Kopien verteilt und/oder übermittelt, die auf dem ursprünglichen Werk und einem anderen Werk unter einer kompatiblen Lizenz basieren, kann diese Verteilung und/oder Übermittlung unter den Bedingungen dieser kompatiblen Lizenz erfolgen.
+
+Bereitstellung des Quellcodes: Der Lizenznehmer muss eine maschinenlesbare Kopie des Quellcodes bereitstellen oder eine Adresse angeben, unter der dieser zugänglich ist.
+
+Rechtsschutz: Die Lizenz erteilt keine Erlaubnis zur Nutzung von Handelsnamen, Marken, Dienstleistungsmarken oder Namen des Lizenzgebers.
+
+6. Gewährleistungsausschluss
+
+Das Werk wird "wie es ist" bereitgestellt. Der Lizenzgeber übernimmt keine Garantie.
+
+7. Haftungsbeschränkung
+
+Der Lizenzgeber und die Beitragenden haften nicht für direkte, indirekte, materielle, immaterielle oder sonstige Schäden.
+
+8. Beendigung der Lizenz
+
+Die Lizenz endet automatisch, wenn der Lizenznehmer gegen ihre Bedingungen verstößt.
+
+9. Anwendbares Recht und Gerichtsstand
+
+Diese Lizenz unterliegt dem Recht des Mitgliedstaats der Europäischen Union, in dem der Lizenzgeber seinen Sitz oder Wohnsitz hat.

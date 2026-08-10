@@ -1,0 +1,75 @@
+Licenza Pubblica dell'Unione Europea V. 1.2
+
+La presente licenza pubblica dell'Unione europea ("EUPL") si applica all'opera o al software (secondo la definizione seguente) forniti alle condizioni di cui alla presente licenza. È vietato qualsiasi uso dell'opera diverso da quanto autorizzato ai sensi della presente licenza (nella misura in cui tale uso sia coperto da un diritto del titolare del diritto d'autore sull'opera).
+
+L'opera originale è fornita alle condizioni della presente licenza quando il licenziante (secondo la definizione seguente) ha collocato la seguente nota immediatamente dopo la dichiarazione sul diritto d'autore relativa all'opera originale:
+
+Concesso in licenza a norma dell'EUPL V.1.2
+
+oppure ha espresso in qualsiasi altro modo la propria volontà di cedere l'opera in licenza a norma dell'EUPL.
+
+1. Definizioni
+
+Nella presente licenza i seguenti termini hanno il significato seguente:
+
+- La licenza: la presente licenza.
+- L'opera originale: il software distribuito e/o comunicato dal licenziante in virtù della presente licenza, disponibile in formato di codice sorgente e, a seconda dei casi, anche di codice eseguibile.
+- Le opere derivate: le opere o il software che potrebbero essere creati dal licenziatario a partire dall'opera originale o da modifiche della stessa.
+- L'opera: l'opera originale e le sue opere derivate.
+- Il codice sorgente: la forma leggibile dell'opera, la più adatta perché le persone possano esaminarla e modificarla.
+- Il codice eseguibile: qualsiasi codice che sia stato generalmente compilato, destinato a essere interpretato da un computer come programma.
+- Il licenziante: la persona fisica o giuridica che distribuisce e/o comunica l'opera ai sensi della licenza.
+- I contributori: qualsiasi persona fisica o giuridica che modifichi l'opera secondo la licenza o che contribuisca in qualsiasi altro modo alla creazione di un'opera derivata.
+- Il licenziatario (o "l'utente"): qualsiasi persona fisica o giuridica che utilizzi il software alle condizioni di cui alla presente licenza.
+- La distribuzione e/o comunicazione: qualsiasi atto di vendita, donazione, prestito, locazione, distribuzione, comunicazione, trasmissione o messa a disposizione di copie dell'opera o dell'accesso alle sue funzionalità essenziali.
+
+2. Ambito dei diritti concessi dalla licenza
+
+Il licenziante concede all'utente, per la durata del diritto d'autore sull'opera originale, una licenza mondiale, gratuita, non esclusiva, che può essere oggetto di sublicenza, la quale autorizza a:
+- utilizzare l'opera in qualsiasi circostanza e per qualsiasi uso,
+- riprodurre l'opera,
+- modificare l'opera originale e creare opere derivate basate sull'opera,
+- comunicare al pubblico l'opera,
+- distribuire l'opera o copie della stessa,
+- dare in prestito o in locazione l'opera o copie della stessa,
+- cedere in sublicenza i diritti sull'opera.
+
+I diritti che precedono possono essere esercitati su qualsiasi supporto o formato.
+
+3. Comunicazione del codice sorgente
+
+Il licenziante può fornire l'opera sotto forma di codice sorgente o di codice eseguibile. Se l'opera è fornita come codice eseguibile, il licenziante deve fornire anche una copia del codice sorgente.
+
+4. Limitazioni dei diritti d'autore
+
+Nessuna disposizione della presente licenza è intesa a privare il licenziatario del beneficio di qualsiasi eccezione o limitazione dei diritti esclusivi.
+
+5. Obblighi del licenziatario
+
+La concessione dei diritti è subordinata al rispetto di talune restrizioni e obblighi da parte del licenziatario. Tali obblighi sono:
+
+Diritto d'attribuzione: il licenziatario deve mantenere intatte tutte le note riguardanti il diritto d'autore, il brevetto o i marchi registrati e tutte le note che fanno riferimento alla licenza e all'esclusione di garanzia.
+
+Clausola copyleft: se il licenziatario distribuisce e/o comunica copie dell'opera originale o di un'opera derivata, la distribuzione e/o comunicazione è effettuata alle condizioni della presente licenza.
+
+Clausola di compatibilità: se il licenziatario distribuisce e/o comunica opere derivate o copie basate sull'opera originale e su un'altra opera concessa in licenza compatibile, la distribuzione e/o comunicazione può essere effettuata alle condizioni di questa licenza compatibile.
+
+Fornitura del codice sorgente: il licenziatario deve fornire una copia del codice sorgente leggibile da un calcolatore o indicare un modo per accedervi.
+
+Protezione giuridica: la presente licenza non permette di utilizzare i nomi commerciali, i marchi commerciali o i marchi di servizio del licenziante.
+
+6. Esclusione della garanzia
+
+L'opera è fornita "così com'è". Il licenziante non offre alcuna garanzia sull'opera.
+
+7. Limitazione di responsabilità
+
+Né il licenziante né i contributori saranno responsabili per danni diretti, indiretti, materiali, morali od occasionali.
+
+8. Fine della licenza
+
+La licenza si estingue automaticamente se il licenziatario viola una qualsiasi delle sue condizioni.
+
+9. Diritto applicabile e foro competente
+
+La presente licenza è disciplinata dal diritto dello Stato membro dell'Unione europea in cui il licenziante ha la propria sede legale o la residenza abituale.
