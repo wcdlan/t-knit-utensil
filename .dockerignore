@@ -1,0 +1,11 @@
+node_modules
+.git
+.gitlab-ci.yml
+*.md
+.env
+.env.*
+dist
+*.tar.gz
+.DS_Store
+.vscode
+.idea
