@@ -83,6 +83,19 @@ export const toolGroups: ToolGroup[] = [
             {id: 'word-count', name: '字数统计', description: '字符/单词/行数统计', icon: '📏'},
         ],
     },
+    {
+        id: 'common',
+        name: '常用工具',
+        icon: '🧰',
+        tools: [
+            {
+                id: 'license-selector',
+                name: '开源许可证选择',
+                description: '通过问答匹配最适合的开源许可证，支持协议细览、复制与下载',
+                icon: '📜',
+            },
+        ],
+    },
 ]
 
 export function getToolById(id: string): Tool | undefined {

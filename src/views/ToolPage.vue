@@ -44,6 +44,7 @@ const tool = computed(() => getToolById(toolId.value))
       <WordCount v-else-if="toolId === 'word-count'"/>
       <SshKeyGen v-else-if="toolId === 'ssh-keygen'"/>
       <FaviconTool v-else-if="toolId === 'favicon'"/>
+      <LicenseSelector v-else-if="toolId === 'license-selector'"/>
     </div>
   </div>
   <div v-else class="text-center py-20">
@@ -71,6 +72,7 @@ import DiffTool from '@/components/tools/text/DiffTool.vue'
 import WordCount from '@/components/tools/text/WordCount.vue'
 import SshKeyGen from '@/components/tools/ssh/SshKeyGen.vue'
 import FaviconTool from '@/components/tools/image/FaviconTool.vue'
+import LicenseSelector from '@/components/tools/common/LicenseSelector.vue'
 
 export default {
   components: {
@@ -90,6 +92,7 @@ export default {
     WordCount,
     SshKeyGen,
     FaviconTool,
+    LicenseSelector,
   },
 }
 </script>
