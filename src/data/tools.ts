@@ -94,6 +94,19 @@ export const toolGroups: ToolGroup[] = [
     ],
   },
   {
+      id: 'ai',
+      name: 'AI 工具',
+      icon: '🤖',
+      tools: [
+          {
+              id: 'ai-tester',
+              name: 'AI API 测试',
+              description: '测试 AI API 连接与 Key 可用性，支持 OpenAI / Anthropic / Gemini 格式，查看可用模型列表并发送测试对话',
+              icon: '🧪',
+          },
+      ],
+  },
+    {
     id: 'common',
     name: '常用工具',
     icon: '🧰',

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
-import { getToolById } from '@/data/tools'
+import {computed} from 'vue'
+import {useRoute} from 'vue-router'
+import {getToolById} from '@/data/tools'
 
 const route = useRoute()
 const toolId = computed(() => route.params.toolId as string)
@@ -44,6 +44,7 @@ const tool = computed(() => getToolById(toolId.value))
       <WordCount v-else-if="toolId === 'word-count'" />
       <SshKeyGen v-else-if="toolId === 'ssh-keygen'" />
       <FaviconTool v-else-if="toolId === 'favicon'" />
+      <AiApiTester v-else-if="toolId === 'ai-tester'"/>
       <LicenseSelector v-else-if="toolId === 'license-selector'" />
     </div>
   </div>
@@ -73,6 +74,7 @@ import WordCount from '@/components/tools/text/WordCount.vue'
 import SshKeyGen from '@/components/tools/ssh/SshKeyGen.vue'
 import FaviconTool from '@/components/tools/image/FaviconTool.vue'
 import LicenseSelector from '@/components/tools/common/LicenseSelector.vue'
+import AiApiTester from '@/components/tools/ai/AiApiTester.vue'
 
 export default {
   components: {
@@ -93,6 +95,7 @@ export default {
     SshKeyGen,
     FaviconTool,
     LicenseSelector,
+    AiApiTester,
   },
 }
 </script>
