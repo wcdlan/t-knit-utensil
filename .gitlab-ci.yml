@@ -2,9 +2,9 @@
 # GitLab CI/CD 配置 — t-knit-utensil
 # ============================================================
 # 触发条件：仅推送 Git Tag 时触发（如 v1.0.0）
-# Node 镜像：node:24-alpine（固定大版本保证环境一致性）
-# pnpm 版本：不锁定，由 corepack 根据 package.json 的
-#           packageManager 字段自动选择
+# Node 镜像：node:24-alpine（docker executor 时生效）
+# pnpm 版本：不锁定，由 npm install -g 安装最新版
+# 注意：shell executor 在宿主机直接运行，不拉取 Docker 镜像
 # ============================================================
 
 default:
@@ -42,12 +42,13 @@ workflow:
 # ============================================================
 # Job 1: 构建 & 打包
 # ============================================================
-# 1. 通过 corepack 启用 pnpm
-#    — 版本由 package.json 的 packageManager 字段决定
-#    — 不在 CI 配置中硬编码版本号，保持灵活性
+# 1. 通过 npm 全局安装 pnpm
+#    — corepack enable 需要向 /usr/local/bin 写入符号链接
+#    — shell executor 以 gitlab-runner 用户运行，无 root 权限
+#    — 改用 npm install -g，nvm 管理的全局目录用户可写
 # 2. 按 lockfile 严格安装依赖，保证构建可复现
 # 3. 执行项目构建
-# 4. 将 dist/ 目录打包为 .tar.gz 制品
+# 4. 将 dist/ 目录打包为 .tar.gz 制品（永久保留）
 # ============================================================
 build:
   tags:
@@ -64,8 +65,8 @@ build:
       - .pnpm-store               # pnpm 全局 store 缓存目录
 
   before_script:
-    # 启用 corepack，使 pnpm 命令可用
-    # 版本由 package.json 中 packageManager 字段指定，无需在此处锁定
+    # 全局安装 pnpm
+    # 不锁定版本，与"不限制 pnpm 版本"的设计意图一致
     - npm install -g pnpm
     # 将 pnpm 的全局 store 指向缓存目录，后续安装直接复用
     - pnpm config set store-dir .pnpm-store
@@ -83,6 +84,7 @@ build:
     name: ${TARBALL_NAME%.tar.gz}
     paths:
       - ${TARBALL_NAME}
+    # 不设置 expire_in，制品永久保留（Tag 即为发布版本，不应过期清理）
 
 # ============================================================
 # Job 2: Docker 镜像构建 & 推送
