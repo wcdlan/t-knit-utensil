@@ -65,9 +65,9 @@ build:
       - .pnpm-store               # pnpm 全局 store 缓存目录
 
   before_script:
-    # 全局安装 pnpm
-    # 不锁定版本，与"不限制 pnpm 版本"的设计意图一致
-    - npm install -g pnpm
+    # 安装 pnpm
+    - corepack enable
+    - corepack prepare pnpm@latest --activate
     # 将 pnpm 的全局 store 指向缓存目录，后续安装直接复用
     - pnpm config set store-dir .pnpm-store
 
