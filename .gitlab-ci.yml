@@ -41,7 +41,6 @@ docker:
   image: docker:stable
   services:
     - name: docker:dind
-      command: [ "--insecure-registry=NEXUS" ]   # 若 Nexus 使用 HTTP 则必须添加
   before_script:
     # 使用 --password-stdin 安全登录
     - echo "$NEXUS_PASSWORD" | docker login "$NEXUS" -u "$NEXUS_USER" --password-stdin
