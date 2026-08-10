@@ -23,6 +23,7 @@ interface LicenseProfile {
   patent: boolean
   simplicity: number      // 0=short 1=medium 2=comprehensive
   osiApproved: boolean
+  domestic: boolean        // 国产许可证
   summary: string
   tags: string[]
   url: string
@@ -31,101 +32,185 @@ interface LicenseProfile {
 const LICENSES: LicenseProfile[] = [
   {
     id: 'mit', name: 'MIT License', spdxId: 'MIT',
-    copyleft: 1, patent: false, simplicity: 0, osiApproved: true,
+    copyleft: 1, patent: false, simplicity: 0, osiApproved: true, domestic: false,
     summary: '最宽松的许可协议之一。允许任意使用、复制、修改、合并、出版、分发、再许可和/或销售软件副本，仅需保留原版权声明和许可声明。',
     tags: ['宽松', '简短', '商业友好', '社区热门'],
     url: 'https://opensource.org/licenses/MIT',
   },
   {
     id: 'apache-2.0', name: 'Apache License 2.0', spdxId: 'Apache-2.0',
-    copyleft: 1, patent: true, simplicity: 1, osiApproved: true,
+    copyleft: 1, patent: true, simplicity: 1, osiApproved: true, domestic: false,
     summary: '与 MIT 类似但增加了专利授权条款和商标保护。使用者获得明确的专利许可，修改文件需注明变更。适合需要专利保护的项目。',
     tags: ['宽松', '专利保护', '商业友好', '企业首选'],
     url: 'https://www.apache.org/licenses/LICENSE-2.0',
   },
   {
     id: 'bsd-2', name: 'BSD 2-Clause License', spdxId: 'BSD-2-Clause',
-    copyleft: 1, patent: false, simplicity: 0, osiApproved: true,
+    copyleft: 1, patent: false, simplicity: 0, osiApproved: true, domestic: false,
     summary: '与 MIT 几乎相同，仅需保留版权声明和免责声明。额外包含"禁止以作者名义背书"条款。非常简短。',
     tags: ['宽松', '简短', '商业友好'],
     url: 'https://opensource.org/licenses/BSD-2-Clause',
   },
   {
     id: 'bsd-3', name: 'BSD 3-Clause License', spdxId: 'BSD-3-Clause',
-    copyleft: 1, patent: false, simplicity: 0, osiApproved: true,
+    copyleft: 1, patent: false, simplicity: 0, osiApproved: true, domestic: false,
     summary: 'BSD 2-Clause 的扩展，增加"未经许可不得使用作者/机构名称背书"条款。Go 语言等项目使用。',
     tags: ['宽松', '简短', '商业友好', '反背书'],
     url: 'https://opensource.org/licenses/BSD-3-Clause',
   },
   {
     id: 'isc', name: 'ISC License', spdxId: 'ISC',
-    copyleft: 1, patent: false, simplicity: 0, osiApproved: true,
+    copyleft: 1, patent: false, simplicity: 0, osiApproved: true, domestic: false,
     summary: '功能上等同于 MIT，但语言更简洁。ISC（Internet Systems Consortium）使用的许可。OpenBSD 等项目采用。',
     tags: ['宽松', '最简短', '商业友好'],
     url: 'https://opensource.org/licenses/ISC',
   },
   {
     id: 'gpl-2.0', name: 'GNU General Public License v2.0', spdxId: 'GPL-2.0-only',
-    copyleft: 3, patent: false, simplicity: 2, osiApproved: true,
+    copyleft: 3, patent: false, simplicity: 2, osiApproved: true, domestic: false,
     summary: '强 Copyleft 许可证。任何分发包含 GPLv2 代码的软件必须以 GPLv2 开源。不含专利条款。Linux 内核使用。',
     tags: ['强Copyleft', '病毒式', '自由软件', 'Linux'],
     url: 'https://www.gnu.org/licenses/gpl-2.0.html',
   },
   {
     id: 'gpl-3.0', name: 'GNU General Public License v3.0', spdxId: 'GPL-3.0-only',
-    copyleft: 3, patent: true, simplicity: 2, osiApproved: true,
+    copyleft: 3, patent: true, simplicity: 2, osiApproved: true, domestic: false,
     summary: 'GPLv2 的升级版。增加专利授权条款、反 Tivoization 条款，兼容 Apache 2.0。更强的国际法律适用性。',
     tags: ['强Copyleft', '专利保护', '反Tivoization', '自由软件'],
     url: 'https://www.gnu.org/licenses/gpl-3.0.html',
   },
   {
     id: 'agpl-3.0', name: 'GNU Affero General Public License v3.0', spdxId: 'AGPL-3.0-only',
-    copyleft: 4, patent: true, simplicity: 2, osiApproved: true,
+    copyleft: 4, patent: true, simplicity: 2, osiApproved: true, domestic: false,
     summary: 'GPLv3 的加强版。当用户在网络上使用软件时（如 SaaS），也需提供源代码。防止云服务商"利用但不回馈"。MongoDB 使用。',
     tags: ['网络Copyleft', '专利保护', 'SaaS杀手', '自由软件'],
     url: 'https://www.gnu.org/licenses/agpl-3.0.html',
   },
   {
     id: 'lgpl-2.1', name: 'GNU Lesser General Public License v2.1', spdxId: 'LGPL-2.1-only',
-    copyleft: 2, patent: false, simplicity: 2, osiApproved: true,
+    copyleft: 2, patent: false, simplicity: 2, osiApproved: true, domestic: false,
     summary: '弱 Copyleft。允许非自由软件通过链接方式使用 LGPL 库，但库本身的修改需开源。适合希望推广使用的库项目。',
     tags: ['弱Copyleft', '库友好', '链接例外'],
     url: 'https://www.gnu.org/licenses/lgpl-2.1.html',
   },
   {
     id: 'lgpl-3.0', name: 'GNU Lesser General Public License v3.0', spdxId: 'LGPL-3.0-only',
-    copyleft: 2, patent: true, simplicity: 2, osiApproved: true,
+    copyleft: 2, patent: true, simplicity: 2, osiApproved: true, domestic: false,
     summary: 'LGPLv2.1 的升级版。增加专利授权条款，兼容 GPLv3。适合需要专利保护的库项目。',
     tags: ['弱Copyleft', '专利保护', '库友好', 'GPLv3兼容'],
     url: 'https://www.gnu.org/licenses/lgpl-3.0.html',
   },
   {
     id: 'mpl-2.0', name: 'Mozilla Public License 2.0', spdxId: 'MPL-2.0',
-    copyleft: 2, patent: true, simplicity: 1, osiApproved: true,
+    copyleft: 2, patent: true, simplicity: 1, osiApproved: true, domestic: false,
     summary: '文件级 Copyleft。修改 MPL 许可的文件需开源修改部分，但可与闭源文件共存于同一项目中。专利保护。比 LGPL 更灵活。',
     tags: ['弱Copyleft', '文件级', '专利保护', '灵活'],
     url: 'https://www.mozilla.org/en-US/MPL/2.0/',
   },
   {
     id: 'unlicense', name: 'The Unlicense', spdxId: 'Unlicense',
-    copyleft: 0, patent: false, simplicity: 0, osiApproved: true,
+    copyleft: 0, patent: false, simplicity: 0, osiApproved: true, domestic: false,
     summary: '完全放弃版权，将作品贡献到公共领域。无任何限制，不要求署名。适合希望代码被最大程度自由使用的开发者。',
     tags: ['公共领域', '无限制', '最自由'],
     url: 'https://unlicense.org/',
   },
   {
     id: 'cc0-1.0', name: 'Creative Commons Zero v1.0 Universal', spdxId: 'CC0-1.0',
-    copyleft: 0, patent: false, simplicity: 1, osiApproved: false,
+    copyleft: 0, patent: false, simplicity: 1, osiApproved: false, domestic: false,
     summary: 'CC0 是 Creative Commons 发布的公共领域贡献声明。在法律允许范围内放弃所有版权及相关权利。比 Unlicense 更严谨的法律措辞。',
     tags: ['公共领域', '无限制', '法律严谨'],
     url: 'https://creativecommons.org/publicdomain/zero/1.0/',
   },
   {
     id: 'eupl-1.2', name: 'European Union Public License 1.2', spdxId: 'EUPL-1.2',
-    copyleft: 3, patent: true, simplicity: 1, osiApproved: true,
+    copyleft: 3, patent: true, simplicity: 1, osiApproved: true, domestic: false,
     summary: '欧盟官方许可证。强 Copyleft，但有兼容性列表可与 GPL/AGPL/LGPL/MPL 等兼容。多语言版本（22种欧盟官方语言），适合欧盟公共项目。',
     tags: ['强Copyleft', '欧盟', '多语言', '兼容性好'],
     url: 'https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12',
+  },
+  {
+    id: '0bsd', name: 'BSD Zero Clause License', spdxId: '0BSD',
+    copyleft: 0, patent: false, simplicity: 0, osiApproved: true, domestic: false,
+    summary: '比 MIT/ISC 更宽松——连版权声明都不要求保留。等同于将作品投入公共领域，但使用 OSI 认可的许可证形式。',
+    tags: ['公共领域', '零条款', '最自由', 'OSI认证'],
+    url: 'https://opensource.org/licenses/0BSD',
+  },
+  {
+    id: 'bsl', name: 'Boost Software License 1.0', spdxId: 'BSL-1.0',
+    copyleft: 1, patent: false, simplicity: 0, osiApproved: true, domestic: false,
+    summary: '与 MIT/BSD 类似的宽松许可证，Boost C++ 库使用。要求保留版权声明，但允许以目标码形式分发时不附带声明。',
+    tags: ['宽松', '简短', 'C++社区', 'Boost'],
+    url: 'https://www.boost.org/LICENSE_1_0.txt',
+  },
+  {
+    id: 'zlib', name: 'zlib/libpng License', spdxId: 'Zlib',
+    copyleft: 1, patent: false, simplicity: 0, osiApproved: true, domestic: false,
+    summary: '非常简短的宽松许可证。zlib 和 libpng 库使用。明确要求不得声称你编写了原始软件，源代码修改版须标注。',
+    tags: ['宽松', '简短', '库推荐', 'zlib'],
+    url: 'https://opensource.org/licenses/Zlib',
+  },
+  {
+    id: 'epl-2.0', name: 'Eclipse Public License 2.0', spdxId: 'EPL-2.0',
+    copyleft: 2, patent: true, simplicity: 1, osiApproved: true, domestic: false,
+    summary: '文件级弱 Copyleft，含专利保护。Eclipse 基金会项目（Eclipse IDE、Jenkins 等）使用。可与 GPL 二次授权兼容。',
+    tags: ['弱Copyleft', '专利保护', '文件级', 'Eclipse', 'GPL兼容'],
+    url: 'https://www.eclipse.org/legal/epl-2.0/',
+  },
+  {
+    id: 'cddl-1.0', name: 'Common Development and Distribution License 1.0', spdxId: 'CDDL-1.0',
+    copyleft: 2, patent: true, simplicity: 1, osiApproved: true, domestic: false,
+    summary: 'Sun Microsystems（现 Oracle）创建的文件级 Copyleft 许可证。OpenSolaris、ZFS 等项目使用。含专利保护，与 GPL 不兼容。',
+    tags: ['弱Copyleft', '专利保护', '文件级', 'Sun/Oracle'],
+    url: 'https://opensource.org/licenses/CDDL-1.0',
+  },
+  {
+    id: 'artistic-2.0', name: 'Artistic License 2.0', spdxId: 'Artistic-2.0',
+    copyleft: 1, patent: false, simplicity: 1, osiApproved: true, domestic: false,
+    summary: 'Perl 社区创建的独特许可证。在宽松基础上赋予原作者一定的"艺术控制权"。适合希望保持项目方向控制的作者。',
+    tags: ['宽松', '独特', 'Perl社区', '作者控制'],
+    url: 'https://opensource.org/licenses/Artistic-2.0',
+  },
+  {
+    id: 'ms-pl', name: 'Microsoft Public License', spdxId: 'MS-PL',
+    copyleft: 2, patent: true, simplicity: 0, osiApproved: true, domestic: false,
+    summary: 'Microsoft 发布的文件级弱 Copyleft 许可证。修改需开源，但可与闭源代码共存。专利保护 + 专利报复条款。短小精悍。',
+    tags: ['弱Copyleft', '专利保护', 'Microsoft', '简短'],
+    url: 'https://opensource.org/licenses/MS-PL',
+  },
+  {
+    id: 'osl-3.0', name: 'Open Software License 3.0', spdxId: 'OSL-3.0',
+    copyleft: 3, patent: true, simplicity: 1, osiApproved: true, domestic: false,
+    summary: '强 Copyleft 许可证，包含专利保护和"外部部署"条款（类似 AGPL 的网络服务条款）。由 Lawrence Rosen 撰写。',
+    tags: ['强Copyleft', '专利保护', '网络条款', '法律专业'],
+    url: 'https://opensource.org/licenses/OSL-3.0',
+  },
+  {
+    id: 'postgresql', name: 'PostgreSQL License', spdxId: 'PostgreSQL',
+    copyleft: 1, patent: false, simplicity: 0, osiApproved: true, domestic: false,
+    summary: '非常简短的宽松许可证，与 MIT 类似。PostgreSQL 数据库使用。允许任意使用、复制、修改和分发。',
+    tags: ['宽松', '简短', '数据库', '商业友好'],
+    url: 'https://opensource.org/licenses/PostgreSQL',
+  },
+  {
+    id: 'mulan-psl-2.0', name: '木兰宽松许可证 v2 (MulanPSL 2.0)', spdxId: 'MulanPSL-2.0',
+    copyleft: 1, patent: true, simplicity: 1, osiApproved: true, domestic: true,
+    summary: '国产开源许可证，OSI 认证。宽松型许可，含专利保护。中英文双语，中文版具有优先效力。由中国开源社区推动，华为、腾讯等企业参与制定。',
+    tags: ['国产', '宽松', '专利保护', 'OSI认证', '中英双语'],
+    url: 'https://license.coscl.org.cn/MulanPSL2',
+  },
+  {
+    id: 'mulan-pub-2.0', name: '木兰公共许可证 v2 (Mulan PubL 2.0)', spdxId: 'MulanPubL-2.0',
+    copyleft: 3, patent: true, simplicity: 1, osiApproved: true, domestic: true,
+    summary: '国产强 Copyleft 许可证，OSI 认证。类似 GPL，衍生作品须以相同协议开源。含专利保护，中英双语，中文优先。适合希望保护开源生态的中国项目。',
+    tags: ['国产', '强Copyleft', '专利保护', 'OSI认证', '中英双语'],
+    url: 'https://license.coscl.org.cn/MulanPubL-2.0',
+  },
+  {
+    id: 'wtfpl', name: 'Do What The F*ck You Want To Public License', spdxId: 'WTFPL',
+    copyleft: 0, patent: false, simplicity: 0, osiApproved: false, domestic: false,
+    summary: '最极端的"许可证"——只有一句话：你他妈想干嘛就干嘛。不被 OSI 认可，不适合正式项目，但在一些小工具/玩笑项目中很受欢迎。',
+    tags: ['公共领域', '极简', '非正式', '幽默'],
+    url: 'https://www.wtfpl.net/',
   },
 ]
 
@@ -174,6 +259,23 @@ const QUESTIONS: Question[] = [
     ],
   },
   {
+    id: 'domestic',
+    text: '是否偏好国产开源许可证？',
+    options: [
+      {value: 'any', label: '不关心，国内外均可', description: '许可证产地不影响选择，按其他条件匹配即可'},
+      {
+        value: 'prefer',
+        label: '优先国产许可证',
+        description: '同等条件下偏向国产许可证（如木兰系列），但不排斥国外许可证'
+      },
+      {
+        value: 'only',
+        label: '仅考虑国产许可证',
+        description: '只考虑国产许可证，如木兰宽松许可证 v2、木兰公共许可证 v2 等'
+      },
+    ],
+  },
+  {
     id: 'simplicity',
     text: '你偏好哪种许可证风格？',
     options: [
@@ -189,6 +291,7 @@ const answers = ref<Record<string, string>>({
   projectType: 'personal',
   copyleft: 'none',
   patent: 'no',
+  domestic: 'any',
   simplicity: 'short',
 })
 
@@ -238,6 +341,17 @@ function computeScores(): ScoredLicense[] {
     const simplicityDiff = Math.abs(license.simplicity - simplicityTarget)
     score -= simplicityDiff * 8
 
+    // Domestic preference
+    if (a.domestic === 'only' && !license.domestic) {
+      score -= 50
+    }
+    if (a.domestic === 'prefer' && license.domestic) {
+      score += 12
+    }
+    if (a.domestic === 'only' && license.domestic) {
+      score += 5
+    }
+
     if (a.projectType === 'commercial' || a.projectType === 'saas') {
       if (license.copyleft <= 1) score += 5
       if (license.patent) score += 3
@@ -256,6 +370,7 @@ function computeScores(): ScoredLicense[] {
     if (needPatent && license.patent) highlights.push('提供专利保护')
     if (simplicityDiff === 0) highlights.push('许可文本风格匹配')
     if (license.osiApproved) highlights.push('OSI 认证')
+    if (a.domestic !== 'any' && license.domestic) highlights.push('国产许可证')
 
     return {license, score: Math.max(0, Math.round(score)), highlights}
   })
@@ -423,6 +538,7 @@ function scoreLabel(score: number): string {
                   <span>复杂度: {{ simplicityLabels[item.license.simplicity] }}</span>
                   <span v-if="item.license.patent" class="text-green-500 font-medium">含专利条款</span>
                   <span v-if="item.license.osiApproved" class="text-blue-400">OSI 认证</span>
+                  <span v-if="item.license.domestic" class="text-red-400 font-medium">🇨🇳 国产</span>
                   <a :href="item.license.url" class="text-blue-400 hover:text-blue-600 underline"
                      target="_blank">SPDX</a>
                 </div>
