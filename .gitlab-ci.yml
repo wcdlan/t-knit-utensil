@@ -1,66 +1,149 @@
+# ============================================================
+# GitLab CI/CD 配置 — t-knit-utensil
+# ============================================================
+# 触发条件：仅推送 Git Tag 时触发（如 v1.0.0）
+# Node 镜像：node:24-alpine（固定大版本保证环境一致性）
+# pnpm 版本：不锁定，由 corepack 根据 package.json 的
+#           packageManager 字段自动选择
+# ============================================================
+
 default:
   image: node:24-alpine
 
+# ----------------------------------------------------------
+# 流水线阶段定义
+# ----------------------------------------------------------
 stages:
-  - build
-  - package
+  - build      # 阶段1：安装依赖 → 构建项目 → 打包产物
+  - package    # 阶段2：构建 Docker 镜像 → 推送至 Nexus 仓库
 
+# ----------------------------------------------------------
+# 全局变量
+# ----------------------------------------------------------
 variables:
-  PNPM_VERSION: '10.26.1'
+  # 构建产物压缩包名称（基于 Git Tag 命名）
   TARBALL_NAME: tku-${CI_COMMIT_TAG}.tar.gz
-  NEXUS: v4.nagioa.cn:35483   # 你的 Nexus 仓库地址
+  # Nexus 私有 Docker 仓库地址
+  NEXUS: v4.nagioa.cn:35483
+  # Docker 镜像名称（不含仓库前缀）
   IMAGE_NAME: entropycrop/t-knit-utensil
 
-# 仅在推送 tag 时运行
+# ============================================================
+# 工作流控制
+# 仅当推送 Git Tag（如 v1.0.0、v2.3.1）时触发流水线
+# 普通分支推送、MR 等均不会触发
+# ============================================================
 workflow:
   rules:
     - if: $CI_COMMIT_TAG
       when: always
     - when: never
 
+# ============================================================
+# Job 1: 构建 & 打包
+# ============================================================
+# 1. 通过 corepack 启用 pnpm
+#    — 版本由 package.json 的 packageManager 字段决定
+#    — 不在 CI 配置中硬编码版本号，保持灵活性
+# 2. 按 lockfile 严格安装依赖，保证构建可复现
+# 3. 执行项目构建
+# 4. 将 dist/ 目录打包为 .tar.gz 制品
+# ============================================================
 build:
   tags:
     - linux_docker
   stage: build
+
+  # ---------- pnpm 依赖缓存 ----------
+  # 以 pnpm-lock.yaml 为缓存键，lockfile 不变则复用缓存
+  cache:
+    key:
+      files:
+        - pnpm-lock.yaml
+    paths:
+      - .pnpm-store               # pnpm 全局 store 缓存目录
+
   before_script:
-    - corepack enable && corepack prepare pnpm@${PNPM_VERSION} --activate
+    # 启用 corepack，使 pnpm 命令可用
+    # 版本由 package.json 中 packageManager 字段指定，无需在此处锁定
+    - corepack enable
+    # 将 pnpm 的全局 store 指向缓存目录，后续安装直接复用
+    - pnpm config set store-dir .pnpm-store
+
   script:
+    # 严格按 lockfile 安装依赖，确保 CI 环境与本地一致
     - pnpm install --frozen-lockfile
+    # 执行项目构建（生产环境）
     - pnpm build
+    # 将构建产物打包为 tar.gz，供后续阶段或手动下载
     - cd dist && tar czf ../${TARBALL_NAME} .
+
   artifacts:
+    # 制品名称：去掉 .tar.gz 后缀
     name: ${TARBALL_NAME%.tar.gz}
     paths:
       - ${TARBALL_NAME}
-    expire_in: 30 days
 
+# ============================================================
+# Job 2: Docker 镜像构建 & 推送
+# ============================================================
+# 从 Git Tag 解析语义化版本号，构建多标签镜像并推送至 Nexus
+#
+# 标签策略（以 v1.2.3 为例）：
+#   latest  → 指向最新版本
+#   v1.2.3  → 完整 Git Tag
+#   1       → 主版本号（大版本升级时 breaking change）
+#   1.2     → 主版本 + 次版本（功能更新）
+#   1.2.3   → 完整语义化版本（精确锁定）
+# ============================================================
 docker:
   tags:
     - linux_docker
   stage: package
   image: docker:stable
   services:
+    # Docker-in-Docker：允许在容器内运行 Docker 命令
     - name: docker:dind
+
+  variables:
+    # 启用 Docker BuildKit，获得并行构建、更好的缓存等能力
+    DOCKER_BUILDKIT: "1"
+
   before_script:
-    # 使用 --password-stdin 安全登录
+    # 使用 --password-stdin 安全登录 Nexus 仓库
+    # 密码通过管道传入 stdin，不会出现在进程列表或 shell 历史中
     - echo "$NEXUS_PASSWORD" | docker login "$NEXUS" -u "$NEXUS_USER" --password-stdin
+
   script:
     - |
+      # ---------- 解析语义化版本号 ----------
+      # ${CI_COMMIT_TAG#v} 去掉 v 前缀，如 v1.2.3 → 1.2.3
       MAJOR=$(echo ${CI_COMMIT_TAG#v} | cut -d. -f1)
       MINOR=$(echo ${CI_COMMIT_TAG#v} | cut -d. -f2)
       PATCH=$(echo ${CI_COMMIT_TAG#v} | cut -d. -f3)
 
+      # 拼接完整镜像路径：仓库地址/镜像名
       IMAGE=${NEXUS}/${IMAGE_NAME}
 
-      docker build -t ${IMAGE}:latest \
-                   -t ${IMAGE}:${CI_COMMIT_TAG} \
-                   -t ${IMAGE}:${MAJOR} \
-                   -t ${IMAGE}:${MAJOR}.${MINOR} \
-                   -t ${IMAGE}:${MAJOR}.${MINOR}.${PATCH} .
+      echo ">>> 构建镜像: ${IMAGE}"
+      echo ">>> 标签: latest, ${CI_COMMIT_TAG}, ${MAJOR}, ${MAJOR}.${MINOR}, ${MAJOR}.${MINOR}.${PATCH}"
 
-      # 逐个推送（可合并为 docker push --all-tags，但稳妥起见逐个推）
-      docker push ${IMAGE}:latest
-      docker push ${IMAGE}:${CI_COMMIT_TAG}
-      docker push ${IMAGE}:${MAJOR}
-      docker push ${IMAGE}:${MAJOR}.${MINOR}
-      docker push ${IMAGE}:${MAJOR}.${MINOR}.${PATCH}
+      # ---------- 构建镜像 ----------
+      # 一次性打上全部标签，避免多次构建
+      docker build \
+        -t ${IMAGE}:latest \
+        -t ${IMAGE}:${CI_COMMIT_TAG} \
+        -t ${IMAGE}:${MAJOR} \
+        -t ${IMAGE}:${MAJOR}.${MINOR} \
+        -t ${IMAGE}:${MAJOR}.${MINOR}.${PATCH} \
+        .
+
+      # ---------- 推送镜像 ----------
+      # 循环推送所有标签，比逐个写 docker push 更简洁
+      echo ">>> 推送镜像至 ${NEXUS} ..."
+      for tag in latest ${CI_COMMIT_TAG} ${MAJOR} ${MAJOR}.${MINOR} ${MAJOR}.${MINOR}.${PATCH}; do
+        echo "    推送: ${IMAGE}:${tag}"
+        docker push ${IMAGE}:${tag}
+      done
+
+      echo ">>> 推送完成!"
