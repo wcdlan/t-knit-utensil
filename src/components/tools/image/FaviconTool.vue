@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {computed, nextTick, onMounted, onUnmounted, ref} from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue'
 import JSZip from 'jszip'
 
 // --- Types ---
@@ -11,15 +11,15 @@ interface FaviconSize {
 
 // --- State ---
 const faviconSizes = ref<FaviconSize[]>([
-  {size: 16, label: '16×16', selected: true},
-  {size: 32, label: '32×32', selected: true},
-  {size: 48, label: '48×48', selected: true},
-  {size: 64, label: '64×64', selected: false},
-  {size: 128, label: '128×128', selected: false},
-  {size: 256, label: '256×256', selected: false},
+  { size: 16, label: '16×16', selected: true },
+  { size: 32, label: '32×32', selected: true },
+  { size: 48, label: '48×48', selected: true },
+  { size: 64, label: '64×64', selected: false },
+  { size: 128, label: '128×128', selected: false },
+  { size: 256, label: '256×256', selected: false },
 ])
 
-const outputFormats = ref({png: true, ico: false})
+const outputFormats = ref({ png: true, ico: false })
 
 const selectedFormats = computed(() => {
   const fmts: ('png' | 'ico')[] = []
@@ -37,26 +37,26 @@ const generating = ref(false)
 const generatedFavicons = ref<Map<number, string>>(new Map())
 
 // Crop state (values in image-pixel coordinates)
-const crop = ref({x: 0, y: 0, size: 256})
-const imageNatural = ref({w: 0, h: 0})
+const crop = ref({ x: 0, y: 0, size: 256 })
+const imageNatural = ref({ w: 0, h: 0 })
 
 // Canvas refs
 const previewCanvas = ref<HTMLCanvasElement | null>(null)
 const fileInput = ref<HTMLInputElement | null>(null)
 
 // Drag state for crop box
-const dragStart = ref({x: 0, y: 0, cropX: 0, cropY: 0})
+const dragStart = ref({ x: 0, y: 0, cropX: 0, cropY: 0 })
 
 // Computed
 const displaySize = ref(320) // preview display size in CSS px
 
 const selectedSizes = computed(() =>
-    faviconSizes.value.filter((s) => s.selected).map((s) => s.size)
+  faviconSizes.value.filter((s) => s.selected).map((s) => s.size),
 )
 
 const cropSquare = computed(() => {
   const img = sourceImage.value
-  if (!img) return {x: 0, y: 0, size: displaySize.value}
+  if (!img) return { x: 0, y: 0, size: displaySize.value }
   const scale = displaySize.value / imageNatural.value.w
   return {
     x: crop.value.x * scale,
@@ -90,7 +90,7 @@ function loadImageFile(file: File) {
     const img = new Image()
     img.onload = async () => {
       sourceImage.value = img
-      imageNatural.value = {w: img.naturalWidth, h: img.naturalHeight}
+      imageNatural.value = { w: img.naturalWidth, h: img.naturalHeight }
       // Default crop: largest centered square
       const minDim = Math.min(img.naturalWidth, img.naturalHeight)
       crop.value = {
@@ -157,7 +157,7 @@ function drawPreview() {
 function getCanvasPos(e: PointerEvent): { x: number; y: number } {
   const canvas = previewCanvas.value!
   const rect = canvas.getBoundingClientRect()
-  return {x: e.clientX - rect.left, y: e.clientY - rect.top}
+  return { x: e.clientX - rect.left, y: e.clientY - rect.top }
 }
 
 function onPointerDown(e: PointerEvent) {
@@ -167,13 +167,13 @@ function onPointerDown(e: PointerEvent) {
   // Check if click is inside crop area
   const margin = 10
   if (
-      pos.x >= cs.x - margin &&
-      pos.x <= cs.x + cs.size + margin &&
-      pos.y >= cs.y - margin &&
-      pos.y <= cs.y + cs.size + margin
+    pos.x >= cs.x - margin &&
+    pos.x <= cs.x + cs.size + margin &&
+    pos.y >= cs.y - margin &&
+    pos.y <= cs.y + cs.size + margin
   ) {
     isDragging.value = true
-    dragStart.value = {x: pos.x, y: pos.y, cropX: crop.value.x, cropY: crop.value.y}
+    dragStart.value = { x: pos.x, y: pos.y, cropX: crop.value.x, cropY: crop.value.y }
     ;(e.target as HTMLElement).setPointerCapture(e.pointerId)
   }
 }
@@ -192,7 +192,7 @@ function onPointerMove(e: PointerEvent) {
   newX = Math.max(0, Math.min(newX, imageNatural.value.w - crop.value.size))
   newY = Math.max(0, Math.min(newY, imageNatural.value.h - crop.value.size))
 
-  crop.value = {...crop.value, x: Math.round(newX), y: Math.round(newY)}
+  crop.value = { ...crop.value, x: Math.round(newX), y: Math.round(newY) }
   drawPreview()
 }
 
@@ -207,7 +207,10 @@ function onWheel(e: WheelEvent) {
   if (!sourceImage.value) return
   e.preventDefault()
   const delta = e.deltaY > 0 ? -10 : 10
-  const newSize = Math.max(16, Math.min(crop.value.size + delta, Math.min(imageNatural.value.w, imageNatural.value.h)))
+  const newSize = Math.max(
+    16,
+    Math.min(crop.value.size + delta, Math.min(imageNatural.value.w, imageNatural.value.h)),
+  )
   if (newSize !== crop.value.size) {
     // Keep center
     const cx = crop.value.x + crop.value.size / 2
@@ -232,17 +235,7 @@ function generateFavicon(size: number): string {
   const ctx = canvas.getContext('2d')!
 
   // Crop from source image and resize to target size
-  ctx.drawImage(
-      img,
-      crop.value.x,
-      crop.value.y,
-      crop.value.size,
-      crop.value.size,
-      0,
-      0,
-      size,
-      size,
-  )
+  ctx.drawImage(img, crop.value.x, crop.value.y, crop.value.size, crop.value.size, 0, 0, size, size)
 
   return canvas.toDataURL('image/png')
 }
@@ -363,11 +356,17 @@ async function downloadZip() {
     }
   }
 
-  const blob = await zip.generateAsync({type: 'blob'})
+  const blob = await zip.generateAsync({ type: 'blob' })
   downloadBlob(blob, 'favicon.zip')
 }
 
 // --- Lifecycle ---
+function clearImage() {
+  sourceImage.value = null
+  sourceDataUrl.value = ''
+  generatedFavicons.value.clear()
+}
+
 function setDefaultCrop() {
   if (!sourceImage.value) return
   const img = sourceImage.value
@@ -387,7 +386,7 @@ function onDragOver(e: DragEvent) {
 onMounted(() => {
   const canvas = previewCanvas.value
   if (canvas) {
-    canvas.addEventListener('wheel', onWheel, {passive: false})
+    canvas.addEventListener('wheel', onWheel, { passive: false })
   }
 })
 
@@ -403,16 +402,16 @@ onUnmounted(() => {
   <div class="space-y-6" @dragover="onDragOver" @drop="handleDrop">
     <!-- Upload area -->
     <div
-        v-if="!sourceImage"
-        class="relative border-2 border-dashed border-gray-300 rounded-xl p-12 text-center hover:border-blue-400 hover:bg-blue-50/50 transition cursor-pointer"
-        @click="fileInput?.click()"
+      v-if="!sourceImage"
+      class="relative border-2 border-dashed border-gray-300 rounded-xl p-12 text-center hover:border-blue-400 hover:bg-blue-50/50 transition cursor-pointer"
+      @click="fileInput?.click()"
     >
       <input
-          ref="fileInput"
-          accept="image/*"
-          class="hidden"
-          type="file"
-          @change="handleFileSelect"
+        ref="fileInput"
+        accept="image/*"
+        class="hidden"
+        type="file"
+        @change="handleFileSelect"
       />
       <div class="text-5xl mb-4">🖼️</div>
       <p class="text-gray-600 text-lg font-medium mb-1">点击上传或拖拽图片到此处</p>
@@ -424,39 +423,42 @@ onUnmounted(() => {
       <!-- Left: Crop area -->
       <div class="flex-shrink-0">
         <p class="text-sm text-gray-500 mb-2 font-medium">裁剪区域（拖动调整位置，滚轮调整大小）</p>
-        <div class="relative inline-block bg-gray-100 rounded-lg overflow-hidden shadow-sm border border-gray-200">
+        <div
+          class="relative inline-block bg-gray-100 rounded-lg overflow-hidden shadow-sm border border-gray-200"
+        >
           <canvas
-              v-if="sourceImage"
-              ref="previewCanvas"
-              :class="{ 'cursor-grabbing': isDragging }"
-              class="block cursor-move max-w-full"
-              @pointerdown="onPointerDown"
-              @pointerleave="onPointerUp"
-              @pointermove="onPointerMove"
-              @pointerup="onPointerUp"
+            v-if="sourceImage"
+            ref="previewCanvas"
+            :class="{ 'cursor-grabbing': isDragging }"
+            class="block cursor-move max-w-full"
+            @pointerdown="onPointerDown"
+            @pointerleave="onPointerUp"
+            @pointermove="onPointerMove"
+            @pointerup="onPointerUp"
           />
           <!-- Loading overlay -->
           <div
-              v-if="uploading || generating"
-              class="absolute inset-0 flex items-center justify-center bg-white/60"
+            v-if="uploading || generating"
+            class="absolute inset-0 flex items-center justify-center bg-white/60"
           >
             <div class="flex items-center gap-2 text-blue-500 text-sm">
               <span
-                  class="inline-block w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"/>
+                class="inline-block w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"
+              />
               {{ uploading ? '加载中...' : '生成中...' }}
             </div>
           </div>
         </div>
         <div class="flex items-center gap-4 mt-3">
           <button
-              class="px-3 py-1.5 text-sm bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition cursor-pointer"
-              @click="setDefaultCrop"
+            class="px-3 py-1.5 text-sm bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition cursor-pointer"
+            @click="setDefaultCrop"
           >
             重置裁剪
           </button>
           <button
-              class="px-3 py-1.5 text-sm bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition cursor-pointer"
-              @click="sourceImage = null; sourceDataUrl = ''; generatedFavicons.clear()"
+            class="px-3 py-1.5 text-sm bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition cursor-pointer"
+            @click="clearImage"
           >
             更换图片
           </button>
@@ -473,17 +475,16 @@ onUnmounted(() => {
           <p class="text-sm text-gray-500 mb-2 font-medium">输出尺寸</p>
           <div class="flex flex-wrap gap-2">
             <label
-                v-for="s in faviconSizes"
-                :key="s.size"
-                :class="s.selected ? 'border-blue-400 bg-blue-50 text-blue-700' : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'"
-                class="flex items-center gap-1.5 px-3 py-1.5 border rounded-lg text-sm cursor-pointer transition"
+              v-for="s in faviconSizes"
+              :key="s.size"
+              :class="
+                s.selected
+                  ? 'border-blue-400 bg-blue-50 text-blue-700'
+                  : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+              "
+              class="flex items-center gap-1.5 px-3 py-1.5 border rounded-lg text-sm cursor-pointer transition"
             >
-              <input
-                  v-model="s.selected"
-                  class="sr-only"
-                  type="checkbox"
-                  @change="generateAll()"
-              />
+              <input v-model="s.selected" class="sr-only" type="checkbox" @change="generateAll()" />
               <span>{{ s.label }}</span>
             </label>
           </div>
@@ -494,18 +495,26 @@ onUnmounted(() => {
           <p class="text-sm text-gray-500 mb-2 font-medium">输出格式</p>
           <div class="flex gap-3">
             <label
-                :class="outputFormats.png ? 'border-blue-400 bg-blue-50 text-blue-700' : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'"
-                class="flex items-center gap-2 px-4 py-2 border rounded-lg cursor-pointer transition"
+              :class="
+                outputFormats.png
+                  ? 'border-blue-400 bg-blue-50 text-blue-700'
+                  : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+              "
+              class="flex items-center gap-2 px-4 py-2 border rounded-lg cursor-pointer transition"
             >
-              <input v-model="outputFormats.png" class="sr-only" type="checkbox"/>
+              <input v-model="outputFormats.png" class="sr-only" type="checkbox" />
               <span class="font-medium">PNG</span>
               <span class="text-xs opacity-70">透明背景</span>
             </label>
             <label
-                :class="outputFormats.ico ? 'border-blue-400 bg-blue-50 text-blue-700' : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'"
-                class="flex items-center gap-2 px-4 py-2 border rounded-lg cursor-pointer transition"
+              :class="
+                outputFormats.ico
+                  ? 'border-blue-400 bg-blue-50 text-blue-700'
+                  : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+              "
+              class="flex items-center gap-2 px-4 py-2 border rounded-lg cursor-pointer transition"
             >
-              <input v-model="outputFormats.ico" class="sr-only" type="checkbox"/>
+              <input v-model="outputFormats.ico" class="sr-only" type="checkbox" />
               <span class="font-medium">ICO</span>
               <span class="text-xs opacity-70">传统格式</span>
             </label>
@@ -517,46 +526,53 @@ onUnmounted(() => {
           <div class="flex items-center justify-between mb-2">
             <p class="text-sm text-gray-500 font-medium">预览</p>
             <button
-                v-if="selectedSizes.length && selectedFormats.length"
-                class="px-4 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition cursor-pointer"
-                @click="downloadZip"
+              v-if="selectedSizes.length && selectedFormats.length"
+              class="px-4 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition cursor-pointer"
+              @click="downloadZip"
             >
               📦 打包下载 ZIP
             </button>
           </div>
           <div class="flex flex-wrap gap-4">
             <div
-                v-for="s in faviconSizes"
-                v-show="s.selected"
-                :key="s.size"
-                class="flex flex-col items-center gap-2"
+              v-for="s in faviconSizes"
+              v-show="s.selected"
+              :key="s.size"
+              class="flex flex-col items-center gap-2"
             >
               <div
-                  :class="{ 'ring-2 ring-blue-300': generatedFavicons.has(s.size) }"
-                  :style="{ width: Math.max(s.size + 24, 80) + 'px', height: Math.max(s.size + 24, 80) + 'px' }"
-                  class="bg-gray-50 border border-gray-200 rounded-lg flex items-center justify-center overflow-hidden"
+                :class="{ 'ring-2 ring-blue-300': generatedFavicons.has(s.size) }"
+                :style="{
+                  width: Math.max(s.size + 24, 80) + 'px',
+                  height: Math.max(s.size + 24, 80) + 'px',
+                }"
+                class="bg-gray-50 border border-gray-200 rounded-lg flex items-center justify-center overflow-hidden"
               >
                 <img
-                    v-if="generatedFavicons.get(s.size)"
-                    :src="generatedFavicons.get(s.size)!"
-                    :style="{ width: s.size + 'px', height: s.size + 'px', imageRendering: s.size <= 32 ? 'pixelated' : 'auto' }"
-                    alt=""
+                  v-if="generatedFavicons.get(s.size)"
+                  :src="generatedFavicons.get(s.size)!"
+                  :style="{
+                    width: s.size + 'px',
+                    height: s.size + 'px',
+                    imageRendering: s.size <= 32 ? 'pixelated' : 'auto',
+                  }"
+                  alt=""
                 />
                 <span v-else class="text-xs text-gray-400">生成中...</span>
               </div>
               <span class="text-xs text-gray-500">{{ s.label }}</span>
               <div v-if="generatedFavicons.get(s.size)" class="flex gap-1.5">
                 <button
-                    v-if="outputFormats.png"
-                    class="text-xs text-blue-500 hover:text-blue-700 transition cursor-pointer"
-                    @click="downloadSingle(s.size, 'png')"
+                  v-if="outputFormats.png"
+                  class="text-xs text-blue-500 hover:text-blue-700 transition cursor-pointer"
+                  @click="downloadSingle(s.size, 'png')"
                 >
                   ↓ PNG
                 </button>
                 <button
-                    v-if="outputFormats.ico"
-                    class="text-xs text-blue-500 hover:text-blue-700 transition cursor-pointer"
-                    @click="downloadSingle(s.size, 'ico')"
+                  v-if="outputFormats.ico"
+                  class="text-xs text-blue-500 hover:text-blue-700 transition cursor-pointer"
+                  @click="downloadSingle(s.size, 'ico')"
                 >
                   ↓ ICO
                 </button>

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {ref, watch} from 'vue'
+import { ref, watch } from 'vue'
 
 const hex = ref('#3b82f6')
 const r = ref(59)
@@ -25,39 +25,41 @@ function rgbToHex(rv: number, gv: number, bv: number) {
 }
 
 function rgbToHsl(rv: number, gv: number, bv: number) {
-  rv /= 255;
-  gv /= 255;
+  rv /= 255
+  gv /= 255
   bv /= 255
-  const max = Math.max(rv, gv, bv), min = Math.min(rv, gv, bv)
-  let hv = 0, sv = 0
+  const max = Math.max(rv, gv, bv),
+    min = Math.min(rv, gv, bv)
+  let hv = 0,
+    sv = 0
   const lv = (max + min) / 2
   if (max !== min) {
     const d = max - min
     sv = lv > 0.5 ? d / (2 - max - min) : d / (max + min)
     switch (max) {
       case rv:
-        hv = ((gv - bv) / d + (gv < bv ? 6 : 0)) / 6;
+        hv = ((gv - bv) / d + (gv < bv ? 6 : 0)) / 6
         break
       case gv:
-        hv = ((bv - rv) / d + 2) / 6;
+        hv = ((bv - rv) / d + 2) / 6
         break
       case bv:
-        hv = ((rv - gv) / d + 4) / 6;
+        hv = ((rv - gv) / d + 4) / 6
         break
     }
   }
-  return {h: Math.round(hv * 360), s: Math.round(sv * 100), l: Math.round(lv * 100)}
+  return { h: Math.round(hv * 360), s: Math.round(sv * 100), l: Math.round(lv * 100) }
 }
 
 function updateFromHex() {
   const rgb = hexToRgb(hex.value)
   if (rgb) {
-    r.value = rgb.r;
-    g.value = rgb.g;
+    r.value = rgb.r
+    g.value = rgb.g
     b.value = rgb.b
     const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b)
-    h.value = hsl.h;
-    s.value = hsl.s;
+    h.value = hsl.h
+    s.value = hsl.s
     l.value = hsl.l
     previewColor.value = hex.value.startsWith('#') ? hex.value : '#' + hex.value
   }
@@ -66,8 +68,8 @@ function updateFromHex() {
 function updateFromRgb() {
   hex.value = rgbToHex(r.value, g.value, b.value)
   const hsl = rgbToHsl(r.value, g.value, b.value)
-  h.value = hsl.h;
-  s.value = hsl.s;
+  h.value = hsl.h
+  s.value = hsl.s
   l.value = hsl.l
   previewColor.value = hex.value
 }
@@ -86,14 +88,10 @@ updateFromHex()
       <!-- Color Preview -->
       <div class="flex-shrink-0">
         <div
-            :style="{ backgroundColor: previewColor }"
-            class="w-32 h-32 rounded-xl border border-gray-200 shadow-sm"
+          :style="{ backgroundColor: previewColor }"
+          class="w-32 h-32 rounded-xl border border-gray-200 shadow-sm"
         ></div>
-        <input
-            v-model="hex"
-            class="mt-2 w-full h-10 cursor-pointer"
-            type="color"
-        />
+        <input v-model="hex" class="mt-2 w-full h-10 cursor-pointer" type="color" />
       </div>
 
       <!-- Color Values -->
@@ -103,15 +101,16 @@ updateFromHex()
           <label class="block text-xs font-semibold text-gray-500 mb-1">HEX</label>
           <div class="flex gap-2">
             <input
-                v-model="hex"
-                class="flex-1 p-2.5 border border-gray-200 rounded-lg text-sm font-mono focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                placeholder="#000000"
-                @input="updateFromHex"
+              v-model="hex"
+              class="flex-1 p-2.5 border border-gray-200 rounded-lg text-sm font-mono focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+              placeholder="#000000"
+              @input="updateFromHex"
             />
             <button
-                class="px-3 py-2 bg-gray-100 text-gray-600 rounded-lg text-xs hover:bg-gray-200 transition cursor-pointer"
-                @click="copy(hex)"
-            >复制
+              class="px-3 py-2 bg-gray-100 text-gray-600 rounded-lg text-xs hover:bg-gray-200 transition cursor-pointer"
+              @click="copy(hex)"
+            >
+              复制
             </button>
           </div>
         </div>
@@ -121,27 +120,34 @@ updateFromHex()
           <label class="block text-xs font-semibold text-gray-500 mb-1">RGB</label>
           <div class="flex gap-2">
             <input
-                v-model.number="r"
-                class="w-20 p-2.5 border border-gray-200 rounded-lg text-sm font-mono text-center focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                max="255" min="0" type="number"
-                @input="updateFromRgb"
+              v-model.number="r"
+              class="w-20 p-2.5 border border-gray-200 rounded-lg text-sm font-mono text-center focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+              max="255"
+              min="0"
+              type="number"
+              @input="updateFromRgb"
             />
             <input
-                v-model.number="g"
-                class="w-20 p-2.5 border border-gray-200 rounded-lg text-sm font-mono text-center focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                max="255" min="0" type="number"
-                @input="updateFromRgb"
+              v-model.number="g"
+              class="w-20 p-2.5 border border-gray-200 rounded-lg text-sm font-mono text-center focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+              max="255"
+              min="0"
+              type="number"
+              @input="updateFromRgb"
             />
             <input
-                v-model.number="b"
-                class="w-20 p-2.5 border border-gray-200 rounded-lg text-sm font-mono text-center focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                max="255" min="0" type="number"
-                @input="updateFromRgb"
+              v-model.number="b"
+              class="w-20 p-2.5 border border-gray-200 rounded-lg text-sm font-mono text-center focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+              max="255"
+              min="0"
+              type="number"
+              @input="updateFromRgb"
             />
             <button
-                class="px-3 py-2 bg-gray-100 text-gray-600 rounded-lg text-xs hover:bg-gray-200 transition cursor-pointer"
-                @click="copy(`rgb(${r}, ${g}, ${b})`)"
-            >复制
+              class="px-3 py-2 bg-gray-100 text-gray-600 rounded-lg text-xs hover:bg-gray-200 transition cursor-pointer"
+              @click="copy(`rgb(${r}, ${g}, ${b})`)"
+            >
+              复制
             </button>
           </div>
         </div>
@@ -154,9 +160,10 @@ updateFromHex()
               hsl({{ h }}, {{ s }}%, {{ l }}%)
             </span>
             <button
-                class="px-3 py-2 bg-gray-100 text-gray-600 rounded-lg text-xs hover:bg-gray-200 transition cursor-pointer"
-                @click="copy(`hsl(${h}, ${s}%, ${l}%)`)"
-            >复制
+              class="px-3 py-2 bg-gray-100 text-gray-600 rounded-lg text-xs hover:bg-gray-200 transition cursor-pointer"
+              @click="copy(`hsl(${h}, ${s}%, ${l}%)`)"
+            >
+              复制
             </button>
           </div>
         </div>

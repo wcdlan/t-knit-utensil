@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import {computed} from 'vue'
-import {useRoute} from 'vue-router'
-import {getToolById} from '@/data/tools'
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+import { getToolById } from '@/data/tools'
 
 const route = useRoute()
 const toolId = computed(() => route.params.toolId as string)
@@ -28,23 +28,23 @@ const tool = computed(() => getToolById(toolId.value))
 
     <!-- Dynamic Tool Component -->
     <div class="bg-white rounded-xl border border-gray-200 p-6">
-      <JsonFormatter v-if="toolId === 'json-formatter'"/>
-      <Base64Tool v-else-if="toolId === 'base64'"/>
-      <UrlEncode v-else-if="toolId === 'url-encode'"/>
-      <UnicodeTool v-else-if="toolId === 'unicode'"/>
-      <SqlFormatter v-else-if="toolId === 'sql-formatter'"/>
-      <TimestampTool v-else-if="toolId === 'timestamp'"/>
-      <ColorConverter v-else-if="toolId === 'color'"/>
-      <UuidGenerator v-else-if="toolId === 'uuid'"/>
-      <HashTool v-else-if="toolId === 'hash'"/>
-      <QrcodeTool v-else-if="toolId === 'qrcode'"/>
-      <PasswordTool v-else-if="toolId === 'password'"/>
-      <RegexTool v-else-if="toolId === 'regex'"/>
-      <DiffTool v-else-if="toolId === 'diff'"/>
-      <WordCount v-else-if="toolId === 'word-count'"/>
-      <SshKeyGen v-else-if="toolId === 'ssh-keygen'"/>
-      <FaviconTool v-else-if="toolId === 'favicon'"/>
-      <LicenseSelector v-else-if="toolId === 'license-selector'"/>
+      <JsonFormatter v-if="toolId === 'json-formatter'" />
+      <Base64Tool v-else-if="toolId === 'base64'" />
+      <UrlEncode v-else-if="toolId === 'url-encode'" />
+      <UnicodeTool v-else-if="toolId === 'unicode'" />
+      <SqlFormatter v-else-if="toolId === 'sql-formatter'" />
+      <TimestampTool v-else-if="toolId === 'timestamp'" />
+      <ColorConverter v-else-if="toolId === 'color'" />
+      <UuidGenerator v-else-if="toolId === 'uuid'" />
+      <HashTool v-else-if="toolId === 'hash'" />
+      <QrcodeTool v-else-if="toolId === 'qrcode'" />
+      <PasswordTool v-else-if="toolId === 'password'" />
+      <RegexTool v-else-if="toolId === 'regex'" />
+      <DiffTool v-else-if="toolId === 'diff'" />
+      <WordCount v-else-if="toolId === 'word-count'" />
+      <SshKeyGen v-else-if="toolId === 'ssh-keygen'" />
+      <FaviconTool v-else-if="toolId === 'favicon'" />
+      <LicenseSelector v-else-if="toolId === 'license-selector'" />
     </div>
   </div>
   <div v-else class="text-center py-20">

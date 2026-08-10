@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {onMounted, onUnmounted, ref} from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 
 const now = ref(Math.floor(Date.now() / 1000))
 const nowMs = ref(Date.now())
@@ -45,7 +45,8 @@ function dateToTs() {
 }
 
 function copy(el: string) {
-  const text = el === 'now' ? String(now.value) : el === 'nowMs' ? String(nowMs.value) : tsResult.value
+  const text =
+    el === 'now' ? String(now.value) : el === 'nowMs' ? String(nowMs.value) : tsResult.value
   navigator.clipboard.writeText(text)
 }
 </script>
@@ -59,12 +60,22 @@ function copy(el: string) {
         <div class="flex items-center justify-between bg-white p-3 rounded border border-blue-100">
           <span class="text-gray-500">秒级时间戳</span>
           <span class="font-mono font-semibold text-blue-700">{{ now }}</span>
-          <button class="text-xs text-blue-500 hover:text-blue-700 cursor-pointer" @click="copy('now')">复制</button>
+          <button
+            class="text-xs text-blue-500 hover:text-blue-700 cursor-pointer"
+            @click="copy('now')"
+          >
+            复制
+          </button>
         </div>
         <div class="flex items-center justify-between bg-white p-3 rounded border border-blue-100">
           <span class="text-gray-500">毫秒级时间戳</span>
           <span class="font-mono font-semibold text-blue-700">{{ nowMs }}</span>
-          <button class="text-xs text-blue-500 hover:text-blue-700 cursor-pointer" @click="copy('nowMs')">复制</button>
+          <button
+            class="text-xs text-blue-500 hover:text-blue-700 cursor-pointer"
+            @click="copy('nowMs')"
+          >
+            复制
+          </button>
         </div>
         <div class="flex items-center justify-between bg-white p-3 rounded border border-blue-100">
           <span class="text-gray-500">本地时间</span>
@@ -78,16 +89,20 @@ function copy(el: string) {
       <h3 class="text-sm font-semibold text-gray-700 mb-2">时间戳 → 日期</h3>
       <div class="flex gap-2">
         <input
-            v-model="tsInput"
-            class="flex-1 p-3 border border-gray-200 rounded-lg text-sm font-mono focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-            placeholder="输入时间戳 (秒或毫秒)"
+          v-model="tsInput"
+          class="flex-1 p-3 border border-gray-200 rounded-lg text-sm font-mono focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+          placeholder="输入时间戳 (秒或毫秒)"
         />
-        <button class="px-4 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition cursor-pointer"
-                @click="tsToDate">
+        <button
+          class="px-4 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition cursor-pointer"
+          @click="tsToDate"
+        >
           转换
         </button>
       </div>
-      <div v-if="tsResult" class="mt-2 p-3 bg-gray-50 rounded-lg text-sm font-mono">{{ tsResult }}</div>
+      <div v-if="tsResult" class="mt-2 p-3 bg-gray-50 rounded-lg text-sm font-mono">
+        {{ tsResult }}
+      </div>
     </div>
 
     <!-- Date to Timestamp -->
@@ -95,18 +110,22 @@ function copy(el: string) {
       <h3 class="text-sm font-semibold text-gray-700 mb-2">日期 → 时间戳</h3>
       <div class="flex gap-2">
         <input
-            v-model="dateInput"
-            class="flex-1 p-3 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-            type="datetime-local"
+          v-model="dateInput"
+          class="flex-1 p-3 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+          type="datetime-local"
         />
-        <button class="px-4 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition cursor-pointer"
-                @click="dateToTs">
+        <button
+          class="px-4 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition cursor-pointer"
+          @click="dateToTs"
+        >
           转换
         </button>
       </div>
-      <div v-if="dateResult" class="mt-2 p-3 bg-gray-50 rounded-lg text-sm font-mono whitespace-pre">{{
-          dateResult
-        }}
+      <div
+        v-if="dateResult"
+        class="mt-2 p-3 bg-gray-50 rounded-lg text-sm font-mono whitespace-pre"
+      >
+        {{ dateResult }}
       </div>
     </div>
   </div>
