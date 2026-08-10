@@ -66,7 +66,7 @@ build:
   before_script:
     # 启用 corepack，使 pnpm 命令可用
     # 版本由 package.json 中 packageManager 字段指定，无需在此处锁定
-    - corepack enable
+    - npm install -g pnpm
     # 将 pnpm 的全局 store 指向缓存目录，后续安装直接复用
     - pnpm config set store-dir .pnpm-store
 
