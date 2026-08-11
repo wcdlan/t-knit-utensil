@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 	import { ref } from 'vue';
 	import { NButton, NInput } from 'naive-ui';
+	import { copyToClipboard } from '@/utils/clipboard';
 
 	const input = ref('');
 	const output = ref('');
@@ -120,7 +121,7 @@
 	}
 
 	function copy() {
-		navigator.clipboard.writeText(output.value);
+		copyToClipboard(output.value);
 	}
 </script>
 

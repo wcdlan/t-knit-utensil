@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 	import { ref } from 'vue';
 	import { NButton, NCheckbox, NInputNumber } from 'naive-ui';
+	import { copyToClipboard } from '@/utils/clipboard';
 
 	const length = ref(16);
 	const upper = ref(true);
@@ -35,11 +36,11 @@
 	}
 
 	function copyAll() {
-		navigator.clipboard.writeText(passwords.value.join('\n'));
+		copyToClipboard(passwords.value.join('\n'));
 	}
 
 	function copyOne(pwd: string) {
-		navigator.clipboard.writeText(pwd);
+		copyToClipboard(pwd);
 	}
 
 	generate();

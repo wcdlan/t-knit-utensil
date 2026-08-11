@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 	import { ref } from 'vue';
 	import { NButton, NInput, NSelect } from 'naive-ui';
+	import { copyToClipboard } from '@/utils/clipboard';
 
 	const input = ref('');
 	const algorithm = ref('MD5');
@@ -19,7 +20,7 @@
 	}
 
 	function copy() {
-		navigator.clipboard.writeText(output.value);
+		copyToClipboard(output.value);
 	}
 </script>
 

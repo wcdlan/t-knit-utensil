@@ -3,6 +3,8 @@
 	import JSZip from 'jszip';
 	import { NAlert, NButton, NButtonGroup, NInput } from 'naive-ui';
 	import { generateKeyPair, KEY_TYPES, type KeyType } from '@/utils/ssh';
+	import { copyToClipboard } from '@/utils/clipboard';
+	import { downloadBlob, downloadTextFile } from '@/utils/download';
 
 	const keyType = ref<KeyType>('rsa-2048');
 	const passphrase = ref('');
@@ -39,31 +41,21 @@
 	}
 
 	function copyPrivate() {
-		navigator.clipboard.writeText(privateKey.value);
+		copyToClipboard(privateKey.value);
 	}
 
 	function copyPublic() {
-		navigator.clipboard.writeText(publicKey.value);
-	}
-
-	function download(filename: string, content: string) {
-		const blob = new Blob([content], { type: 'text/plain' });
-		const url = URL.createObjectURL(blob);
-		const a = document.createElement('a');
-		a.href = url;
-		a.download = filename;
-		a.click();
-		URL.revokeObjectURL(url);
+		copyToClipboard(publicKey.value);
 	}
 
 	function downloadPrivate() {
 		const ext = keyType.value.startsWith('ecdsa') ? 'ecdsa' : 'rsa';
-		download(`id_${ext}`, privateKey.value);
+		downloadTextFile(privateKey.value, `id_${ext}`);
 	}
 
 	function downloadPublic() {
 		const ext = keyType.value.startsWith('ecdsa') ? 'ecdsa' : 'rsa';
-		download(`id_${ext}.pub`, publicKey.value);
+		downloadTextFile(publicKey.value, `id_${ext}.pub`);
 	}
 
 	function sanitizeFilename(name: string): string {
@@ -79,12 +71,7 @@
 		zip.file(`${baseName}.pub`, publicKey.value);
 
 		const blob = await zip.generateAsync({ type: 'blob' });
-		const url = URL.createObjectURL(blob);
-		const a = document.createElement('a');
-		a.href = url;
-		a.download = `${baseName}.zip`;
-		a.click();
-		URL.revokeObjectURL(url);
+		downloadBlob(blob, `${baseName}.zip`);
 	}
 </script>
 

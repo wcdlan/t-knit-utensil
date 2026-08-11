@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 	import { computed, ref } from 'vue';
 	import { NButton, NButtonGroup, NProgress, NRadio, NRadioGroup, NTag } from 'naive-ui';
+	import { copyToClipboard } from '@/utils/clipboard';
+	import { downloadTextFile } from '@/utils/download';
 
 	// ── License full texts (loaded at build time) ──────────────────────────────────
 	const LICENSE_TEXTS: Record<string, string> = import.meta.glob('@/assets/license/*.txt', {
@@ -592,18 +594,7 @@
 	}
 
 	async function copyLicense(license: LicenseProfile) {
-		try {
-			await navigator.clipboard.writeText(getLicenseText(license.id, selectedLang.value));
-		} catch {
-			const textarea = document.createElement('textarea');
-			textarea.value = getLicenseText(license.id, selectedLang.value);
-			textarea.style.position = 'fixed';
-			textarea.style.opacity = '0';
-			document.body.appendChild(textarea);
-			textarea.select();
-			document.execCommand('copy');
-			document.body.removeChild(textarea);
-		}
+		await copyToClipboard(getLicenseText(license.id, selectedLang.value));
 		copiedId.value = license.id;
 		setTimeout(() => {
 			copiedId.value = null;
@@ -612,17 +603,9 @@
 
 	function downloadLicense(license: LicenseProfile) {
 		const text = getLicenseText(license.id, selectedLang.value);
-		const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-		const url = URL.createObjectURL(blob);
-		const a = document.createElement('a');
-		a.href = url;
 		const langSuffix =
 			selectedLang.value && selectedLang.value !== license.languages[0]?.code ? `.${selectedLang.value}` : '';
-		a.download = `${license.spdxId.replace(/[^a-zA-Z0-9.-]/g, '_')}${langSuffix}.txt`;
-		document.body.appendChild(a);
-		a.click();
-		document.body.removeChild(a);
-		URL.revokeObjectURL(url);
+		downloadTextFile(text, `${license.spdxId.replace(/[^a-zA-Z0-9.-]/g, '_')}${langSuffix}.txt`);
 	}
 
 	// ── Helpers ──────────────────────────────────────────────────────────────────

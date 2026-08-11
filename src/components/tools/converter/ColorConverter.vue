@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 	import { ref, watch } from 'vue';
+	import { copyToClipboard } from '@/utils/clipboard';
 
 	const hex = ref('#3b82f6');
 	const r = ref(59);
@@ -75,7 +76,7 @@
 	}
 
 	function copy(val: string) {
-		navigator.clipboard.writeText(val);
+		copyToClipboard(val);
 	}
 
 	watch(hex, updateFromHex);

@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 	import { ref } from 'vue';
 	import { NButton, NCheckbox, NInputNumber } from 'naive-ui';
+	import { copyToClipboard } from '@/utils/clipboard';
 
 	const uuids = ref<string[]>([]);
 	const count = ref(5);
@@ -24,11 +25,11 @@
 	}
 
 	function copyAll() {
-		navigator.clipboard.writeText(uuids.value.join('\n'));
+		copyToClipboard(uuids.value.join('\n'));
 	}
 
 	function copyOne(uuid: string) {
-		navigator.clipboard.writeText(uuid);
+		copyToClipboard(uuid);
 	}
 
 	generate();

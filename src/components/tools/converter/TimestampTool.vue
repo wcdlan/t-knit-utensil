@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 	import { onMounted, onUnmounted, ref } from 'vue';
 	import { NButton, NInput } from 'naive-ui';
+	import { copyToClipboard } from '@/utils/clipboard';
 
 	const now = ref(Math.floor(Date.now() / 1000));
 	const nowMs = ref(Date.now());
@@ -47,7 +48,7 @@
 
 	function copy(el: string) {
 		const text = el === 'now' ? String(now.value) : el === 'nowMs' ? String(nowMs.value) : tsResult.value;
-		navigator.clipboard.writeText(text);
+		copyToClipboard(text);
 	}
 </script>
 

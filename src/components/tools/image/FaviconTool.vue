@@ -1,7 +1,10 @@
 <script lang="ts" setup>
 	import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue';
 	import JSZip from 'jszip';
-	import { NAlert, NButton, NCheckbox } from 'naive-ui'; // --- Types ---
+	import { NAlert, NButton, NCheckbox } from 'naive-ui';
+	import { downloadBlob } from '@/utils/download';
+
+	// --- Types ---
 
 	// --- Types ---
 	interface FaviconSize {
@@ -287,17 +290,6 @@
 	async function dataUrlToArrayBuffer(dataUrl: string): Promise<ArrayBuffer> {
 		const res = await fetch(dataUrl);
 		return res.arrayBuffer();
-	}
-
-	function downloadBlob(blob: Blob, filename: string) {
-		const url = URL.createObjectURL(blob);
-		const a = document.createElement('a');
-		a.href = url;
-		a.download = filename;
-		document.body.appendChild(a);
-		a.click();
-		document.body.removeChild(a);
-		URL.revokeObjectURL(url);
 	}
 
 	function downloadSingle(size: number, format: 'png' | 'ico') {
