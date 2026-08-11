@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 	import { computed, h, ref } from 'vue';
 	import type { DataTableColumn } from 'naive-ui';
-	import { NAlert, NCollapse, NCollapseItem, NInput, NSelect, NTag } from 'naive-ui';
+	import { NAlert, NCollapse, NCollapseItem, NDataTable, NInput, NSelect, NTag } from 'naive-ui';
 
 	const pattern = ref('');
 	const flags = ref('g');
@@ -172,7 +172,7 @@
 		<!-- Special Chars Reference -->
 		<n-collapse class="mt-6">
 			<n-collapse-item name="ref" title="特殊字符速查表">
-				<n-dataTable :bordered="false" :columns="refColumns" :data="specialChars" size="small" />
+				<n-data-table :bordered="false" :columns="refColumns" :data="specialChars" size="small" />
 			</n-collapse-item>
 		</n-collapse>
 	</div>
