@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-	import { computed, ref, watch } from 'vue' // ---- 预设的 API 格式 ----
+	import { computed, ref, watch } from 'vue'
 
 	// ---- 预设的 API 格式 ----
 	interface ApiPreset {
@@ -86,6 +86,9 @@
 	const apiKey = ref('')
 	const customHeaderName = ref('X-API-Key')
 
+	// ---- 代理选项 ----
+	const useProxy = ref(true)
+
 	// ---- 测试状态 ----
 	type TestStatus = 'idle' | 'loading' | 'success' | 'error'
 	const connectionStatus = ref<TestStatus>('idle')
@@ -124,7 +127,30 @@
 	const preset = computed(() => presets[selectedPreset.value])
 
 	function buildHeaders(): Record<string, string> {
-		return preset.value.headers(apiKey.value)
+		const headers: Record<string, string> = {
+			'Content-Type': 'application/json'
+		}
+
+		// Apply auth based on authType
+		if (apiKey.value) {
+			if (authType.value === 'bearer') {
+				headers['Authorization'] = `Bearer ${apiKey.value}`
+			} else if (authType.value === 'header') {
+				headers[customHeaderName.value] = apiKey.value
+			}
+			// query: key goes in URL (getFullUrl handles it)
+		}
+
+		// Merge preset-specific extra headers (e.g. anthropic-version)
+		const presetHeaders = preset.value.headers(apiKey.value)
+		for (const [key, value] of Object.entries(presetHeaders)) {
+			const lower = key.toLowerCase()
+			if (lower !== 'authorization' && lower !== 'content-type' && lower !== 'x-api-key') {
+				headers[key] = value
+			}
+		}
+
+		return headers
 	}
 
 	function getFullUrl(path: string): string {
@@ -135,6 +161,56 @@
 			url += path
 		}
 		return url
+	}
+
+	// ---- 统一请求（支持代理） ----
+	interface ApiResponse {
+		ok: boolean
+		status: number
+		json: () => Promise<any>
+		text: () => Promise<string>
+	}
+
+	async function apiFetch(url: string, options: RequestInit): Promise<ApiResponse> {
+		if (!useProxy.value) {
+			const resp = await fetch(url, options)
+			return {
+				ok: resp.ok,
+				status: resp.status,
+				json: () => resp.json(),
+				text: () => resp.text()
+			}
+		}
+
+		const proxyResp = await fetch('/api/proxy', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				url,
+				method: options.method || 'GET',
+				headers: options.headers || {},
+				body: options.body
+			})
+		})
+
+		const data = await proxyResp.json()
+
+		if (!data.ok) {
+			throw new Error(data.error || '代理请求失败')
+		}
+
+		return {
+			ok: data.status >= 200 && data.status < 300,
+			status: data.status,
+			json: async () => {
+				try {
+					return JSON.parse(data.body)
+				} catch {
+					return data.body
+				}
+			},
+			text: async () => data.body
+		}
 	}
 
 	// ---- 测试连接 ----
@@ -149,7 +225,7 @@
 
 		try {
 			const headers = buildHeaders()
-			const resp = await fetch(getFullUrl(preset.value.modelsPath), {
+			const resp = await apiFetch(getFullUrl(preset.value.modelsPath), {
 				method: 'GET',
 				headers
 			})
@@ -160,14 +236,13 @@
 			} else {
 				const body = await resp.text().catch(() => '')
 				connectionStatus.value = 'error'
-				connectionMessage.value = `HTTP ${resp.status}: ${body.slice(0, 200) || resp.statusText}`
+				connectionMessage.value = `HTTP ${resp.status}: ${body.slice(0, 200) || 'Unknown error'}`
 			}
 		} catch (e: any) {
 			connectionStatus.value = 'error'
-			// 检查是否为 CORS 错误
 			if (e.message?.includes('Failed to fetch') || e.name === 'TypeError') {
 				connectionMessage.value =
-					'网络错误：可能是 CORS 限制或 URL 不可达。浏览器端请求可能被服务端拒绝，建议检查网络或使用代理。'
+					'网络错误：可能是 CORS 限制或 URL 不可达。浏览器端请求可能被服务端拒绝，建议开启代理。'
 			} else {
 				connectionMessage.value = `请求失败: ${e.message}`
 			}
@@ -186,7 +261,7 @@
 
 		try {
 			const headers = buildHeaders()
-			const resp = await fetch(getFullUrl(preset.value.modelsPath), {
+			const resp = await apiFetch(getFullUrl(preset.value.modelsPath), {
 				method: 'GET',
 				headers
 			})
@@ -211,7 +286,7 @@
 		} catch (e: any) {
 			modelsStatus.value = 'error'
 			if (e.message?.includes('Failed to fetch') || e.name === 'TypeError') {
-				modelsMessage.value = '网络错误：可能是 CORS 限制。请确认 API 端点支持跨域请求。'
+				modelsMessage.value = '网络错误：可能是 CORS 限制。请确认 API 端点支持跨域请求，或开启代理。'
 			} else {
 				modelsMessage.value = `请求失败: ${e.message}`
 			}
@@ -262,7 +337,7 @@
 				}
 			}
 
-			const resp = await fetch(getFullUrl(chatPath), {
+			const resp = await apiFetch(getFullUrl(chatPath), {
 				method: 'POST',
 				headers,
 				body: JSON.stringify(body)
@@ -272,7 +347,7 @@
 
 			if (!resp.ok) {
 				testStatus.value = 'error'
-				testMessage.value = `HTTP ${resp.status}: ${JSON.stringify(data?.error ?? data ?? resp.statusText).slice(0, 300)}`
+				testMessage.value = `HTTP ${resp.status}: ${JSON.stringify(data?.error ?? data ?? 'Unknown error').slice(0, 300)}`
 				return
 			}
 
@@ -292,7 +367,7 @@
 		} catch (e: any) {
 			testStatus.value = 'error'
 			if (e.message?.includes('Failed to fetch') || e.name === 'TypeError') {
-				testMessage.value = '网络错误：可能是 CORS 限制。浏览器端请求可能被服务端拒绝。'
+				testMessage.value = '网络错误：可能是 CORS 限制。浏览器端请求可能被服务端拒绝，请开启代理。'
 			} else {
 				testMessage.value = `请求失败: ${e.message}`
 			}
@@ -363,6 +438,18 @@
 					class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none font-mono"
 					type="password"
 				/>
+			</div>
+
+			<!-- 代理开关 -->
+			<div class="mt-4 flex items-center gap-3">
+				<label class="relative inline-flex items-center cursor-pointer">
+					<input v-model="useProxy" class="sr-only peer" type="checkbox" />
+					<div
+						class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-500"
+					></div>
+					<span class="ms-2 text-sm font-medium text-gray-700">通过本地代理请求</span>
+				</label>
+				<span class="text-xs text-gray-400">绕过 CORS 和 HTTP/HTTPS 混合内容限制</span>
 			</div>
 
 			<!-- 操作按钮 -->
