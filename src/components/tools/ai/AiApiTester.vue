@@ -124,8 +124,7 @@
 	const preset = computed(() => presets[selectedPreset.value])
 
 	function buildHeaders(): Record<string, string> {
-		const base = preset.value.headers(apiKey.value)
-		return base
+		return preset.value.headers(apiKey.value)
 	}
 
 	function getFullUrl(path: string): string {
