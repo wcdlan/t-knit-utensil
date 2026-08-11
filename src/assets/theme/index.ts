@@ -1,36 +1,36 @@
-// 蓝色系主题 — naive-ui themeOverrides
-// Tailwind Blue palette: 400=#60a5fa  500=#3b82f6  600=#2563eb  700=#1d4ed8
+// 蓝色系主题（淡色版） — naive-ui themeOverrides
+// Tailwind Blue palette: 300=#93c5fd  400=#60a5fa  500=#3b82f6  600=#2563eb
 
 export const themeOverrides = {
 	common: {
 		// ---- 主色 (Blue) ----
-		primaryColor: '#3b82f6',
-		primaryColorHover: '#2563eb',
-		primaryColorPressed: '#1d4ed8',
-		primaryColorSuppl: '#3b82f6',
+		primaryColor: '#60a5fa',
+		primaryColorHover: '#3b82f6',
+		primaryColorPressed: '#2563eb',
+		primaryColorSuppl: '#60a5fa',
 
 		// ---- 信息色 (同 Blue 系) ----
-		infoColor: '#3b82f6',
-		infoColorHover: '#2563eb',
-		infoColorPressed: '#1d4ed8',
-		infoColorSuppl: '#3b82f6',
+		infoColor: '#60a5fa',
+		infoColorHover: '#3b82f6',
+		infoColorPressed: '#2563eb',
+		infoColorSuppl: '#60a5fa',
 
 		// ---- 成功色 (Emerald) ----
-		successColor: '#10b981',
-		successColorHover: '#059669',
-		successColorPressed: '#047857',
-		successColorSuppl: '#10b981',
+		successColor: '#34d399',
+		successColorHover: '#10b981',
+		successColorPressed: '#059669',
+		successColorSuppl: '#34d399',
 
 		// ---- 警告色 (Amber) ----
-		warningColor: '#f59e0b',
-		warningColorHover: '#d97706',
-		warningColorPressed: '#b45309',
-		warningColorSuppl: '#f59e0b',
+		warningColor: '#fbbf24',
+		warningColorHover: '#f59e0b',
+		warningColorPressed: '#d97706',
+		warningColorSuppl: '#fbbf24',
 
 		// ---- 错误色 (Red) ----
-		errorColor: '#ef4444',
-		errorColorHover: '#dc2626',
-		errorColorPressed: '#b91c1c',
-		errorColorSuppl: '#ef4444'
+		errorColor: '#f87171',
+		errorColorHover: '#ef4444',
+		errorColorPressed: '#dc2626',
+		errorColorSuppl: '#f87171'
 	}
 }
