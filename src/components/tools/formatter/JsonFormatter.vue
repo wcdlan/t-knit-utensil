@@ -63,7 +63,7 @@
 
 		<div v-if="output && !error" class="relative">
 			<n-input :autosize="{ minRows: 10 }" :value="output" readonly type="textarea" />
-			<n-button class="absolute top-2 right-2" size="small" @click="copy"> 复制 </n-button>
+			<n-button class="absolute top-2" size="small" @click="copy"> 复制 </n-button>
 		</div>
 	</div>
 </template>
