@@ -3,15 +3,7 @@
 	import JSZip from 'jszip';
 	import { NAlert, NButton, NCheckbox } from 'naive-ui';
 	import { downloadBlob } from '@/utils/download';
-
-	// --- Types ---
-
-	// --- Types ---
-	interface FaviconSize {
-		size: number;
-		label: string;
-		selected: boolean;
-	}
+	import type { FaviconSize } from '@/types/image';
 
 	// --- State ---
 	const faviconSizes = ref<FaviconSize[]>([

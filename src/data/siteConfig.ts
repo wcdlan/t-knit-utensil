@@ -1,23 +1,8 @@
 import { reactive } from 'vue';
 import defaultConfig from '../../site.config.json';
+import type { SiteConfig } from '@/types/site';
 
-export interface FooterConfig {
-	copyright: string;
-	icp: string;
-	icpUrl: string;
-	poweredBy: string;
-}
-
-export interface AuthConfig {
-	password: string;
-}
-
-export interface SiteConfig {
-	siteName: string;
-	siteDescription: string;
-	footer: FooterConfig;
-	auth: AuthConfig;
-}
+export type { FooterConfig, AuthConfig, SiteConfig } from '@/types/site';
 
 export const siteConfig = reactive<SiteConfig>({ ...defaultConfig });
 export const isDev = import.meta.env.DEV;

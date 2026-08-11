@@ -1,17 +1,8 @@
 // SSH key generation & formatting utilities using Web Crypto API
 
-export type KeyType = 'rsa-2048' | 'rsa-3072' | 'rsa-4096' | 'ecdsa-p256' | 'ecdsa-p384' | 'ecdsa-p521';
+import type { KeyPairResult, KeyType, KeyTypeMeta } from '@/types/ssh';
 
-export interface KeyPairResult {
-	privateKeyPem: string;
-	publicKeySsh: string;
-}
-
-interface KeyTypeMeta {
-	label: string;
-	sshAlgorithm: string;
-	curveOid?: number[]; // for ECDSA, the curve OID used in SSH wire format
-}
+export type { KeyType, KeyPairResult } from '@/types/ssh';
 
 export const KEY_TYPES: Record<KeyType, KeyTypeMeta> = {
 	'rsa-2048': { label: 'RSA 2048', sshAlgorithm: 'ssh-rsa' },

@@ -1,18 +1,9 @@
 <script lang="ts" setup>
 	import { NAlert, NButton, NInput, NPopover, NSelect, NSwitch, NTag } from 'naive-ui';
 	import { computed, ref, watch } from 'vue';
+	import type { ApiPreset, ApiResponse, HistoryItem, TestStatus } from '@/types/ai';
 
 	// ---- 预设的 API 格式 ----
-	interface ApiPreset {
-		key: string;
-		label: string;
-		defaultBaseUrl: string;
-		modelsPath: string;
-		modelListKey: string;
-		headers: (apiKey: string) => Record<string, string>;
-		buildTestBody: (model: string) => unknown;
-		parseModels: (data: unknown) => string[];
-	}
 
 	const presets: Record<string, ApiPreset> = {
 		openai: {
@@ -76,16 +67,6 @@
 	};
 
 	// ---- 历史记录 ----
-	interface HistoryItem {
-		id: string;
-		preset: string;
-		baseUrl: string;
-		authType: string;
-		apiKey: string;
-		customHeaderName: string;
-		useProxy: boolean;
-		createdAt: number;
-	}
 
 	const STORAGE_KEY = 'ai-api-tester-history';
 
@@ -168,7 +149,6 @@
 
 	const useProxy = ref(true);
 
-	type TestStatus = 'idle' | 'loading' | 'success' | 'error';
 	const connectionStatus = ref<TestStatus>('idle');
 	const connectionMessage = ref('');
 	const modelsStatus = ref<TestStatus>('idle');
@@ -234,13 +214,6 @@
 			url += path + (path.includes('?') ? '&' : '?') + `key=${encodeURIComponent(apiKey.value)}`;
 		else url += path;
 		return url;
-	}
-
-	interface ApiResponse {
-		ok: boolean;
-		status: number;
-		json: () => Promise<any>;
-		text: () => Promise<string>;
 	}
 
 	async function apiFetch(url: string, options: RequestInit): Promise<ApiResponse> {

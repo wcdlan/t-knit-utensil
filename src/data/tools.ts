@@ -1,16 +1,6 @@
-export interface Tool {
-	id: string;
-	name: string;
-	description: string;
-	icon: string;
-}
+import type { Tool, ToolGroup } from '@/types/tools';
 
-export interface ToolGroup {
-	id: string;
-	name: string;
-	icon: string;
-	tools: Tool[];
-}
+export type { Tool, ToolGroup };
 
 export const toolGroups: ToolGroup[] = [
 	{

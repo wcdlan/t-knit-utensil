@@ -3,6 +3,7 @@
 	import { NButton, NButtonGroup, NProgress, NRadio, NRadioGroup, NTag } from 'naive-ui';
 	import { copyToClipboard } from '@/utils/clipboard';
 	import { downloadTextFile } from '@/utils/download';
+	import type { LicenseProfile, Question, ScoredLicense } from '@/types/license';
 
 	// ── License full texts (loaded at build time) ──────────────────────────────────
 	const LICENSE_TEXTS: Record<string, string> = import.meta.glob('@/assets/license/*.txt', {
@@ -24,20 +25,6 @@
 	}
 
 	// ── License Profiles ──────────────────────────────────────────────────────────
-	interface LicenseProfile {
-		id: string;
-		name: string;
-		spdxId: string;
-		copyleft: number;
-		patent: boolean;
-		simplicity: number;
-		osiApproved: boolean;
-		domestic: boolean;
-		summary: string;
-		tags: string[];
-		url: string;
-		languages: { code: string; label: string }[];
-	}
 
 	const LICENSES: LicenseProfile[] = [
 		{
@@ -431,17 +418,6 @@
 	];
 
 	// ── Questions ────────────────────────────────────────────────────────────────
-	interface QuestionOption {
-		value: string;
-		label: string;
-		description: string;
-	}
-
-	interface Question {
-		id: string;
-		text: string;
-		options: QuestionOption[];
-	}
 
 	const QUESTIONS: Question[] = [
 		{
@@ -532,11 +508,6 @@
 	const copiedId = ref<string | null>(null);
 
 	// ── Scoring Engine ───────────────────────────────────────────────────────────
-	interface ScoredLicense {
-		license: LicenseProfile;
-		score: number;
-		highlights: string[];
-	}
 
 	function computeScores(): ScoredLicense[] {
 		const a = answers.value;
