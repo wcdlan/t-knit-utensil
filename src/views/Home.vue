@@ -1,24 +1,24 @@
 <script lang="ts" setup>
-	import { computed, ref } from 'vue'
-	import { NEmpty, NInput } from 'naive-ui'
-	import { toolGroups } from '@/data/tools'
+	import { computed, ref } from 'vue';
+	import { NEmpty, NInput } from 'naive-ui';
+	import { toolGroups } from '@/data/tools';
 
-	const query = ref('')
-	const collapsed = ref<Record<string, boolean>>({})
+	const query = ref('');
+	const collapsed = ref<Record<string, boolean>>({});
 
 	const filteredGroups = computed(() => {
-		if (!query.value.trim()) return toolGroups
-		const q = query.value.toLowerCase()
+		if (!query.value.trim()) return toolGroups;
+		const q = query.value.toLowerCase();
 		return toolGroups
 			.map((g) => ({
 				...g,
 				tools: g.tools.filter((t) => t.name.toLowerCase().includes(q) || t.description.toLowerCase().includes(q))
 			}))
-			.filter((g) => g.tools.length > 0)
-	})
+			.filter((g) => g.tools.length > 0);
+	});
 
 	function toggle(id: string) {
-		collapsed.value[id] = !collapsed.value[id]
+		collapsed.value[id] = !collapsed.value[id];
 	}
 </script>
 

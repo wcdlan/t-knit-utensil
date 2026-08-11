@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-	import { computed } from 'vue'
-	import { useRoute } from 'vue-router'
-	import { getToolById } from '@/data/tools'
+	import { computed } from 'vue';
+	import { useRoute } from 'vue-router';
+	import { getToolById } from '@/data/tools';
 
-	const route = useRoute()
-	const toolId = computed(() => route.params.toolId as string)
-	const tool = computed(() => getToolById(toolId.value))
+	const route = useRoute();
+	const toolId = computed(() => route.params.toolId as string);
+	const tool = computed(() => getToolById(toolId.value));
 </script>
 
 <template>
@@ -53,24 +53,24 @@
 </template>
 
 <script lang="ts">
-	import JsonFormatter from '@/components/tools/formatter/JsonFormatter.vue'
-	import Base64Tool from '@/components/tools/codec/Base64Tool.vue'
-	import UrlEncode from '@/components/tools/codec/UrlEncode.vue'
-	import UnicodeTool from '@/components/tools/codec/UnicodeTool.vue'
-	import SqlFormatter from '@/components/tools/formatter/SqlFormatter.vue'
-	import TimestampTool from '@/components/tools/converter/TimestampTool.vue'
-	import ColorConverter from '@/components/tools/converter/ColorConverter.vue'
-	import UuidGenerator from '@/components/tools/generator/UuidGenerator.vue'
-	import HashTool from '@/components/tools/generator/HashTool.vue'
-	import QrcodeTool from '@/components/tools/generator/QrcodeTool.vue'
-	import PasswordTool from '@/components/tools/generator/PasswordTool.vue'
-	import RegexTool from '@/components/tools/text/RegexTool.vue'
-	import DiffTool from '@/components/tools/text/DiffTool.vue'
-	import WordCount from '@/components/tools/text/WordCount.vue'
-	import SshKeyGen from '@/components/tools/ssh/SshKeyGen.vue'
-	import FaviconTool from '@/components/tools/image/FaviconTool.vue'
-	import LicenseSelector from '@/components/tools/common/LicenseSelector.vue'
-	import AiApiTester from '@/components/tools/ai/AiApiTester.vue'
+	import JsonFormatter from '@/components/tools/formatter/JsonFormatter.vue';
+	import Base64Tool from '@/components/tools/codec/Base64Tool.vue';
+	import UrlEncode from '@/components/tools/codec/UrlEncode.vue';
+	import UnicodeTool from '@/components/tools/codec/UnicodeTool.vue';
+	import SqlFormatter from '@/components/tools/formatter/SqlFormatter.vue';
+	import TimestampTool from '@/components/tools/converter/TimestampTool.vue';
+	import ColorConverter from '@/components/tools/converter/ColorConverter.vue';
+	import UuidGenerator from '@/components/tools/generator/UuidGenerator.vue';
+	import HashTool from '@/components/tools/generator/HashTool.vue';
+	import QrcodeTool from '@/components/tools/generator/QrcodeTool.vue';
+	import PasswordTool from '@/components/tools/generator/PasswordTool.vue';
+	import RegexTool from '@/components/tools/text/RegexTool.vue';
+	import DiffTool from '@/components/tools/text/DiffTool.vue';
+	import WordCount from '@/components/tools/text/WordCount.vue';
+	import SshKeyGen from '@/components/tools/ssh/SshKeyGen.vue';
+	import FaviconTool from '@/components/tools/image/FaviconTool.vue';
+	import LicenseSelector from '@/components/tools/common/LicenseSelector.vue';
+	import AiApiTester from '@/components/tools/ai/AiApiTester.vue';
 
 	export default {
 		components: {
@@ -93,5 +93,5 @@
 			LicenseSelector,
 			AiApiTester
 		}
-	}
+	};
 </script>

@@ -42,8 +42,8 @@
 		<n-input
 			v-model:value="input"
 			:autosize="{ minRows: 6 }"
-			type="textarea"
 			:placeholder="mode === 'to-unicode' ? '输入中文文本...' : '输入 Unicode 编码 (如 \\u4e2d\\u6587)...'"
+			type="textarea"
 		/>
 
 		<n-button type="primary" @click="process"> 转换 </n-button>

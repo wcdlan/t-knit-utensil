@@ -1,15 +1,15 @@
 export interface Tool {
-	id: string
-	name: string
-	description: string
-	icon: string
+	id: string;
+	name: string;
+	description: string;
+	icon: string;
 }
 
 export interface ToolGroup {
-	id: string
-	name: string
-	icon: string
-	tools: Tool[]
+	id: string;
+	name: string;
+	icon: string;
+	tools: Tool[];
 }
 
 export const toolGroups: ToolGroup[] = [
@@ -120,11 +120,11 @@ export const toolGroups: ToolGroup[] = [
 			}
 		]
 	}
-]
+];
 
 export function getToolById(id: string): Tool | undefined {
 	for (const group of toolGroups) {
-		const tool = group.tools.find((t) => t.id === id)
-		if (tool) return tool
+		const tool = group.tools.find((t) => t.id === id);
+		if (tool) return tool;
 	}
 }

@@ -1,85 +1,85 @@
 <script lang="ts" setup>
-	import { ref, watch } from 'vue'
+	import { ref, watch } from 'vue';
 
-	const hex = ref('#3b82f6')
-	const r = ref(59)
-	const g = ref(130)
-	const b = ref(246)
-	const h = ref(0)
-	const s = ref(0)
-	const l = ref(0)
-	const previewColor = ref('#3b82f6')
+	const hex = ref('#3b82f6');
+	const r = ref(59);
+	const g = ref(130);
+	const b = ref(246);
+	const h = ref(0);
+	const s = ref(0);
+	const l = ref(0);
+	const previewColor = ref('#3b82f6');
 
 	function hexToRgb(hexVal: string) {
-		const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hexVal)
-		if (!result) return null
+		const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hexVal);
+		if (!result) return null;
 		return {
 			r: parseInt(result[1], 16),
 			g: parseInt(result[2], 16),
 			b: parseInt(result[3], 16)
-		}
+		};
 	}
 
 	function rgbToHex(rv: number, gv: number, bv: number) {
-		return '#' + [rv, gv, bv].map((x) => x.toString(16).padStart(2, '0')).join('')
+		return '#' + [rv, gv, bv].map((x) => x.toString(16).padStart(2, '0')).join('');
 	}
 
 	function rgbToHsl(rv: number, gv: number, bv: number) {
-		rv /= 255
-		gv /= 255
-		bv /= 255
+		rv /= 255;
+		gv /= 255;
+		bv /= 255;
 		const max = Math.max(rv, gv, bv),
-			min = Math.min(rv, gv, bv)
+			min = Math.min(rv, gv, bv);
 		let hv = 0,
-			sv = 0
-		const lv = (max + min) / 2
+			sv = 0;
+		const lv = (max + min) / 2;
 		if (max !== min) {
-			const d = max - min
-			sv = lv > 0.5 ? d / (2 - max - min) : d / (max + min)
+			const d = max - min;
+			sv = lv > 0.5 ? d / (2 - max - min) : d / (max + min);
 			switch (max) {
 				case rv:
-					hv = ((gv - bv) / d + (gv < bv ? 6 : 0)) / 6
-					break
+					hv = ((gv - bv) / d + (gv < bv ? 6 : 0)) / 6;
+					break;
 				case gv:
-					hv = ((bv - rv) / d + 2) / 6
-					break
+					hv = ((bv - rv) / d + 2) / 6;
+					break;
 				case bv:
-					hv = ((rv - gv) / d + 4) / 6
-					break
+					hv = ((rv - gv) / d + 4) / 6;
+					break;
 			}
 		}
-		return { h: Math.round(hv * 360), s: Math.round(sv * 100), l: Math.round(lv * 100) }
+		return { h: Math.round(hv * 360), s: Math.round(sv * 100), l: Math.round(lv * 100) };
 	}
 
 	function updateFromHex() {
-		const rgb = hexToRgb(hex.value)
+		const rgb = hexToRgb(hex.value);
 		if (rgb) {
-			r.value = rgb.r
-			g.value = rgb.g
-			b.value = rgb.b
-			const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b)
-			h.value = hsl.h
-			s.value = hsl.s
-			l.value = hsl.l
-			previewColor.value = hex.value.startsWith('#') ? hex.value : '#' + hex.value
+			r.value = rgb.r;
+			g.value = rgb.g;
+			b.value = rgb.b;
+			const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+			h.value = hsl.h;
+			s.value = hsl.s;
+			l.value = hsl.l;
+			previewColor.value = hex.value.startsWith('#') ? hex.value : '#' + hex.value;
 		}
 	}
 
 	function updateFromRgb() {
-		hex.value = rgbToHex(r.value, g.value, b.value)
-		const hsl = rgbToHsl(r.value, g.value, b.value)
-		h.value = hsl.h
-		s.value = hsl.s
-		l.value = hsl.l
-		previewColor.value = hex.value
+		hex.value = rgbToHex(r.value, g.value, b.value);
+		const hsl = rgbToHsl(r.value, g.value, b.value);
+		h.value = hsl.h;
+		s.value = hsl.s;
+		l.value = hsl.l;
+		previewColor.value = hex.value;
 	}
 
 	function copy(val: string) {
-		navigator.clipboard.writeText(val)
+		navigator.clipboard.writeText(val);
 	}
 
-	watch(hex, updateFromHex)
-	updateFromHex()
+	watch(hex, updateFromHex);
+	updateFromHex();
 </script>
 
 <template>

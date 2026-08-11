@@ -1,17 +1,17 @@
 <script lang="ts" setup>
-	import { computed, onMounted, ref } from 'vue'
-	import { useRoute, useRouter } from 'vue-router'
-	import { type MenuOption, NConfigProvider, NLayout, NLayoutContent, NLayoutSider, NMenu } from 'naive-ui'
-	import { themeOverrides } from './assets/theme'
-	import { loadConfig, siteConfig } from './data/siteConfig'
-	import { toolGroups } from './data/tools'
-	import logoImg from './assets/TKU.png'
+	import { computed, onMounted, ref } from 'vue';
+	import { useRoute, useRouter } from 'vue-router';
+	import { type MenuOption, NConfigProvider, NLayout, NLayoutContent, NLayoutSider, NMenu } from 'naive-ui';
+	import { themeOverrides } from './assets/theme';
+	import { loadConfig, siteConfig } from './data/siteConfig';
+	import { toolGroups } from './data/tools';
+	import logoImg from './assets/TKU.png';
 
-	const router = useRouter()
-	const route = useRoute()
-	const expandedKeys = ref<string[]>([])
+	const router = useRouter();
+	const route = useRoute();
+	const expandedKeys = ref<string[]>([]);
 
-	onMounted(() => loadConfig())
+	onMounted(() => loadConfig());
 
 	const menuOptions = computed<MenuOption[]>(() => [
 		{ label: '🏠 首页', key: 'home' },
@@ -24,19 +24,19 @@
 			}))
 		})),
 		{ label: '⚙️ 设置', key: 'settings' }
-	])
+	]);
 
 	const activeKey = computed(() => {
-		if (route.path === '/') return 'home'
-		if (route.path === '/settings') return 'settings'
-		if (route.path.startsWith('/tool/')) return '/tool/' + route.params.toolId
-		return 'home'
-	})
+		if (route.path === '/') return 'home';
+		if (route.path === '/settings') return 'settings';
+		if (route.path.startsWith('/tool/')) return '/tool/' + route.params.toolId;
+		return 'home';
+	});
 
 	function handleMenuUpdate(key: string) {
-		if (key === 'home') router.push('/')
-		else if (key === 'settings') router.push('/settings')
-		else if (key.startsWith('/tool/')) router.push(key)
+		if (key === 'home') router.push('/');
+		else if (key === 'settings') router.push('/settings');
+		else if (key.startsWith('/tool/')) router.push(key);
 	}
 </script>
 

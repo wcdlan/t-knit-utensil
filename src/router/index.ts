@@ -1,7 +1,7 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import Home from '@/views/Home.vue'
+import { createRouter, createWebHistory } from 'vue-router';
+import Home from '@/views/Home.vue';
 
-const TOKEN_KEY = 'tku-auth-token'
+const TOKEN_KEY = 'tku-auth-token';
 
 const router = createRouter({
 	history: createWebHistory(),
@@ -20,13 +20,13 @@ const router = createRouter({
 			component: () => import('@/views/Settings.vue')
 		}
 	]
-})
+});
 
 router.beforeEach((to) => {
 	if (to.path === '/settings') {
-		const token = localStorage.getItem(TOKEN_KEY)
-		if (!token) return '/login'
+		const token = localStorage.getItem(TOKEN_KEY);
+		if (!token) return '/login';
 	}
-})
+});
 
-export default router
+export default router;

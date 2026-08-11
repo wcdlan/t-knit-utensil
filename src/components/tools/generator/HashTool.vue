@@ -1,25 +1,25 @@
 <script lang="ts" setup>
-	import { ref } from 'vue'
-	import { NButton, NInput, NSelect } from 'naive-ui'
+	import { ref } from 'vue';
+	import { NButton, NInput, NSelect } from 'naive-ui';
 
-	const input = ref('')
-	const algorithm = ref('MD5')
-	const output = ref('')
+	const input = ref('');
+	const algorithm = ref('MD5');
+	const output = ref('');
 
-	const algorithms = ['MD5', 'SHA-1', 'SHA-256', 'SHA-384', 'SHA-512']
+	const algorithms = ['MD5', 'SHA-1', 'SHA-256', 'SHA-384', 'SHA-512'];
 
-	const algoOptions = algorithms.map((a) => ({ label: a, value: a }))
+	const algoOptions = algorithms.map((a) => ({ label: a, value: a }));
 
 	async function generateHash() {
-		if (!input.value) return
-		const msgUint8 = new TextEncoder().encode(input.value)
-		const hashBuffer = await crypto.subtle.digest(algorithm.value, msgUint8)
-		const hashArray = Array.from(new Uint8Array(hashBuffer))
-		output.value = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('')
+		if (!input.value) return;
+		const msgUint8 = new TextEncoder().encode(input.value);
+		const hashBuffer = await crypto.subtle.digest(algorithm.value, msgUint8);
+		const hashArray = Array.from(new Uint8Array(hashBuffer));
+		output.value = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
 	}
 
 	function copy() {
-		navigator.clipboard.writeText(output.value)
+		navigator.clipboard.writeText(output.value);
 	}
 </script>
 

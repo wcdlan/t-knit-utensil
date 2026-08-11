@@ -1,37 +1,37 @@
 <script lang="ts" setup>
-	import { ref } from 'vue'
-	import { NButton, NCheckbox, NInputNumber } from 'naive-ui'
+	import { ref } from 'vue';
+	import { NButton, NCheckbox, NInputNumber } from 'naive-ui';
 
-	const uuids = ref<string[]>([])
-	const count = ref(5)
-	const uppercase = ref(false)
+	const uuids = ref<string[]>([]);
+	const count = ref(5);
+	const uppercase = ref(false);
 
 	function generateV4(): string {
 		return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-			const r = (Math.random() * 16) | 0
-			const v = c === 'x' ? r : (r & 0x3) | 0x8
-			return v.toString(16)
-		})
+			const r = (Math.random() * 16) | 0;
+			const v = c === 'x' ? r : (r & 0x3) | 0x8;
+			return v.toString(16);
+		});
 	}
 
 	function generate() {
-		const result: string[] = []
+		const result: string[] = [];
 		for (let i = 0; i < count.value; i++) {
-			const uuid = generateV4()
-			result.push(uppercase.value ? uuid.toUpperCase() : uuid)
+			const uuid = generateV4();
+			result.push(uppercase.value ? uuid.toUpperCase() : uuid);
 		}
-		uuids.value = result
+		uuids.value = result;
 	}
 
 	function copyAll() {
-		navigator.clipboard.writeText(uuids.value.join('\n'))
+		navigator.clipboard.writeText(uuids.value.join('\n'));
 	}
 
 	function copyOne(uuid: string) {
-		navigator.clipboard.writeText(uuid)
+		navigator.clipboard.writeText(uuid);
 	}
 
-	generate()
+	generate();
 </script>
 
 <template>

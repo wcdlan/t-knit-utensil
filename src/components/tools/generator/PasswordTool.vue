@@ -1,48 +1,48 @@
 <script lang="ts" setup>
-	import { ref } from 'vue'
-	import { NButton, NCheckbox, NInputNumber } from 'naive-ui'
+	import { ref } from 'vue';
+	import { NButton, NCheckbox, NInputNumber } from 'naive-ui';
 
-	const length = ref(16)
-	const upper = ref(true)
-	const lower = ref(true)
-	const numbers = ref(true)
-	const symbols = ref(true)
-	const passwords = ref<string[]>([])
-	const count = ref(5)
+	const length = ref(16);
+	const upper = ref(true);
+	const lower = ref(true);
+	const numbers = ref(true);
+	const symbols = ref(true);
+	const passwords = ref<string[]>([]);
+	const count = ref(5);
 
 	function generate() {
-		let chars = ''
-		if (lower.value) chars += 'abcdefghijklmnopqrstuvwxyz'
-		if (upper.value) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-		if (numbers.value) chars += '0123456789'
-		if (symbols.value) chars += '!@#$%^&*()_+-=[]{}|;:,.<>?'
+		let chars = '';
+		if (lower.value) chars += 'abcdefghijklmnopqrstuvwxyz';
+		if (upper.value) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		if (numbers.value) chars += '0123456789';
+		if (symbols.value) chars += '!@#$%^&*()_+-=[]{}|;:,.<>?';
 
 		if (!chars) {
-			passwords.value = ['请至少选择一种字符类型']
-			return
+			passwords.value = ['请至少选择一种字符类型'];
+			return;
 		}
 
-		const result: string[] = []
+		const result: string[] = [];
 		for (let i = 0; i < count.value; i++) {
-			let pwd = ''
-			const bytes = crypto.getRandomValues(new Uint32Array(length.value))
+			let pwd = '';
+			const bytes = crypto.getRandomValues(new Uint32Array(length.value));
 			for (let j = 0; j < length.value; j++) {
-				pwd += chars[bytes[j] % chars.length]
+				pwd += chars[bytes[j] % chars.length];
 			}
-			result.push(pwd)
+			result.push(pwd);
 		}
-		passwords.value = result
+		passwords.value = result;
 	}
 
 	function copyAll() {
-		navigator.clipboard.writeText(passwords.value.join('\n'))
+		navigator.clipboard.writeText(passwords.value.join('\n'));
 	}
 
 	function copyOne(pwd: string) {
-		navigator.clipboard.writeText(pwd)
+		navigator.clipboard.writeText(pwd);
 	}
 
-	generate()
+	generate();
 </script>
 
 <template>

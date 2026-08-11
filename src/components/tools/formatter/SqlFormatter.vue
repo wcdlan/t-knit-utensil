@@ -1,13 +1,13 @@
 <script lang="ts" setup>
-	import { ref } from 'vue'
-	import { NButton, NInput } from 'naive-ui'
+	import { ref } from 'vue';
+	import { NButton, NInput } from 'naive-ui';
 
-	const input = ref('')
-	const output = ref('')
+	const input = ref('');
+	const output = ref('');
 
 	function format() {
-		let sql = input.value.trim()
-		if (!sql) return
+		let sql = input.value.trim();
+		if (!sql) return;
 
 		const keywords = [
 			'SELECT',
@@ -64,13 +64,13 @@
 			'IF',
 			'EXISTS',
 			'NOT EXISTS'
-		]
+		];
 
-		sql = sql.replace(/\s+/g, ' ')
+		sql = sql.replace(/\s+/g, ' ');
 
 		for (const kw of keywords) {
-			const re = new RegExp('\\b' + kw.replace(/ /g, '\\s+') + '\\b', 'gi')
-			sql = sql.replace(re, kw)
+			const re = new RegExp('\\b' + kw.replace(/ /g, '\\s+') + '\\b', 'gi');
+			sql = sql.replace(re, kw);
 		}
 
 		const majorClauses = [
@@ -93,34 +93,34 @@
 			'DROP TABLE',
 			'RETURNING',
 			'WITH'
-		]
+		];
 
 		for (const clause of majorClauses) {
-			const re = new RegExp('\\b(' + clause.replace(/ /g, '\\s+') + ')\\b', 'g')
-			sql = sql.replace(re, '\n$1')
+			const re = new RegExp('\\b(' + clause.replace(/ /g, '\\s+') + ')\\b', 'g');
+			sql = sql.replace(re, '\n$1');
 		}
 
-		sql = sql.replace(/^\n/, '')
+		sql = sql.replace(/^\n/, '');
 
-		const lines = sql.split('\n')
+		const lines = sql.split('\n');
 		const formatted = lines
 			.map((line, i) => {
-				const trimmed = line.trim()
-				if (i === 0) return trimmed
-				const isMajor = majorClauses.some((c) => trimmed.startsWith(c))
-				return isMajor ? trimmed : '  ' + trimmed
+				const trimmed = line.trim();
+				if (i === 0) return trimmed;
+				const isMajor = majorClauses.some((c) => trimmed.startsWith(c));
+				return isMajor ? trimmed : '  ' + trimmed;
 			})
-			.join('\n')
+			.join('\n');
 
-		output.value = formatted
+		output.value = formatted;
 	}
 
 	function compress() {
-		output.value = input.value.replace(/\s+/g, ' ').trim()
+		output.value = input.value.replace(/\s+/g, ' ').trim();
 	}
 
 	function copy() {
-		navigator.clipboard.writeText(output.value)
+		navigator.clipboard.writeText(output.value);
 	}
 </script>
 

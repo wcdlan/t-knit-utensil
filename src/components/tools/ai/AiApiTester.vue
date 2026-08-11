@@ -1,17 +1,17 @@
 <script lang="ts" setup>
-	import { NAlert, NButton, NInput, NPopover, NSelect, NSwitch, NTag } from 'naive-ui'
-	import { computed, ref, watch } from 'vue'
+	import { NAlert, NButton, NInput, NPopover, NSelect, NSwitch, NTag } from 'naive-ui';
+	import { computed, ref, watch } from 'vue';
 
 	// ---- 预设的 API 格式 ----
 	interface ApiPreset {
-		key: string
-		label: string
-		defaultBaseUrl: string
-		modelsPath: string
-		modelListKey: string
-		headers: (apiKey: string) => Record<string, string>
-		buildTestBody: (model: string) => unknown
-		parseModels: (data: unknown) => string[]
+		key: string;
+		label: string;
+		defaultBaseUrl: string;
+		modelsPath: string;
+		modelListKey: string;
+		headers: (apiKey: string) => Record<string, string>;
+		buildTestBody: (model: string) => unknown;
+		parseModels: (data: unknown) => string[];
 	}
 
 	const presets: Record<string, ApiPreset> = {
@@ -28,9 +28,9 @@
 				max_tokens: 10
 			}),
 			parseModels: (data: any) => {
-				const list = data?.data ?? data
-				if (Array.isArray(list)) return list.map((m: any) => m.id ?? m.name ?? String(m)).filter(Boolean)
-				return []
+				const list = data?.data ?? data;
+				if (Array.isArray(list)) return list.map((m: any) => m.id ?? m.name ?? String(m)).filter(Boolean);
+				return [];
 			}
 		},
 		anthropic: {
@@ -50,9 +50,9 @@
 				messages: [{ role: 'user', content: 'Hi, respond with just "OK".' }]
 			}),
 			parseModels: (data: any) => {
-				const list = data?.data ?? data
-				if (Array.isArray(list)) return list.map((m: any) => m.id ?? m.name ?? String(m)).filter(Boolean)
-				return []
+				const list = data?.data ?? data;
+				if (Array.isArray(list)) return list.map((m: any) => m.id ?? m.name ?? String(m)).filter(Boolean);
+				return [];
 			}
 		},
 		gemini: {
@@ -64,44 +64,44 @@
 			headers: (_apiKey) => ({ 'Content-Type': 'application/json' }),
 			buildTestBody: () => ({}),
 			parseModels: (data: any) => {
-				const list = data?.models ?? data
+				const list = data?.models ?? data;
 				if (Array.isArray(list)) {
 					return list
 						.map((m: any) => m.name?.replace(/^models\//, '') ?? m.id ?? String(m))
-						.filter((n: string) => !n.includes('legacy') && !n.includes('deprecated'))
+						.filter((n: string) => !n.includes('legacy') && !n.includes('deprecated'));
 				}
-				return []
+				return [];
 			}
 		}
-	}
+	};
 
 	// ---- 历史记录 ----
 	interface HistoryItem {
-		id: string
-		preset: string
-		baseUrl: string
-		authType: string
-		apiKey: string
-		customHeaderName: string
-		useProxy: boolean
-		createdAt: number
+		id: string;
+		preset: string;
+		baseUrl: string;
+		authType: string;
+		apiKey: string;
+		customHeaderName: string;
+		useProxy: boolean;
+		createdAt: number;
 	}
 
-	const STORAGE_KEY = 'ai-api-tester-history'
+	const STORAGE_KEY = 'ai-api-tester-history';
 
 	function loadHistory(): HistoryItem[] {
 		try {
-			const raw = localStorage.getItem(STORAGE_KEY)
-			return raw ? JSON.parse(raw) : []
+			const raw = localStorage.getItem(STORAGE_KEY);
+			return raw ? JSON.parse(raw) : [];
 		} catch {
-			return []
+			return [];
 		}
 	}
 	function saveHistory(list: HistoryItem[]) {
-		localStorage.setItem(STORAGE_KEY, JSON.stringify(list))
+		localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
 	}
 	function generateId(): string {
-		return Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8)
+		return Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8);
 	}
 	function configsEqual(a: HistoryItem, b: Omit<HistoryItem, 'id' | 'createdAt'>): boolean {
 		return (
@@ -111,10 +111,10 @@
 			a.apiKey === b.apiKey &&
 			a.customHeaderName === b.customHeaderName &&
 			a.useProxy === b.useProxy
-		)
+		);
 	}
 
-	const historyList = ref<HistoryItem[]>(loadHistory())
+	const historyList = ref<HistoryItem[]>(loadHistory());
 
 	function addToHistory() {
 		const current = {
@@ -124,261 +124,261 @@
 			apiKey: apiKey.value,
 			customHeaderName: customHeaderName.value,
 			useProxy: useProxy.value
-		}
-		const exists = historyList.value.some((h) => configsEqual(h, current))
-		if (exists) return
-		const item: HistoryItem = { ...current, id: generateId(), createdAt: Date.now() }
-		historyList.value.unshift(item)
-		saveHistory(historyList.value)
+		};
+		const exists = historyList.value.some((h) => configsEqual(h, current));
+		if (exists) return;
+		const item: HistoryItem = { ...current, id: generateId(), createdAt: Date.now() };
+		historyList.value.unshift(item);
+		saveHistory(historyList.value);
 	}
 
 	function applyHistory(item: HistoryItem) {
-		selectedPreset.value = item.preset as keyof typeof presets
-		baseUrl.value = item.baseUrl
-		authType.value = item.authType as 'bearer' | 'header' | 'query'
-		apiKey.value = item.apiKey
-		customHeaderName.value = item.customHeaderName
-		useProxy.value = item.useProxy
-		connectionStatus.value = 'idle'
-		connectionMessage.value = ''
-		modelsStatus.value = 'idle'
-		modelsMessage.value = ''
-		models.value = []
-		testStatus.value = 'idle'
-		testResponse.value = ''
-		testMessage.value = ''
+		selectedPreset.value = item.preset as keyof typeof presets;
+		baseUrl.value = item.baseUrl;
+		authType.value = item.authType as 'bearer' | 'header' | 'query';
+		apiKey.value = item.apiKey;
+		customHeaderName.value = item.customHeaderName;
+		useProxy.value = item.useProxy;
+		connectionStatus.value = 'idle';
+		connectionMessage.value = '';
+		modelsStatus.value = 'idle';
+		modelsMessage.value = '';
+		models.value = [];
+		testStatus.value = 'idle';
+		testResponse.value = '';
+		testMessage.value = '';
 	}
 
 	function deleteHistory(id: string) {
-		historyList.value = historyList.value.filter((h) => h.id !== id)
-		saveHistory(historyList.value)
+		historyList.value = historyList.value.filter((h) => h.id !== id);
+		saveHistory(historyList.value);
 	}
 
 	function clearAllHistory() {
-		historyList.value = []
-		saveHistory(historyList.value)
+		historyList.value = [];
+		saveHistory(historyList.value);
 	}
 
 	// ---- 表单状态 ----
-	const selectedPreset = ref<keyof typeof presets>('openai')
-	const baseUrl = ref(presets.openai.defaultBaseUrl)
-	const authType = ref<'bearer' | ('header' | 'query')>('bearer')
-	const apiKey = ref('')
-	const customHeaderName = ref('X-API-Key')
+	const selectedPreset = ref<keyof typeof presets>('openai');
+	const baseUrl = ref(presets.openai.defaultBaseUrl);
+	const authType = ref<'bearer' | ('header' | 'query')>('bearer');
+	const apiKey = ref('');
+	const customHeaderName = ref('X-API-Key');
 
-	const useProxy = ref(true)
+	const useProxy = ref(true);
 
-	type TestStatus = 'idle' | 'loading' | 'success' | 'error'
-	const connectionStatus = ref<TestStatus>('idle')
-	const connectionMessage = ref('')
-	const modelsStatus = ref<TestStatus>('idle')
-	const modelsMessage = ref('')
-	const models = ref<string[]>([])
+	type TestStatus = 'idle' | 'loading' | 'success' | 'error';
+	const connectionStatus = ref<TestStatus>('idle');
+	const connectionMessage = ref('');
+	const modelsStatus = ref<TestStatus>('idle');
+	const modelsMessage = ref('');
+	const models = ref<string[]>([]);
 
-	const testModel = ref('')
-	const testPrompt = ref('Say "Hello, I am working!" in one sentence.')
-	const testResponse = ref('')
-	const testStatus = ref<TestStatus>('idle')
-	const testMessage = ref('')
+	const testModel = ref('');
+	const testPrompt = ref('Say "Hello, I am working!" in one sentence.');
+	const testResponse = ref('');
+	const testStatus = ref<TestStatus>('idle');
+	const testMessage = ref('');
 
 	watch(selectedPreset, (key) => {
-		baseUrl.value = presets[key].defaultBaseUrl
+		baseUrl.value = presets[key].defaultBaseUrl;
 		if (key === 'anthropic') {
-			authType.value = 'header'
-			customHeaderName.value = 'x-api-key'
+			authType.value = 'header';
+			customHeaderName.value = 'x-api-key';
 		} else {
-			authType.value = 'bearer'
+			authType.value = 'bearer';
 		}
-		connectionStatus.value = 'idle'
-		connectionMessage.value = ''
-		modelsStatus.value = 'idle'
-		modelsMessage.value = ''
-		models.value = []
-		testStatus.value = 'idle'
-		testResponse.value = ''
-		testMessage.value = ''
-	})
+		connectionStatus.value = 'idle';
+		connectionMessage.value = '';
+		modelsStatus.value = 'idle';
+		modelsMessage.value = '';
+		models.value = [];
+		testStatus.value = 'idle';
+		testResponse.value = '';
+		testMessage.value = '';
+	});
 
-	const preset = computed(() => presets[selectedPreset.value])
-	const presetOptions = computed(() => Object.entries(presets).map(([k, p]) => ({ label: p.label, value: k })))
+	const preset = computed(() => presets[selectedPreset.value]);
+	const presetOptions = computed(() => Object.entries(presets).map(([k, p]) => ({ label: p.label, value: k })));
 
 	const authTypeOptions = [
 		{ label: 'Bearer Token (Authorization: Bearer)', value: 'bearer' },
 		{ label: '自定义 Header', value: 'header' },
 		{ label: 'Query 参数 (?key=)', value: 'query' }
-	]
+	];
 
 	function alertType(status: TestStatus): 'info' | 'success' | 'error' {
-		if (status === 'loading') return 'info'
-		if (status === 'success') return 'success'
-		return 'error'
+		if (status === 'loading') return 'info';
+		if (status === 'success') return 'success';
+		return 'error';
 	}
 
 	function buildHeaders(): Record<string, string> {
-		const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+		const headers: Record<string, string> = { 'Content-Type': 'application/json' };
 		if (apiKey.value) {
-			if (authType.value === 'bearer') headers['Authorization'] = `Bearer ${apiKey.value}`
-			else if (authType.value === 'header') headers[customHeaderName.value] = apiKey.value
+			if (authType.value === 'bearer') headers['Authorization'] = `Bearer ${apiKey.value}`;
+			else if (authType.value === 'header') headers[customHeaderName.value] = apiKey.value;
 		}
-		const presetHeaders = preset.value.headers(apiKey.value)
+		const presetHeaders = preset.value.headers(apiKey.value);
 		for (const [key, value] of Object.entries(presetHeaders)) {
-			const lower = key.toLowerCase()
-			if (lower !== 'authorization' && lower !== 'content-type' && lower !== 'x-api-key') headers[key] = value
+			const lower = key.toLowerCase();
+			if (lower !== 'authorization' && lower !== 'content-type' && lower !== 'x-api-key') headers[key] = value;
 		}
-		return headers
+		return headers;
 	}
 
 	function getFullUrl(path: string): string {
-		let url = baseUrl.value.replace(/\/+$/, '')
+		let url = baseUrl.value.replace(/\/+$/, '');
 		if (authType.value === 'query' && apiKey.value)
-			url += path + (path.includes('?') ? '&' : '?') + `key=${encodeURIComponent(apiKey.value)}`
-		else url += path
-		return url
+			url += path + (path.includes('?') ? '&' : '?') + `key=${encodeURIComponent(apiKey.value)}`;
+		else url += path;
+		return url;
 	}
 
 	interface ApiResponse {
-		ok: boolean
-		status: number
-		json: () => Promise<any>
-		text: () => Promise<string>
+		ok: boolean;
+		status: number;
+		json: () => Promise<any>;
+		text: () => Promise<string>;
 	}
 
 	async function apiFetch(url: string, options: RequestInit): Promise<ApiResponse> {
 		if (!useProxy.value) {
-			const resp = await fetch(url, options)
-			return { ok: resp.ok, status: resp.status, json: () => resp.json(), text: () => resp.text() }
+			const resp = await fetch(url, options);
+			return { ok: resp.ok, status: resp.status, json: () => resp.json(), text: () => resp.text() };
 		}
 		const proxyResp = await fetch('/api/proxy', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ url, method: options.method || 'GET', headers: options.headers || {}, body: options.body })
-		})
-		const data = await proxyResp.json()
-		if (!data.ok) throw new Error(data.error || '代理请求失败')
+		});
+		const data = await proxyResp.json();
+		if (!data.ok) throw new Error(data.error || '代理请求失败');
 		return {
 			ok: data.status >= 200 && data.status < 300,
 			status: data.status,
 			json: async () => {
 				try {
-					return JSON.parse(data.body)
+					return JSON.parse(data.body);
 				} catch {
-					return data.body
+					return data.body;
 				}
 			},
 			text: async () => data.body
-		}
+		};
 	}
 
 	async function testConnection() {
 		if (!apiKey.value.trim()) {
-			connectionStatus.value = 'error'
-			connectionMessage.value = '请先填写 API Key'
-			return
+			connectionStatus.value = 'error';
+			connectionMessage.value = '请先填写 API Key';
+			return;
 		}
-		connectionStatus.value = 'loading'
-		connectionMessage.value = '正在连接...'
+		connectionStatus.value = 'loading';
+		connectionMessage.value = '正在连接...';
 		try {
-			const headers = buildHeaders()
-			const resp = await apiFetch(getFullUrl(preset.value.modelsPath), { method: 'GET', headers })
+			const headers = buildHeaders();
+			const resp = await apiFetch(getFullUrl(preset.value.modelsPath), { method: 'GET', headers });
 			if (resp.ok) {
-				connectionStatus.value = 'success'
-				connectionMessage.value = `连接成功 (HTTP ${resp.status})`
+				connectionStatus.value = 'success';
+				connectionMessage.value = `连接成功 (HTTP ${resp.status})`;
 			} else {
-				const body = await resp.text().catch(() => '')
-				connectionStatus.value = 'error'
-				connectionMessage.value = `HTTP ${resp.status}: ${body.slice(0, 200) || 'Unknown error'}`
+				const body = await resp.text().catch(() => '');
+				connectionStatus.value = 'error';
+				connectionMessage.value = `HTTP ${resp.status}: ${body.slice(0, 200) || 'Unknown error'}`;
 			}
 		} catch (e: any) {
-			connectionStatus.value = 'error'
+			connectionStatus.value = 'error';
 			if (e.message?.includes('Failed to fetch') || e.name === 'TypeError')
 				connectionMessage.value =
-					'网络错误：可能是 CORS 限制或 URL 不可达。浏览器端请求可能被服务端拒绝，建议开启代理。'
-			else connectionMessage.value = `请求失败: ${e.message}`
+					'网络错误：可能是 CORS 限制或 URL 不可达。浏览器端请求可能被服务端拒绝，建议开启代理。';
+			else connectionMessage.value = `请求失败: ${e.message}`;
 		}
 	}
 
 	async function fetchModels() {
 		if (!apiKey.value.trim()) {
-			modelsStatus.value = 'error'
-			modelsMessage.value = '请先填写 API Key'
-			return
+			modelsStatus.value = 'error';
+			modelsMessage.value = '请先填写 API Key';
+			return;
 		}
-		modelsStatus.value = 'loading'
-		modelsMessage.value = '正在获取模型列表...'
+		modelsStatus.value = 'loading';
+		modelsMessage.value = '正在获取模型列表...';
 		try {
-			const headers = buildHeaders()
-			const resp = await apiFetch(getFullUrl(preset.value.modelsPath), { method: 'GET', headers })
+			const headers = buildHeaders();
+			const resp = await apiFetch(getFullUrl(preset.value.modelsPath), { method: 'GET', headers });
 			if (!resp.ok) {
-				const body = await resp.text().catch(() => '')
-				modelsStatus.value = 'error'
-				modelsMessage.value = `HTTP ${resp.status}: ${body.slice(0, 200)}`
-				return
+				const body = await resp.text().catch(() => '');
+				modelsStatus.value = 'error';
+				modelsMessage.value = `HTTP ${resp.status}: ${body.slice(0, 200)}`;
+				return;
 			}
-			const data = await resp.json()
-			models.value = preset.value.parseModels(data)
+			const data = await resp.json();
+			models.value = preset.value.parseModels(data);
 			if (models.value.length === 0) {
-				modelsStatus.value = 'success'
-				modelsMessage.value = '未解析到模型数据，请查看原始响应'
+				modelsStatus.value = 'success';
+				modelsMessage.value = '未解析到模型数据，请查看原始响应';
 			} else {
-				modelsStatus.value = 'success'
-				modelsMessage.value = `共获取到 ${models.value.length} 个模型`
+				modelsStatus.value = 'success';
+				modelsMessage.value = `共获取到 ${models.value.length} 个模型`;
 			}
 		} catch (e: any) {
-			modelsStatus.value = 'error'
+			modelsStatus.value = 'error';
 			if (e.message?.includes('Failed to fetch') || e.name === 'TypeError')
-				modelsMessage.value = '网络错误：可能是 CORS 限制。请确认 API 端点支持跨域请求，或开启代理。'
-			else modelsMessage.value = `请求失败: ${e.message}`
+				modelsMessage.value = '网络错误：可能是 CORS 限制。请确认 API 端点支持跨域请求，或开启代理。';
+			else modelsMessage.value = `请求失败: ${e.message}`;
 		}
 	}
 
 	async function sendTestMessage() {
 		if (!apiKey.value.trim()) {
-			testStatus.value = 'error'
-			testMessage.value = '请先填写 API Key'
-			return
+			testStatus.value = 'error';
+			testMessage.value = '请先填写 API Key';
+			return;
 		}
-		const model = testModel.value.trim() || (models.value[0] ?? '')
+		const model = testModel.value.trim() || (models.value[0] ?? '');
 		if (!model) {
-			testStatus.value = 'error'
-			testMessage.value = '请选择一个模型或手动输入模型名称'
-			return
+			testStatus.value = 'error';
+			testMessage.value = '请选择一个模型或手动输入模型名称';
+			return;
 		}
-		testStatus.value = 'loading'
-		testMessage.value = '正在发送...'
-		testResponse.value = ''
+		testStatus.value = 'loading';
+		testMessage.value = '正在发送...';
+		testResponse.value = '';
 		try {
-			const headers = buildHeaders()
-			let chatPath = '/v1/chat/completions'
-			let body: unknown
+			const headers = buildHeaders();
+			let chatPath = '/v1/chat/completions';
+			let body: unknown;
 			if (selectedPreset.value === 'anthropic') {
-				chatPath = '/v1/messages'
-				body = { model, max_tokens: 100, messages: [{ role: 'user', content: testPrompt.value }] }
+				chatPath = '/v1/messages';
+				body = { model, max_tokens: 100, messages: [{ role: 'user', content: testPrompt.value }] };
 			} else if (selectedPreset.value === 'gemini') {
-				chatPath = `/v1beta/models/${model}:generateContent`
-				body = { contents: [{ parts: [{ text: testPrompt.value }] }] }
+				chatPath = `/v1beta/models/${model}:generateContent`;
+				body = { contents: [{ parts: [{ text: testPrompt.value }] }] };
 			} else {
-				body = { model, messages: [{ role: 'user', content: testPrompt.value }], max_tokens: 100 }
+				body = { model, messages: [{ role: 'user', content: testPrompt.value }], max_tokens: 100 };
 			}
-			const resp = await apiFetch(getFullUrl(chatPath), { method: 'POST', headers, body: JSON.stringify(body) })
-			const data = await resp.json().catch(() => null)
+			const resp = await apiFetch(getFullUrl(chatPath), { method: 'POST', headers, body: JSON.stringify(body) });
+			const data = await resp.json().catch(() => null);
 			if (!resp.ok) {
-				testStatus.value = 'error'
-				testMessage.value = `HTTP ${resp.status}: ${JSON.stringify(data?.error ?? data ?? 'Unknown error').slice(0, 300)}`
-				return
+				testStatus.value = 'error';
+				testMessage.value = `HTTP ${resp.status}: ${JSON.stringify(data?.error ?? data ?? 'Unknown error').slice(0, 300)}`;
+				return;
 			}
-			let content = ''
+			let content = '';
 			if (selectedPreset.value === 'gemini')
-				content = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? JSON.stringify(data)
-			else if (selectedPreset.value === 'anthropic') content = data?.content?.[0]?.text ?? JSON.stringify(data)
-			else content = data?.choices?.[0]?.message?.content ?? JSON.stringify(data)
-			testResponse.value = content
-			testStatus.value = 'success'
-			testMessage.value = '响应成功'
+				content = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? JSON.stringify(data);
+			else if (selectedPreset.value === 'anthropic') content = data?.content?.[0]?.text ?? JSON.stringify(data);
+			else content = data?.choices?.[0]?.message?.content ?? JSON.stringify(data);
+			testResponse.value = content;
+			testStatus.value = 'success';
+			testMessage.value = '响应成功';
 		} catch (e: any) {
-			testStatus.value = 'error'
+			testStatus.value = 'error';
 			if (e.message?.includes('Failed to fetch') || e.name === 'TypeError')
-				testMessage.value = '网络错误：可能是 CORS 限制。浏览器端请求可能被服务端拒绝，请开启代理。'
-			else testMessage.value = `请求失败: ${e.message}`
+				testMessage.value = '网络错误：可能是 CORS 限制。浏览器端请求可能被服务端拒绝，请开启代理。';
+			else testMessage.value = `请求失败: ${e.message}`;
 		}
 	}
 </script>

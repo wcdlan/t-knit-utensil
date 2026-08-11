@@ -1,40 +1,40 @@
 <script lang="ts" setup>
-	import { computed, ref } from 'vue'
-	import { NButton, NButtonGroup, NProgress, NRadio, NRadioGroup, NTag } from 'naive-ui'
+	import { computed, ref } from 'vue';
+	import { NButton, NButtonGroup, NProgress, NRadio, NRadioGroup, NTag } from 'naive-ui';
 
 	// ── License full texts (loaded at build time) ──────────────────────────────────
 	const LICENSE_TEXTS: Record<string, string> = import.meta.glob('@/assets/license/*.txt', {
 		query: '?raw',
 		import: 'default',
 		eager: true
-	}) as Record<string, string>
+	}) as Record<string, string>;
 
 	function getLicenseText(id: string, lang?: string): string {
 		if (lang) {
 			for (const [path, text] of Object.entries(LICENSE_TEXTS)) {
-				if (path.endsWith(`/${id}.${lang}.txt`)) return text
+				if (path.endsWith(`/${id}.${lang}.txt`)) return text;
 			}
 		}
 		for (const [path, text] of Object.entries(LICENSE_TEXTS)) {
-			if (path.endsWith(`/${id}.txt`)) return text
+			if (path.endsWith(`/${id}.txt`)) return text;
 		}
-		return ''
+		return '';
 	}
 
 	// ── License Profiles ──────────────────────────────────────────────────────────
 	interface LicenseProfile {
-		id: string
-		name: string
-		spdxId: string
-		copyleft: number
-		patent: boolean
-		simplicity: number
-		osiApproved: boolean
-		domestic: boolean
-		summary: string
-		tags: string[]
-		url: string
-		languages: { code: string; label: string }[]
+		id: string;
+		name: string;
+		spdxId: string;
+		copyleft: number;
+		patent: boolean;
+		simplicity: number;
+		osiApproved: boolean;
+		domestic: boolean;
+		summary: string;
+		tags: string[];
+		url: string;
+		languages: { code: string; label: string }[];
 	}
 
 	const LICENSES: LicenseProfile[] = [
@@ -426,19 +426,19 @@
 			url: 'https://www.wtfpl.net/',
 			languages: [{ code: 'en', label: 'English' }]
 		}
-	]
+	];
 
 	// ── Questions ────────────────────────────────────────────────────────────────
 	interface QuestionOption {
-		value: string
-		label: string
-		description: string
+		value: string;
+		label: string;
+		description: string;
 	}
 
 	interface Question {
-		id: string
-		text: string
-		options: QuestionOption[]
+		id: string;
+		text: string;
+		options: QuestionOption[];
 	}
 
 	const QUESTIONS: Question[] = [
@@ -514,7 +514,7 @@
 				{ value: 'full', label: '完整严谨', description: '全面的法律措辞，覆盖各种边界情况（GPL 风格）' }
 			]
 		}
-	]
+	];
 
 	// ── State ────────────────────────────────────────────────────────────────────
 	const answers = ref<Record<string, string>>({
@@ -523,106 +523,106 @@
 		patent: 'no',
 		domestic: 'any',
 		simplicity: 'short'
-	})
+	});
 
-	const expandedLicense = ref<string | null>(null)
-	const selectedLang = ref<string>('')
-	const copiedId = ref<string | null>(null)
+	const expandedLicense = ref<string | null>(null);
+	const selectedLang = ref<string>('');
+	const copiedId = ref<string | null>(null);
 
 	// ── Scoring Engine ───────────────────────────────────────────────────────────
 	interface ScoredLicense {
-		license: LicenseProfile
-		score: number
-		highlights: string[]
+		license: LicenseProfile;
+		score: number;
+		highlights: string[];
 	}
 
 	function computeScores(): ScoredLicense[] {
-		const a = answers.value
-		const desiredCopyleftMax = { personal: 4, commercial: 1, library: 2, saas: 1, cli: 3 }[a.projectType] ?? 4
-		const copyleftTarget = { none: 0, attribution: 1, weak: 2, strong: 3, network: 4 }[a.copyleft] ?? 0
-		const needPatent = a.patent === 'yes'
-		const simplicityTarget = { short: 0, medium: 1, full: 2 }[a.simplicity] ?? 0
+		const a = answers.value;
+		const desiredCopyleftMax = { personal: 4, commercial: 1, library: 2, saas: 1, cli: 3 }[a.projectType] ?? 4;
+		const copyleftTarget = { none: 0, attribution: 1, weak: 2, strong: 3, network: 4 }[a.copyleft] ?? 0;
+		const needPatent = a.patent === 'yes';
+		const simplicityTarget = { short: 0, medium: 1, full: 2 }[a.simplicity] ?? 0;
 
 		const results: ScoredLicense[] = LICENSES.map((license) => {
-			let score = 100
-			const copyleftDiff = Math.abs(license.copyleft - copyleftTarget)
-			score -= copyleftDiff * 12
-			if (license.copyleft > desiredCopyleftMax) score -= (license.copyleft - desiredCopyleftMax) * 18
-			if (needPatent && !license.patent) score -= 15
-			if (!needPatent && license.patent) score += 3
-			const simplicityDiff = Math.abs(license.simplicity - simplicityTarget)
-			score -= simplicityDiff * 8
-			if (a.domestic === 'only' && !license.domestic) score -= 50
-			if (a.domestic === 'prefer' && license.domestic) score += 12
-			if (a.domestic === 'only' && license.domestic) score += 5
+			let score = 100;
+			const copyleftDiff = Math.abs(license.copyleft - copyleftTarget);
+			score -= copyleftDiff * 12;
+			if (license.copyleft > desiredCopyleftMax) score -= (license.copyleft - desiredCopyleftMax) * 18;
+			if (needPatent && !license.patent) score -= 15;
+			if (!needPatent && license.patent) score += 3;
+			const simplicityDiff = Math.abs(license.simplicity - simplicityTarget);
+			score -= simplicityDiff * 8;
+			if (a.domestic === 'only' && !license.domestic) score -= 50;
+			if (a.domestic === 'prefer' && license.domestic) score += 12;
+			if (a.domestic === 'only' && license.domestic) score += 5;
 			if (a.projectType === 'commercial' || a.projectType === 'saas') {
-				if (license.copyleft <= 1) score += 5
-				if (license.patent) score += 3
+				if (license.copyleft <= 1) score += 5;
+				if (license.patent) score += 3;
 			}
 			if (a.projectType === 'library') {
-				if (license.copyleft >= 1 && license.copyleft <= 2) score += 5
-				if (license.copyleft === 0) score -= 3
+				if (license.copyleft >= 1 && license.copyleft <= 2) score += 5;
+				if (license.copyleft === 0) score -= 3;
 			}
-			if (a.projectType === 'saas' && license.copyleft >= 4) score -= 25
-			const highlights: string[] = []
-			if (license.copyleft === copyleftTarget) highlights.push('Copyleft 级别完全匹配')
-			else if (copyleftDiff <= 1) highlights.push('Copyleft 级别接近')
-			if (needPatent && license.patent) highlights.push('提供专利保护')
-			if (simplicityDiff === 0) highlights.push('许可文本风格匹配')
-			if (license.osiApproved) highlights.push('OSI 认证')
-			if (a.domestic !== 'any' && license.domestic) highlights.push('国产许可证')
-			return { license, score: Math.max(0, Math.round(score)), highlights }
-		})
+			if (a.projectType === 'saas' && license.copyleft >= 4) score -= 25;
+			const highlights: string[] = [];
+			if (license.copyleft === copyleftTarget) highlights.push('Copyleft 级别完全匹配');
+			else if (copyleftDiff <= 1) highlights.push('Copyleft 级别接近');
+			if (needPatent && license.patent) highlights.push('提供专利保护');
+			if (simplicityDiff === 0) highlights.push('许可文本风格匹配');
+			if (license.osiApproved) highlights.push('OSI 认证');
+			if (a.domestic !== 'any' && license.domestic) highlights.push('国产许可证');
+			return { license, score: Math.max(0, Math.round(score)), highlights };
+		});
 
-		results.sort((a, b) => b.score - a.score)
-		return results
+		results.sort((a, b) => b.score - a.score);
+		return results;
 	}
 
-	const scoredLicenses = computed(() => computeScores())
+	const scoredLicenses = computed(() => computeScores());
 
 	// ── Actions ──────────────────────────────────────────────────────────────────
 	function toggleExpand(id: string) {
 		if (expandedLicense.value === id) {
-			expandedLicense.value = null
+			expandedLicense.value = null;
 		} else {
-			expandedLicense.value = id
-			const lic = LICENSES.find((l) => l.id === id)
-			selectedLang.value = lic?.languages[0]?.code ?? 'en'
+			expandedLicense.value = id;
+			const lic = LICENSES.find((l) => l.id === id);
+			selectedLang.value = lic?.languages[0]?.code ?? 'en';
 		}
 	}
 
 	async function copyLicense(license: LicenseProfile) {
 		try {
-			await navigator.clipboard.writeText(getLicenseText(license.id, selectedLang.value))
+			await navigator.clipboard.writeText(getLicenseText(license.id, selectedLang.value));
 		} catch {
-			const textarea = document.createElement('textarea')
-			textarea.value = getLicenseText(license.id, selectedLang.value)
-			textarea.style.position = 'fixed'
-			textarea.style.opacity = '0'
-			document.body.appendChild(textarea)
-			textarea.select()
-			document.execCommand('copy')
-			document.body.removeChild(textarea)
+			const textarea = document.createElement('textarea');
+			textarea.value = getLicenseText(license.id, selectedLang.value);
+			textarea.style.position = 'fixed';
+			textarea.style.opacity = '0';
+			document.body.appendChild(textarea);
+			textarea.select();
+			document.execCommand('copy');
+			document.body.removeChild(textarea);
 		}
-		copiedId.value = license.id
+		copiedId.value = license.id;
 		setTimeout(() => {
-			copiedId.value = null
-		}, 2000)
+			copiedId.value = null;
+		}, 2000);
 	}
 
 	function downloadLicense(license: LicenseProfile) {
-		const text = getLicenseText(license.id, selectedLang.value)
-		const blob = new Blob([text], { type: 'text/plain;charset=utf-8' })
-		const url = URL.createObjectURL(blob)
-		const a = document.createElement('a')
-		a.href = url
+		const text = getLicenseText(license.id, selectedLang.value);
+		const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+		const url = URL.createObjectURL(blob);
+		const a = document.createElement('a');
+		a.href = url;
 		const langSuffix =
-			selectedLang.value && selectedLang.value !== license.languages[0]?.code ? `.${selectedLang.value}` : ''
-		a.download = `${license.spdxId.replace(/[^a-zA-Z0-9.-]/g, '_')}${langSuffix}.txt`
-		document.body.appendChild(a)
-		a.click()
-		document.body.removeChild(a)
-		URL.revokeObjectURL(url)
+			selectedLang.value && selectedLang.value !== license.languages[0]?.code ? `.${selectedLang.value}` : '';
+		a.download = `${license.spdxId.replace(/[^a-zA-Z0-9.-]/g, '_')}${langSuffix}.txt`;
+		document.body.appendChild(a);
+		a.click();
+		document.body.removeChild(a);
+		URL.revokeObjectURL(url);
 	}
 
 	// ── Helpers ──────────────────────────────────────────────────────────────────
@@ -632,29 +632,29 @@
 		2: '弱 Copyleft (文件级)',
 		3: '强 Copyleft (项目级)',
 		4: '网络 Copyleft (AGPL)'
-	}
-	const simplicityLabels: Record<number, string> = { 0: '简短', 1: '适中', 2: '完整' }
+	};
+	const simplicityLabels: Record<number, string> = { 0: '简短', 1: '适中', 2: '完整' };
 
 	function scoreColor(score: number): string {
-		if (score >= 90) return '#22c55e'
-		if (score >= 75) return '#34d399'
-		if (score >= 60) return '#eab308'
-		if (score >= 40) return '#f97316'
-		return '#ef4444'
+		if (score >= 90) return '#22c55e';
+		if (score >= 75) return '#34d399';
+		if (score >= 60) return '#eab308';
+		if (score >= 40) return '#f97316';
+		return '#ef4444';
 	}
 
 	function scoreLabel(score: number): string {
-		if (score >= 90) return '强烈推荐'
-		if (score >= 75) return '推荐'
-		if (score >= 60) return '可以考虑'
-		if (score >= 40) return '不太匹配'
-		return '不推荐'
+		if (score >= 90) return '强烈推荐';
+		if (score >= 75) return '推荐';
+		if (score >= 60) return '可以考虑';
+		if (score >= 40) return '不太匹配';
+		return '不推荐';
 	}
 
 	function scoreStatus(score: number): 'success' | 'warning' | 'error' {
-		if (score >= 75) return 'success'
-		if (score >= 60) return 'warning'
-		return 'error'
+		if (score >= 75) return 'success';
+		if (score >= 60) return 'warning';
+		return 'error';
 	}
 </script>
 

@@ -1,38 +1,38 @@
 <script lang="ts" setup>
-	import { computed, h, ref } from 'vue'
-	import type { DataTableColumn } from 'naive-ui'
-	import { NAlert, NCollapse, NCollapseItem, NInput, NSelect, NTag } from 'naive-ui'
+	import { computed, h, ref } from 'vue';
+	import type { DataTableColumn } from 'naive-ui';
+	import { NAlert, NCollapse, NCollapseItem, NInput, NSelect, NTag } from 'naive-ui';
 
-	const pattern = ref('')
-	const flags = ref('g')
-	const testStr = ref('')
-	const error = ref('')
+	const pattern = ref('');
+	const flags = ref('g');
+	const testStr = ref('');
+	const error = ref('');
 
 	const matches = computed(() => {
-		error.value = ''
-		if (!pattern.value || !testStr.value) return []
+		error.value = '';
+		if (!pattern.value || !testStr.value) return [];
 		try {
-			const re = new RegExp(pattern.value, flags.value)
-			const results: { match: string; index: number; groups: string[] }[] = []
-			let m: RegExpExecArray | null
+			const re = new RegExp(pattern.value, flags.value);
+			const results: { match: string; index: number; groups: string[] }[] = [];
+			let m: RegExpExecArray | null;
 			if (flags.value.includes('g')) {
 				while ((m = re.exec(testStr.value)) !== null) {
-					results.push({ match: m[0], index: m.index, groups: m.slice(1) })
+					results.push({ match: m[0], index: m.index, groups: m.slice(1) });
 					if (m[0] === '') {
-						re.lastIndex++
-						if (re.lastIndex > testStr.value.length) break
+						re.lastIndex++;
+						if (re.lastIndex > testStr.value.length) break;
 					}
 				}
 			} else {
-				m = re.exec(testStr.value)
-				if (m) results.push({ match: m[0], index: m.index, groups: m.slice(1) })
+				m = re.exec(testStr.value);
+				if (m) results.push({ match: m[0], index: m.index, groups: m.slice(1) });
 			}
-			return results
+			return results;
 		} catch (e) {
-			error.value = '正则表达式错误: ' + (e as Error).message
-			return []
+			error.value = '正则表达式错误: ' + (e as Error).message;
+			return [];
 		}
-	})
+	});
 
 	const flagOptions = [
 		{ value: 'g', label: 'g (全局)' },
@@ -43,7 +43,7 @@
 		{ value: 'gm', label: 'gm' },
 		{ value: 'gim', label: 'gim' },
 		{ value: 'gis', label: 'gis' }
-	]
+	];
 
 	const commonPatterns = [
 		{ label: '邮箱', pattern: '^[\\w.-]+@[\\w.-]+\\.\\w+$' },
@@ -61,10 +61,10 @@
 		{ label: '十六进制颜色值', pattern: '^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$' },
 		{ label: '行首空白行', pattern: '^\\s*$' },
 		{ label: 'HTML标签', pattern: '<[^>]+>' }
-	]
+	];
 
 	function selectPattern(p: { label: string; pattern: string }) {
-		pattern.value = p.pattern
+		pattern.value = p.pattern;
 	}
 
 	const specialChars = [
@@ -97,7 +97,7 @@
 		{ char: '(?!)', desc: '负向前瞻，后面不能跟着指定表达式' },
 		{ char: '(?<=)', desc: '正向后顾，前面必须是指定表达式（ES2018+）' },
 		{ char: '(?<!)', desc: '负向后顾，前面不能是指定表达式（ES2018+）' }
-	]
+	];
 
 	const refColumns: DataTableColumn[] = [
 		{
@@ -107,7 +107,7 @@
 			render: (row: any) => h('code', { class: 'font-mono text-blue-600' }, row.char)
 		},
 		{ title: '说明', key: 'desc' }
-	]
+	];
 </script>
 
 <template>

@@ -1,31 +1,31 @@
 <script lang="ts" setup>
-	import { ref } from 'vue'
-	import { useRouter } from 'vue-router'
-	import { NAlert, NButton, NCard, NInput } from 'naive-ui'
-	import { isDev, saveConfig, siteConfig } from '@/data/siteConfig'
-	import { useAuth } from '@/data/auth'
+	import { ref } from 'vue';
+	import { useRouter } from 'vue-router';
+	import { NAlert, NButton, NCard, NInput } from 'naive-ui';
+	import { isDev, saveConfig, siteConfig } from '@/data/siteConfig';
+	import { useAuth } from '@/data/auth';
 
-	const router = useRouter()
-	const { logout } = useAuth()
+	const router = useRouter();
+	const { logout } = useAuth();
 
-	const saved = ref(false)
-	const error = ref('')
+	const saved = ref(false);
+	const error = ref('');
 
 	async function handleSave() {
-		error.value = ''
-		saved.value = false
-		const ok = await saveConfig()
+		error.value = '';
+		saved.value = false;
+		const ok = await saveConfig();
 		if (ok) {
-			saved.value = true
-			setTimeout(() => (saved.value = false), 2000)
+			saved.value = true;
+			setTimeout(() => (saved.value = false), 2000);
 		} else {
-			error.value = '保存失败，请确认在开发模式下运行'
+			error.value = '保存失败，请确认在开发模式下运行';
 		}
 	}
 
 	function handleLogout() {
-		logout()
-		router.replace('/')
+		logout();
+		router.replace('/');
 	}
 </script>
 

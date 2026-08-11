@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-	import { computed, ref } from 'vue'
+	import { computed, ref } from 'vue';
 
-	const text = ref('')
-	const size = ref(200)
+	const text = ref('');
+	const size = ref(200);
 	const qrUrl = computed(() => {
-		if (!text.value) return ''
-		return `https://api.qrserver.com/v1/create-qr-code/?size=${size.value}x${size.value}&data=${encodeURIComponent(text.value)}`
-	})
+		if (!text.value) return '';
+		return `https://api.qrserver.com/v1/create-qr-code/?size=${size.value}x${size.value}&data=${encodeURIComponent(text.value)}`;
+	});
 </script>
 
 <template>

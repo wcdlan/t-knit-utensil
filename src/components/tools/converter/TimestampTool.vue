@@ -1,53 +1,53 @@
 <script lang="ts" setup>
-	import { onMounted, onUnmounted, ref } from 'vue'
-	import { NButton, NInput } from 'naive-ui'
+	import { onMounted, onUnmounted, ref } from 'vue';
+	import { NButton, NInput } from 'naive-ui';
 
-	const now = ref(Math.floor(Date.now() / 1000))
-	const nowMs = ref(Date.now())
-	const nowStr = ref('')
-	const tsInput = ref('')
-	const tsResult = ref('')
-	const dateInput = ref('')
-	const dateResult = ref('')
+	const now = ref(Math.floor(Date.now() / 1000));
+	const nowMs = ref(Date.now());
+	const nowStr = ref('');
+	const tsInput = ref('');
+	const tsResult = ref('');
+	const dateInput = ref('');
+	const dateResult = ref('');
 
-	let timer: ReturnType<typeof setInterval>
+	let timer: ReturnType<typeof setInterval>;
 
 	function updateNow() {
-		now.value = Math.floor(Date.now() / 1000)
-		nowMs.value = Date.now()
-		nowStr.value = new Date().toLocaleString('zh-CN')
+		now.value = Math.floor(Date.now() / 1000);
+		nowMs.value = Date.now();
+		nowStr.value = new Date().toLocaleString('zh-CN');
 	}
 
 	onMounted(() => {
-		updateNow()
-		timer = setInterval(updateNow, 1000)
-		dateInput.value = new Date().toISOString().slice(0, 16)
-	})
+		updateNow();
+		timer = setInterval(updateNow, 1000);
+		dateInput.value = new Date().toISOString().slice(0, 16);
+	});
 
-	onUnmounted(() => clearInterval(timer))
+	onUnmounted(() => clearInterval(timer));
 
 	function tsToDate() {
-		const ts = parseInt(tsInput.value)
+		const ts = parseInt(tsInput.value);
 		if (isNaN(ts)) {
-			tsResult.value = '请输入有效的时间戳'
-			return
+			tsResult.value = '请输入有效的时间戳';
+			return;
 		}
-		const ms = ts > 9999999999 ? ts : ts * 1000
-		tsResult.value = new Date(ms).toLocaleString('zh-CN')
+		const ms = ts > 9999999999 ? ts : ts * 1000;
+		tsResult.value = new Date(ms).toLocaleString('zh-CN');
 	}
 
 	function dateToTs() {
-		const d = new Date(dateInput.value)
+		const d = new Date(dateInput.value);
 		if (isNaN(d.getTime())) {
-			dateResult.value = '请输入有效的日期时间'
-			return
+			dateResult.value = '请输入有效的日期时间';
+			return;
 		}
-		dateResult.value = `秒级: ${Math.floor(d.getTime() / 1000)}\n毫秒级: ${d.getTime()}`
+		dateResult.value = `秒级: ${Math.floor(d.getTime() / 1000)}\n毫秒级: ${d.getTime()}`;
 	}
 
 	function copy(el: string) {
-		const text = el === 'now' ? String(now.value) : el === 'nowMs' ? String(nowMs.value) : tsResult.value
-		navigator.clipboard.writeText(text)
+		const text = el === 'now' ? String(now.value) : el === 'nowMs' ? String(nowMs.value) : tsResult.value;
+		navigator.clipboard.writeText(text);
 	}
 </script>
 

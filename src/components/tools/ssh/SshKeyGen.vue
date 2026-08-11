@@ -1,90 +1,90 @@
 <script lang="ts" setup>
-	import { ref } from 'vue'
-	import JSZip from 'jszip'
-	import { NAlert, NButton, NButtonGroup, NInput } from 'naive-ui'
-	import { generateKeyPair, KEY_TYPES, type KeyType } from '@/utils/ssh'
+	import { ref } from 'vue';
+	import JSZip from 'jszip';
+	import { NAlert, NButton, NButtonGroup, NInput } from 'naive-ui';
+	import { generateKeyPair, KEY_TYPES, type KeyType } from '@/utils/ssh';
 
-	const keyType = ref<KeyType>('rsa-2048')
-	const passphrase = ref('')
-	const passphraseConfirm = ref('')
-	const comment = ref('')
-	const privateKey = ref('')
-	const publicKey = ref('')
-	const generating = ref(false)
-	const error = ref('')
-	const passphraseMismatch = ref(false)
+	const keyType = ref<KeyType>('rsa-2048');
+	const passphrase = ref('');
+	const passphraseConfirm = ref('');
+	const comment = ref('');
+	const privateKey = ref('');
+	const publicKey = ref('');
+	const generating = ref(false);
+	const error = ref('');
+	const passphraseMismatch = ref(false);
 
 	const keyTypes = Object.entries(KEY_TYPES).map(([id, meta]) => ({
 		id: id as KeyType,
 		label: meta.label
-	}))
+	}));
 
 	async function generate() {
 		if (passphrase.value && passphrase.value !== passphraseConfirm.value) {
-			passphraseMismatch.value = true
-			return
+			passphraseMismatch.value = true;
+			return;
 		}
-		passphraseMismatch.value = false
-		generating.value = true
-		error.value = ''
+		passphraseMismatch.value = false;
+		generating.value = true;
+		error.value = '';
 		try {
-			const result = await generateKeyPair(keyType.value, passphrase.value || undefined, comment.value || undefined)
-			privateKey.value = result.privateKeyPem
-			publicKey.value = result.publicKeySsh
+			const result = await generateKeyPair(keyType.value, passphrase.value || undefined, comment.value || undefined);
+			privateKey.value = result.privateKeyPem;
+			publicKey.value = result.publicKeySsh;
 		} catch (e) {
-			error.value = '密钥生成失败: ' + (e instanceof Error ? e.message : '未知错误')
+			error.value = '密钥生成失败: ' + (e instanceof Error ? e.message : '未知错误');
 		} finally {
-			generating.value = false
+			generating.value = false;
 		}
 	}
 
 	function copyPrivate() {
-		navigator.clipboard.writeText(privateKey.value)
+		navigator.clipboard.writeText(privateKey.value);
 	}
 
 	function copyPublic() {
-		navigator.clipboard.writeText(publicKey.value)
+		navigator.clipboard.writeText(publicKey.value);
 	}
 
 	function download(filename: string, content: string) {
-		const blob = new Blob([content], { type: 'text/plain' })
-		const url = URL.createObjectURL(blob)
-		const a = document.createElement('a')
-		a.href = url
-		a.download = filename
-		a.click()
-		URL.revokeObjectURL(url)
+		const blob = new Blob([content], { type: 'text/plain' });
+		const url = URL.createObjectURL(blob);
+		const a = document.createElement('a');
+		a.href = url;
+		a.download = filename;
+		a.click();
+		URL.revokeObjectURL(url);
 	}
 
 	function downloadPrivate() {
-		const ext = keyType.value.startsWith('ecdsa') ? 'ecdsa' : 'rsa'
-		download(`id_${ext}`, privateKey.value)
+		const ext = keyType.value.startsWith('ecdsa') ? 'ecdsa' : 'rsa';
+		download(`id_${ext}`, privateKey.value);
 	}
 
 	function downloadPublic() {
-		const ext = keyType.value.startsWith('ecdsa') ? 'ecdsa' : 'rsa'
-		download(`id_${ext}.pub`, publicKey.value)
+		const ext = keyType.value.startsWith('ecdsa') ? 'ecdsa' : 'rsa';
+		download(`id_${ext}.pub`, publicKey.value);
 	}
 
 	function sanitizeFilename(name: string): string {
-		return name.replace(/[^a-zA-Z0-9一-鿿._@-]/g, '_').slice(0, 64) || 'key'
+		return name.replace(/[^a-zA-Z0-9一-鿿._@-]/g, '_').slice(0, 64) || 'key';
 	}
 
 	async function downloadZip() {
-		const ext = keyType.value.startsWith('ecdsa') ? 'ecdsa' : 'rsa'
-		const baseName = comment.value.trim() ? sanitizeFilename(comment.value.trim()) : `id_${ext}`
+		const ext = keyType.value.startsWith('ecdsa') ? 'ecdsa' : 'rsa';
+		const baseName = comment.value.trim() ? sanitizeFilename(comment.value.trim()) : `id_${ext}`;
 
-		const zip = new JSZip()
-		zip.file(baseName, privateKey.value)
-		zip.file(`${baseName}.pub`, publicKey.value)
+		const zip = new JSZip();
+		zip.file(baseName, privateKey.value);
+		zip.file(`${baseName}.pub`, publicKey.value);
 
-		const blob = await zip.generateAsync({ type: 'blob' })
-		const url = URL.createObjectURL(blob)
-		const a = document.createElement('a')
-		a.href = url
-		a.download = `${baseName}.zip`
-		a.click()
-		URL.revokeObjectURL(url)
+		const blob = await zip.generateAsync({ type: 'blob' });
+		const url = URL.createObjectURL(blob);
+		const a = document.createElement('a');
+		a.href = url;
+		a.download = `${baseName}.zip`;
+		a.click();
+		URL.revokeObjectURL(url);
 	}
 </script>
 
@@ -158,11 +158,11 @@
 				</div>
 			</div>
 			<n-input
-				:value="privateKey"
 				:autosize="{ minRows: 6 }"
+				:value="privateKey"
+				placeholder="点击「生成密钥对」生成私钥"
 				readonly
 				type="textarea"
-				placeholder="点击「生成密钥对」生成私钥"
 			/>
 		</div>
 
@@ -176,8 +176,8 @@
 				</div>
 			</div>
 			<n-input
-				:value="publicKey"
 				:autosize="{ minRows: 3 }"
+				:value="publicKey"
 				placeholder="点击「生成密钥对」生成公钥"
 				readonly
 				type="textarea"

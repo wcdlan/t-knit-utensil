@@ -33,4 +33,4 @@ export const themeOverrides = {
 		errorColorPressed: '#dc2626',
 		errorColorSuppl: '#f87171'
 	}
-}
+};

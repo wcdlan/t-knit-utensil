@@ -1,26 +1,26 @@
 <script lang="ts" setup>
-	import { ref } from 'vue'
-	import { useRouter } from 'vue-router'
-	import { NAlert, NButton, NCard, NInput } from 'naive-ui'
-	import { useAuth } from '@/data/auth'
+	import { ref } from 'vue';
+	import { useRouter } from 'vue-router';
+	import { NAlert, NButton, NCard, NInput } from 'naive-ui';
+	import { useAuth } from '@/data/auth';
 
-	const router = useRouter()
-	const { login } = useAuth()
-	const password = ref('')
-	const error = ref('')
-	const loading = ref(false)
+	const router = useRouter();
+	const { login } = useAuth();
+	const password = ref('');
+	const error = ref('');
+	const loading = ref(false);
 
 	async function handleLogin() {
-		if (!password.value) return
-		error.value = ''
-		loading.value = true
-		const ok = await login(password.value)
-		loading.value = false
+		if (!password.value) return;
+		error.value = '';
+		loading.value = true;
+		const ok = await login(password.value);
+		loading.value = false;
 		if (ok) {
-			router.replace('/settings')
+			router.replace('/settings');
 		} else {
-			error.value = '密码错误'
-			password.value = ''
+			error.value = '密码错误';
+			password.value = '';
 		}
 	}
 </script>

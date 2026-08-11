@@ -1,44 +1,44 @@
 <script lang="ts" setup>
-	import { ref } from 'vue'
-	import { NAlert, NButton, NInput } from 'naive-ui'
+	import { ref } from 'vue';
+	import { NAlert, NButton, NInput } from 'naive-ui';
 
-	const input = ref('')
-	const output = ref('')
-	const error = ref('')
+	const input = ref('');
+	const output = ref('');
+	const error = ref('');
 
 	function format() {
 		try {
-			error.value = ''
-			output.value = JSON.stringify(JSON.parse(input.value), null, 2)
+			error.value = '';
+			output.value = JSON.stringify(JSON.parse(input.value), null, 2);
 		} catch (e) {
-			error.value = 'JSON 格式错误: ' + (e as Error).message
-			output.value = ''
+			error.value = 'JSON 格式错误: ' + (e as Error).message;
+			output.value = '';
 		}
 	}
 
 	function compress() {
 		try {
-			error.value = ''
-			output.value = JSON.stringify(JSON.parse(input.value))
+			error.value = '';
+			output.value = JSON.stringify(JSON.parse(input.value));
 		} catch (e) {
-			error.value = 'JSON 格式错误: ' + (e as Error).message
-			output.value = ''
+			error.value = 'JSON 格式错误: ' + (e as Error).message;
+			output.value = '';
 		}
 	}
 
 	function validate() {
 		try {
-			JSON.parse(input.value)
-			error.value = ''
-			output.value = '✓ JSON 格式正确'
+			JSON.parse(input.value);
+			error.value = '';
+			output.value = '✓ JSON 格式正确';
 		} catch (e) {
-			error.value = '✗ JSON 格式错误: ' + (e as Error).message
-			output.value = ''
+			error.value = '✗ JSON 格式错误: ' + (e as Error).message;
+			output.value = '';
 		}
 	}
 
 	function copy() {
-		navigator.clipboard.writeText(output.value)
+		navigator.clipboard.writeText(output.value);
 	}
 </script>
 
@@ -47,8 +47,8 @@
 		<n-input
 			v-model:value="input"
 			:autosize="{ minRows: 8 }"
-			type="textarea"
 			placeholder='粘贴 JSON 数据，例如: {"name": "test"}'
+			type="textarea"
 		/>
 
 		<div class="flex flex-wrap gap-2">
