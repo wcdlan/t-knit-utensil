@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-	import { computed, h, ref } from 'vue'
-	import type { DataTableColumn } from 'naive-ui'
-	import { NAlert, NCollapse, NCollapseItem, NInput, NSelect, NTag } from 'naive-ui'
+	import { computed, h, ref } from 'vue';
+	import type { DataTableColumn } from 'naive-ui';
+	import { NAlert, NCollapse, NCollapseItem, NInput, NSelect, NTag } from 'naive-ui';
 
 	const pattern = ref('');
 	const flags = ref('g');
@@ -124,7 +124,7 @@
 						<span class="text-gray-400 font-mono">/</span>
 					</template>
 				</n-input>
-				<n-select v-model:value="flags" :options="flagOptions" class="w-[140px]" />
+				<n-select v-model:value="flags" :options="flagOptions" class="!w-[140px]" />
 			</div>
 		</div>
 
