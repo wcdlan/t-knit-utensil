@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+	import { NPopover } from 'naive-ui'
 	import { computed, ref, watch } from 'vue'
 
 	// ---- 预设的 API 格式 ----
@@ -471,18 +472,21 @@
 
 <template>
 	<div class="space-y-6">
-		<!-- 隐私提示 -->
-		<div class="flex items-center gap-2 bg-blue-50 border border-blue-200 rounded-lg px-4 py-2.5 text-sm text-blue-700">
-			<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-				<path d="M12 15v2m0-6v.01M12 3a9 9 0 100 18 9 9 0 000-18z" stroke-linecap="round" stroke-linejoin="round" />
-			</svg>
-			<span>数据存储在客户端本地，放心使用</span>
-		</div>
-
 		<!-- Section 0: 历史记录 -->
 		<section>
 			<div class="flex items-center justify-between mb-3">
-				<h2 class="text-lg font-semibold text-gray-800">历史记录</h2>
+				<h2 class="text-lg font-semibold text-gray-800 inline-flex items-center gap-1">
+					历史记录
+					<NPopover placement="top" trigger="hover">
+						<template #trigger>
+							<span
+								class="inline-flex items-center justify-center w-3.5 h-3.5 rounded-full bg-gray-300 text-[9px] leading-none text-white font-bold cursor-pointer select-none"
+								>!</span
+							>
+						</template>
+						<span>数据存储在客户端本地，放心使用</span>
+					</NPopover>
+				</h2>
 				<div class="flex gap-2">
 					<button
 						:disabled="!apiKey.trim()"
