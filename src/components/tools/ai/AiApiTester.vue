@@ -79,6 +79,100 @@
 		}
 	}
 
+	// ---- 历史记录（localStorage） ----
+	interface HistoryItem {
+		id: string
+		preset: string
+		baseUrl: string
+		authType: string
+		apiKey: string
+		customHeaderName: string
+		useProxy: boolean
+		createdAt: number
+	}
+
+	const STORAGE_KEY = 'ai-api-tester-history'
+
+	function loadHistory(): HistoryItem[] {
+		try {
+			const raw = localStorage.getItem(STORAGE_KEY)
+			return raw ? JSON.parse(raw) : []
+		} catch {
+			return []
+		}
+	}
+
+	function saveHistory(list: HistoryItem[]) {
+		localStorage.setItem(STORAGE_KEY, JSON.stringify(list))
+	}
+
+	function generateId(): string {
+		return Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8)
+	}
+
+	function configsEqual(a: HistoryItem, b: Omit<HistoryItem, 'id' | 'createdAt'>): boolean {
+		return (
+			a.preset === b.preset &&
+			a.baseUrl === b.baseUrl &&
+			a.authType === b.authType &&
+			a.apiKey === b.apiKey &&
+			a.customHeaderName === b.customHeaderName &&
+			a.useProxy === b.useProxy
+		)
+	}
+
+	const historyList = ref<HistoryItem[]>(loadHistory())
+
+	function addToHistory() {
+		const current = {
+			preset: selectedPreset.value,
+			baseUrl: baseUrl.value,
+			authType: authType.value,
+			apiKey: apiKey.value,
+			customHeaderName: customHeaderName.value,
+			useProxy: useProxy.value
+		}
+		// 去重：不存储重复配置
+		const exists = historyList.value.some((h) => configsEqual(h, current))
+		if (exists) return
+		const item: HistoryItem = {
+			...current,
+			id: generateId(),
+
+			createdAt: Date.now()
+		}
+		historyList.value.unshift(item)
+		saveHistory(historyList.value)
+	}
+
+	function applyHistory(item: HistoryItem) {
+		selectedPreset.value = item.preset as keyof typeof presets
+		baseUrl.value = item.baseUrl
+		authType.value = item.authType as 'bearer' | 'header' | 'query'
+		apiKey.value = item.apiKey
+		customHeaderName.value = item.customHeaderName
+		useProxy.value = item.useProxy
+		// 重置状态
+		connectionStatus.value = 'idle'
+		connectionMessage.value = ''
+		modelsStatus.value = 'idle'
+		modelsMessage.value = ''
+		models.value = []
+		testStatus.value = 'idle'
+		testResponse.value = ''
+		testMessage.value = ''
+	}
+
+	function deleteHistory(id: string) {
+		historyList.value = historyList.value.filter((h) => h.id !== id)
+		saveHistory(historyList.value)
+	}
+
+	function clearAllHistory() {
+		historyList.value = []
+		saveHistory(historyList.value)
+	}
+
 	// ---- 表单状态 ----
 	const selectedPreset = ref<keyof typeof presets>('openai')
 	const baseUrl = ref(presets.openai.defaultBaseUrl)
@@ -377,6 +471,70 @@
 
 <template>
 	<div class="space-y-6">
+		<!-- 隐私提示 -->
+		<div class="flex items-center gap-2 bg-blue-50 border border-blue-200 rounded-lg px-4 py-2.5 text-sm text-blue-700">
+			<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+				<path d="M12 15v2m0-6v.01M12 3a9 9 0 100 18 9 9 0 000-18z" stroke-linecap="round" stroke-linejoin="round" />
+			</svg>
+			<span>数据存储在客户端本地，放心使用</span>
+		</div>
+
+		<!-- Section 0: 历史记录 -->
+		<section>
+			<div class="flex items-center justify-between mb-3">
+				<h2 class="text-lg font-semibold text-gray-800">历史记录</h2>
+				<div class="flex gap-2">
+					<button
+						:disabled="!apiKey.trim()"
+						class="px-3 py-1.5 rounded-lg text-xs font-medium transition bg-emerald-500 text-white hover:bg-emerald-600 disabled:opacity-40 disabled:cursor-not-allowed"
+						title="保存当前配置到历史"
+						@click="addToHistory"
+					>
+						保存当前
+					</button>
+					<button
+						v-if="historyList.length"
+						class="px-3 py-1.5 rounded-lg text-xs font-medium transition bg-red-100 text-red-600 hover:bg-red-200"
+						@click="clearAllHistory"
+					>
+						清空全部
+					</button>
+				</div>
+			</div>
+
+			<div v-if="historyList.length === 0" class="text-sm text-gray-400 italic">
+				暂无历史记录，填写配置后点击「保存当前」
+			</div>
+
+			<div v-else class="space-y-2 max-h-52 overflow-y-auto">
+				<div
+					v-for="item in historyList"
+					:key="item.id"
+					class="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 group hover:border-blue-300 hover:bg-blue-50/50 transition"
+				>
+					<button
+						class="text-left flex-1 min-w-0 text-sm text-gray-700 truncate"
+						title="点击加载此配置"
+						@click="applyHistory(item)"
+					>
+						<span class="font-medium">{{ presets[item.preset]?.label ?? item.preset }}</span>
+						<span class="mx-1 text-gray-300">|</span>
+						<span class="font-mono text-xs text-gray-500">{{ item.baseUrl.replace(/^https?:\/\//, '') }}</span>
+						<span class="ml-2 text-xs text-gray-400">{{ new Date(item.createdAt).toLocaleString('zh-CN') }}</span>
+					</button>
+					<button
+						class="ml-2 p-1 rounded text-gray-300 hover:text-red-500 hover:bg-red-50 opacity-0 group-hover:opacity-100 transition shrink-0"
+						title="删除此记录"
+						@click="deleteHistory(item.id)"
+					>
+						<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+							<path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
+						</svg>
+					</button>
+				</div>
+			</div>
+		</section>
+
 		<!-- Section 1: API 配置 -->
 		<section>
 			<h2 class="text-lg font-semibold text-gray-800 mb-4">API 配置</h2>
