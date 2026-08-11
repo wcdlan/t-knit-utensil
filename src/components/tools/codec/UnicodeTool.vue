@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-	import { ref } from 'vue'
-	import { NButton, NButtonGroup, NInput } from 'naive-ui'
+	import { ref } from 'vue';
+	import { NButton, NButtonGroup, NInput } from 'naive-ui';
 
-	const input = ref('')
-	const output = ref('')
-	const mode = ref<'to-unicode' | 'to-chinese'>('to-unicode')
+	const input = ref('');
+	const output = ref('');
+	const mode = ref<'to-unicode' | 'to-chinese'>('to-unicode');
 
 	function process() {
 		try {
@@ -12,19 +12,19 @@
 				output.value = input.value
 					.split('')
 					.map((c) => '\\u' + c.charCodeAt(0).toString(16).padStart(4, '0'))
-					.join('')
+					.join('');
 			} else {
 				output.value = input.value.replace(/\\u[\da-f]{4}/gi, (match) =>
 					String.fromCharCode(parseInt(match.replace('\\u', ''), 16))
-				)
+				);
 			}
 		} catch {
-			output.value = '转换失败'
+			output.value = '转换失败';
 		}
 	}
 
 	function copy() {
-		navigator.clipboard.writeText(output.value)
+		navigator.clipboard.writeText(output.value);
 	}
 </script>
 
@@ -50,7 +50,7 @@
 
 		<div v-if="output" class="relative mt-2">
 			<n-input :autosize="{ minRows: 6 }" :value="output" readonly type="textarea" />
-			<n-button class="absolute top-2 right-2" size="small" @click="copy"> 复制 </n-button>
+			<n-button class="absolute top-2" size="small" @click="copy"> 复制 </n-button>
 		</div>
 	</div>
 </template>
