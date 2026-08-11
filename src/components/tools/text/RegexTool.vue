@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-	import { computed, h, ref } from 'vue';
-	import type { DataTableColumn } from 'naive-ui';
-	import { NAlert, NCollapse, NCollapseItem, NInput, NSelect, NTag } from 'naive-ui';
+	import { computed, h, ref } from 'vue'
+	import type { DataTableColumn } from 'naive-ui'
+	import { NAlert, NCollapse, NCollapseItem, NInput, NSelect, NTag } from 'naive-ui'
 
 	const pattern = ref('');
 	const flags = ref('g');
