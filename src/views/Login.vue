@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 	import { ref } from 'vue'
 	import { useRouter } from 'vue-router'
+	import { NAlert, NButton, NCard, NInput } from 'naive-ui'
 	import { useAuth } from '@/data/auth'
 
 	const router = useRouter()
@@ -31,28 +32,29 @@
 			<p class="text-sm text-gray-500">请输入密码以访问站点设置</p>
 		</div>
 
-		<div class="bg-white rounded-xl border border-gray-200 p-6 space-y-4">
-			<div>
-				<label class="block text-xs font-semibold text-gray-500 mb-1">密码</label>
-				<input
-					v-model="password"
-					class="w-full p-2.5 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-					placeholder="请输入密码"
-					type="password"
-					@keyup.enter="handleLogin"
-				/>
+		<n-card>
+			<div class="space-y-4">
+				<div>
+					<label class="block text-xs font-semibold text-gray-500 mb-1">密码</label>
+					<n-input
+						v-model:value="password"
+						placeholder="请输入密码"
+						show-password-toggle
+						size="large"
+						type="password"
+						@keyup.enter="handleLogin"
+					/>
+				</div>
+
+				<n-alert v-if="error" class="text-sm" type="error">
+					{{ error }}
+				</n-alert>
+
+				<n-button :loading="loading" block size="large" type="primary" @click="handleLogin">
+					{{ loading ? '验证中...' : '登录' }}
+				</n-button>
 			</div>
-
-			<div v-if="error" class="text-sm text-red-500">{{ error }}</div>
-
-			<button
-				:disabled="loading"
-				class="w-full py-2.5 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition cursor-pointer disabled:opacity-50"
-				@click="handleLogin"
-			>
-				{{ loading ? '验证中...' : '登录' }}
-			</button>
-		</div>
+		</n-card>
 
 		<div class="mt-4 text-center">
 			<router-link class="text-sm text-gray-400 hover:text-gray-600 transition" to="/"> 返回首页 </router-link>

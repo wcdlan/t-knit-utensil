@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 	import { ref } from 'vue'
+	import { NButton, NInput } from 'naive-ui'
 
 	const input = ref('')
 	const output = ref('')
@@ -65,10 +66,13 @@
 			'NOT EXISTS'
 		]
 
-		// Normalize whitespace
 		sql = sql.replace(/\s+/g, ' ')
 
-		// Add newlines before major clauses
+		for (const kw of keywords) {
+			const re = new RegExp('\\b' + kw.replace(/ /g, '\\s+') + '\\b', 'gi')
+			sql = sql.replace(re, kw)
+		}
+
 		const majorClauses = [
 			'SELECT',
 			'FROM',
@@ -91,22 +95,13 @@
 			'WITH'
 		]
 
-		// Uppercase keywords
-		for (const kw of keywords) {
-			const re = new RegExp('\\b' + kw.replace(/ /g, '\\s+') + '\\b', 'gi')
-			sql = sql.replace(re, kw)
-		}
-
-		// Add line breaks before major clauses
 		for (const clause of majorClauses) {
 			const re = new RegExp('\\b(' + clause.replace(/ /g, '\\s+') + ')\\b', 'g')
 			sql = sql.replace(re, '\n$1')
 		}
 
-		// Clean up leading newline
 		sql = sql.replace(/^\n/, '')
 
-		// Indent lines
 		const lines = sql.split('\n')
 		const formatted = lines
 			.map((line, i) => {
@@ -131,39 +126,16 @@
 
 <template>
 	<div class="space-y-4">
-		<textarea
-			v-model="input"
-			class="w-full p-3 border border-gray-200 rounded-lg text-sm font-mono focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-y"
-			placeholder="输入 SQL 语句..."
-			rows="8"
-		></textarea>
+		<n-input v-model:value="input" :autosize="{ minRows: 8 }" placeholder="输入 SQL 语句..." type="textarea" />
+
 		<div class="flex gap-2">
-			<button
-				class="px-4 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition cursor-pointer"
-				@click="format"
-			>
-				格式化
-			</button>
-			<button
-				class="px-4 py-2 bg-gray-600 text-white rounded-lg text-sm font-medium hover:bg-gray-700 transition cursor-pointer"
-				@click="compress"
-			>
-				压缩
-			</button>
+			<n-button type="primary" @click="format"> 格式化 </n-button>
+			<n-button type="info" @click="compress"> 压缩 </n-button>
 		</div>
+
 		<div v-if="output" class="relative">
-			<textarea
-				:value="output"
-				class="w-full p-3 border border-gray-200 rounded-lg text-sm font-mono bg-gray-50 resize-y"
-				readonly
-				rows="10"
-			></textarea>
-			<button
-				class="absolute top-2 right-2 px-3 py-1 bg-white border border-gray-200 rounded text-xs hover:bg-gray-50 transition cursor-pointer"
-				@click="copy"
-			>
-				复制
-			</button>
+			<n-input :autosize="{ minRows: 10 }" :value="output" readonly type="textarea" />
+			<n-button class="absolute top-2 right-2" size="small" @click="copy"> 复制 </n-button>
 		</div>
 	</div>
 </template>

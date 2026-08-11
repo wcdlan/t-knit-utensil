@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 	import { computed, ref } from 'vue'
+	import { NEmpty, NInput } from 'naive-ui'
 	import { toolGroups } from '@/data/tools'
 
 	const query = ref('')
@@ -25,15 +26,14 @@
 	<div>
 		<!-- Search -->
 		<div class="mb-4">
-			<input
-				v-model="query"
-				class="w-full max-w-[320px] p-1.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-gray-700"
-				placeholder="搜索工具..."
-				type="text"
-			/>
+			<n-input v-model:value="query" class="max-w-[320px]" clearable placeholder="搜索工具...">
+				<template #prefix>
+					<span class="text-gray-400">🔍</span>
+				</template>
+			</n-input>
 		</div>
 
-		<div v-if="filteredGroups.length === 0" class="text-center py-16 text-sm text-gray-400">未找到匹配的工具</div>
+		<n-empty v-if="filteredGroups.length === 0" class="py-16" description="未找到匹配的工具" />
 
 		<div v-for="group in filteredGroups" :key="group.id" class="mb-5">
 			<div class="flex items-center gap-1.5 mb-2 cursor-pointer select-none" @click="toggle(group.id)">

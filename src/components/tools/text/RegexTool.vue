@@ -1,5 +1,7 @@
 <script lang="ts" setup>
-	import { computed, ref } from 'vue'
+	import { computed, h, ref } from 'vue'
+	import type { DataTableColumn } from 'naive-ui'
+	import { NAlert, NCollapse, NCollapseItem, NInput, NSelect, NTag } from 'naive-ui'
 
 	const pattern = ref('')
 	const flags = ref('g')
@@ -36,7 +38,11 @@
 		{ value: 'g', label: 'g (全局)' },
 		{ value: 'i', label: 'i (忽略大小写)' },
 		{ value: 'm', label: 'm (多行)' },
-		{ value: 's', label: 's (点匹配换行)' }
+		{ value: 's', label: 's (点匹配换行)' },
+		{ value: 'gi', label: 'gi' },
+		{ value: 'gm', label: 'gm' },
+		{ value: 'gim', label: 'gim' },
+		{ value: 'gis', label: 'gis' }
 	]
 
 	const commonPatterns = [
@@ -92,6 +98,16 @@
 		{ char: '(?<=)', desc: '正向后顾，前面必须是指定表达式（ES2018+）' },
 		{ char: '(?<!)', desc: '负向后顾，前面不能是指定表达式（ES2018+）' }
 	]
+
+	const refColumns: DataTableColumn[] = [
+		{
+			title: '字符',
+			key: 'char',
+			width: 80,
+			render: (row: any) => h('code', { class: 'font-mono text-blue-600' }, row.char)
+		},
+		{ title: '说明', key: 'desc' }
+	]
 </script>
 
 <template>
@@ -100,23 +116,15 @@
 		<div>
 			<label class="block text-xs font-semibold text-gray-500 mb-1">正则表达式</label>
 			<div class="flex gap-2">
-				<span class="flex items-center px-3 bg-gray-100 rounded-lg text-gray-400 font-mono">/</span>
-				<input
-					v-model="pattern"
-					class="flex-1 p-2.5 border border-gray-200 rounded-lg text-sm font-mono focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-					placeholder="输入正则表达式"
-				/>
-				<span class="flex items-center px-3 bg-gray-100 rounded-lg text-gray-400 font-mono">/</span>
-				<select
-					v-model="flags"
-					class="p-2.5 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white"
-				>
-					<option v-for="f in flagOptions" :key="f.value" :value="f.value">{{ f.label }}</option>
-					<option value="gi">gi</option>
-					<option value="gm">gm</option>
-					<option value="gim">gim</option>
-					<option value="gis">gis</option>
-				</select>
+				<n-input v-model:value="pattern" class="flex-1 !font-mono" placeholder="输入正则表达式">
+					<template #prefix>
+						<span class="text-gray-400 font-mono">/</span>
+					</template>
+					<template #suffix>
+						<span class="text-gray-400 font-mono">/</span>
+					</template>
+				</n-input>
+				<n-select v-model:value="flags" :options="flagOptions" class="w-[140px]" />
 			</div>
 		</div>
 
@@ -124,37 +132,26 @@
 		<div>
 			<label class="block text-xs font-semibold text-gray-500 mb-1">常用正则</label>
 			<div class="flex flex-wrap gap-1.5">
-				<button
+				<n-tag
 					v-for="p in commonPatterns"
 					:key="p.label"
-					:class="
-						pattern === p.pattern
-							? 'bg-blue-100 border-blue-300 text-blue-700'
-							: 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100 hover:border-gray-300'
-					"
-					class="px-2.5 py-1 text-xs rounded-md border transition-colors"
+					:type="pattern === p.pattern ? 'primary' : 'default'"
+					class="cursor-pointer"
 					@click="selectPattern(p)"
 				>
 					{{ p.label }}
-				</button>
+				</n-tag>
 			</div>
 		</div>
 
 		<!-- Test String -->
 		<div>
 			<label class="block text-xs font-semibold text-gray-500 mb-1">测试文本</label>
-			<textarea
-				v-model="testStr"
-				class="w-full p-3 border border-gray-200 rounded-lg text-sm font-mono focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-y"
-				placeholder="输入要测试的文本..."
-				rows="6"
-			></textarea>
+			<n-input v-model:value="testStr" :autosize="{ minRows: 6 }" placeholder="输入要测试的文本..." type="textarea" />
 		</div>
 
 		<!-- Error -->
-		<div v-if="error" class="p-3 bg-red-50 text-red-600 rounded-lg text-sm">
-			{{ error }}
-		</div>
+		<n-alert v-if="error" class="text-sm" type="error"> {{ error }} </n-alert>
 
 		<!-- Results -->
 		<div v-if="matches.length" class="space-y-2">
@@ -170,31 +167,13 @@
 				</div>
 			</div>
 		</div>
-		<div v-else-if="pattern && testStr && !error" class="p-3 bg-yellow-50 text-yellow-700 rounded-lg text-sm">
-			无匹配结果
-		</div>
+		<n-alert v-else-if="pattern && testStr && !error" class="text-sm" type="warning"> 无匹配结果 </n-alert>
 
 		<!-- Special Chars Reference -->
-		<details class="mt-6" open>
-			<summary class="text-xs font-semibold text-gray-500 cursor-pointer hover:text-gray-700 select-none">
-				特殊字符速查表
-			</summary>
-			<div class="mt-2 overflow-hidden rounded-lg border border-gray-200">
-				<table class="w-full text-xs">
-					<thead>
-						<tr class="bg-gray-50">
-							<th class="px-3 py-2 text-left font-semibold text-gray-600 w-24">字符</th>
-							<th class="px-3 py-2 text-left font-semibold text-gray-600">说明</th>
-						</tr>
-					</thead>
-					<tbody class="divide-y divide-gray-100">
-						<tr v-for="s in specialChars" :key="s.char" class="hover:bg-gray-50">
-							<td class="px-3 py-1.5 font-mono text-blue-600 align-top">{{ s.char }}</td>
-							<td class="px-3 py-1.5 text-gray-600">{{ s.desc }}</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</details>
+		<n-collapse class="mt-6">
+			<n-collapse-item name="ref" title="特殊字符速查表">
+				<n-dataTable :bordered="false" :columns="refColumns" :data="specialChars" size="small" />
+			</n-collapse-item>
+		</n-collapse>
 	</div>
 </template>

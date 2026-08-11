@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 	import { ref } from 'vue'
 	import JSZip from 'jszip'
+	import { NAlert, NButton, NButtonGroup, NInput } from 'naive-ui'
 	import { generateKeyPair, KEY_TYPES, type KeyType } from '@/utils/ssh'
 
 	const keyType = ref<KeyType>('rsa-2048')
@@ -92,54 +93,44 @@
 		<!-- Key type selector -->
 		<div>
 			<label class="block text-xs font-semibold text-gray-500 mb-2">密钥类型</label>
-			<div class="flex flex-wrap gap-2">
-				<button
+			<n-button-group>
+				<n-button
 					v-for="kt in keyTypes"
 					:key="kt.id"
-					:class="[
-						'px-3 py-1.5 rounded-lg text-sm font-medium transition cursor-pointer border',
-						keyType === kt.id
-							? 'bg-blue-500 text-white border-blue-500'
-							: 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
-					]"
+					:type="keyType === kt.id ? 'primary' : 'default'"
 					@click="keyType = kt.id"
 				>
 					{{ kt.label }}
-				</button>
-			</div>
+				</n-button>
+			</n-button-group>
 		</div>
 
 		<!-- Comment -->
 		<div>
 			<label class="block text-xs font-semibold text-gray-500 mb-1">注释 (可选)</label>
-			<input
-				v-model="comment"
-				class="w-full max-w-[360px] p-2.5 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-				placeholder="user@host"
-				type="text"
-			/>
+			<n-input v-model:value="comment" class="max-w-[360px]" placeholder="user@host" />
 		</div>
 
 		<!-- Passphrase -->
 		<div class="flex flex-wrap gap-4">
 			<div>
 				<label class="block text-xs font-semibold text-gray-500 mb-1">私钥密码 (可选)</label>
-				<input
-					v-model="passphrase"
-					class="w-52 p-2.5 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+				<n-input
+					v-model:value="passphrase"
+					class="w-52"
 					placeholder="留空则不加密"
+					show-password-toggle
 					type="password"
 				/>
 			</div>
 			<div v-if="passphrase">
 				<label class="block text-xs font-semibold text-gray-500 mb-1">确认密码</label>
-				<input
-					v-model="passphraseConfirm"
-					:class="[
-						'w-52 p-2.5 border rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none',
-						passphraseMismatch ? 'border-red-400 ring-2 ring-red-300' : 'border-gray-200'
-					]"
+				<n-input
+					v-model:value="passphraseConfirm"
+					:status="passphraseMismatch ? 'error' : undefined"
+					class="w-52"
 					placeholder="再次输入密码"
+					show-password-toggle
 					type="password"
 				/>
 				<p v-if="passphraseMismatch" class="text-xs text-red-500 mt-1">两次输入的密码不一致</p>
@@ -148,76 +139,48 @@
 
 		<!-- Generate button -->
 		<div class="flex gap-2">
-			<button
-				:disabled="generating"
-				class="px-4 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-				@click="generate"
-			>
+			<n-button :loading="generating" type="primary" @click="generate">
 				{{ generating ? '生成中...' : '生成密钥对' }}
-			</button>
-			<button
-				:disabled="!privateKey"
-				class="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-				@click="downloadZip"
-			>
-				下载 ZIP
-			</button>
+			</n-button>
+			<n-button :disabled="!privateKey" @click="downloadZip"> 下载 ZIP </n-button>
 		</div>
 
 		<!-- Error -->
-		<p v-if="error" class="text-sm text-red-500">{{ error }}</p>
+		<n-alert v-if="error" class="text-sm" type="error"> {{ error }} </n-alert>
 
 		<!-- Private key output -->
 		<div>
 			<div class="flex items-center justify-between mb-2">
-				<label class="text-xs font-semibold text-gray-500">私钥</label>
+				<span class="text-xs font-semibold text-gray-500">私钥</span>
 				<div class="flex gap-2">
-					<button
-						class="px-3 py-1 bg-white border border-gray-200 rounded text-xs hover:bg-gray-50 transition cursor-pointer"
-						@click="copyPrivate"
-					>
-						复制
-					</button>
-					<button
-						class="px-3 py-1 bg-white border border-gray-200 rounded text-xs hover:bg-gray-50 transition cursor-pointer"
-						@click="downloadPrivate"
-					>
-						下载
-					</button>
+					<n-button size="small" @click="copyPrivate"> 复制 </n-button>
+					<n-button size="small" @click="downloadPrivate"> 下载 </n-button>
 				</div>
 			</div>
-			<textarea
+			<n-input
 				:value="privateKey"
-				class="w-full h-120 p-3 border border-gray-200 rounded-lg text-xs font-mono bg-gray-50 resize-y focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-				placeholder="点击「生成密钥对」生成私钥"
+				:autosize="{ minRows: 6 }"
 				readonly
+				type="textarea"
+				placeholder="点击「生成密钥对」生成私钥"
 			/>
 		</div>
 
 		<!-- Public key output -->
 		<div>
 			<div class="flex items-center justify-between mb-2">
-				<label class="text-xs font-semibold text-gray-500">公钥</label>
+				<span class="text-xs font-semibold text-gray-500">公钥</span>
 				<div class="flex gap-2">
-					<button
-						class="px-3 py-1 bg-white border border-gray-200 rounded text-xs hover:bg-gray-50 transition cursor-pointer"
-						@click="copyPublic"
-					>
-						复制
-					</button>
-					<button
-						class="px-3 py-1 bg-white border border-gray-200 rounded text-xs hover:bg-gray-50 transition cursor-pointer"
-						@click="downloadPublic"
-					>
-						下载
-					</button>
+					<n-button size="small" @click="copyPublic"> 复制 </n-button>
+					<n-button size="small" @click="downloadPublic"> 下载 </n-button>
 				</div>
 			</div>
-			<textarea
+			<n-input
 				:value="publicKey"
-				class="w-full h-20 p-3 border border-gray-200 rounded-lg text-xs font-mono bg-gray-50 resize-y focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+				:autosize="{ minRows: 3 }"
 				placeholder="点击「生成密钥对」生成公钥"
 				readonly
+				type="textarea"
 			/>
 		</div>
 	</div>

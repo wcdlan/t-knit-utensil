@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 	import { ref } from 'vue'
+	import { NButton, NInput } from 'naive-ui'
 
 	const left = ref('')
 	const right = ref('')
@@ -9,7 +10,6 @@
 		const leftLines = left.value.split('\n')
 		const rightLines = right.value.split('\n')
 
-		// Simple LCS-based diff
 		const m = leftLines.length
 		const n = rightLines.length
 		const dp: number[][] = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0))
@@ -24,7 +24,6 @@
 			}
 		}
 
-		// Backtrack
 		let i = m,
 			j = n
 		const temp: { type: 'same' | 'added' | 'removed'; text: string }[] = []
@@ -55,44 +54,22 @@
 
 <template>
 	<div class="space-y-4">
-		<!-- Dual Textareas -->
 		<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
 			<div>
 				<label class="block text-xs font-semibold text-gray-500 mb-1">原始文本</label>
-				<textarea
-					v-model="left"
-					class="w-full p-3 border border-gray-200 rounded-lg text-sm font-mono focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-y"
-					placeholder="粘贴原始文本..."
-					rows="10"
-				></textarea>
+				<n-input v-model:value="left" :autosize="{ minRows: 10 }" placeholder="粘贴原始文本..." type="textarea" />
 			</div>
 			<div>
 				<label class="block text-xs font-semibold text-gray-500 mb-1">对比文本</label>
-				<textarea
-					v-model="right"
-					class="w-full p-3 border border-gray-200 rounded-lg text-sm font-mono focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-y"
-					placeholder="粘贴对比文本..."
-					rows="10"
-				></textarea>
+				<n-input v-model:value="right" :autosize="{ minRows: 10 }" placeholder="粘贴对比文本..." type="textarea" />
 			</div>
 		</div>
 
 		<div class="flex gap-2">
-			<button
-				class="px-4 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition cursor-pointer"
-				@click="computeDiff"
-			>
-				对比
-			</button>
-			<button
-				class="px-4 py-2 bg-gray-100 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-200 transition cursor-pointer"
-				@click="clearAll"
-			>
-				清空
-			</button>
+			<n-button type="primary" @click="computeDiff"> 对比 </n-button>
+			<n-button @click="clearAll"> 清空 </n-button>
 		</div>
 
-		<!-- Diff Result -->
 		<div v-if="diffResult.length" class="border border-gray-200 rounded-lg overflow-hidden font-mono text-sm">
 			<div
 				v-for="(line, i) in diffResult"

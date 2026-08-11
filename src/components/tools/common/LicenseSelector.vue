@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 	import { computed, ref } from 'vue'
+	import { NButton, NButtonGroup, NProgress, NRadio, NRadioGroup, NTag } from 'naive-ui'
 
 	// ── License full texts (loaded at build time) ──────────────────────────────────
 	const LICENSE_TEXTS: Record<string, string> = import.meta.glob('@/assets/license/*.txt', {
@@ -9,13 +10,11 @@
 	}) as Record<string, string>
 
 	function getLicenseText(id: string, lang?: string): string {
-		// Try language-specific file first: {id}.{lang}.txt
 		if (lang) {
 			for (const [path, text] of Object.entries(LICENSE_TEXTS)) {
 				if (path.endsWith(`/${id}.${lang}.txt`)) return text
 			}
 		}
-		// Fallback to default: {id}.txt
 		for (const [path, text] of Object.entries(LICENSE_TEXTS)) {
 			if (path.endsWith(`/${id}.txt`)) return text
 		}
@@ -27,11 +26,11 @@
 		id: string
 		name: string
 		spdxId: string
-		copyleft: number // 0=none 1=attribution 2=weak(file) 3=strong(viral) 4=network(AGPL)
+		copyleft: number
 		patent: boolean
-		simplicity: number // 0=short 1=medium 2=comprehensive
+		simplicity: number
 		osiApproved: boolean
-		domestic: boolean // 国产许可证
+		domestic: boolean
 		summary: string
 		tags: string[]
 		url: string
@@ -447,11 +446,7 @@
 			id: 'projectType',
 			text: '项目的主要用途是什么？',
 			options: [
-				{
-					value: 'personal',
-					label: '个人学习/娱乐项目',
-					description: 'Side project、学习练习、个人工具等'
-				},
+				{ value: 'personal', label: '个人学习/娱乐项目', description: 'Side project、学习练习、个人工具等' },
 				{ value: 'commercial', label: '商业闭源产品', description: '计划闭源销售的商业软件产品' },
 				{ value: 'library', label: '开源库/SDK/框架', description: '供其他开发者使用的库或框架' },
 				{ value: 'saas', label: '企业 SaaS / 云服务', description: '基于云端的软件即服务产品' },
@@ -462,16 +457,8 @@
 			id: 'copyleft',
 			text: '你希望下游使用者遵守什么规则？',
 			options: [
-				{
-					value: 'none',
-					label: '无限制，闭源商用均可',
-					description: '使用者可自由使用，无需公开源码（MIT 风格）'
-				},
-				{
-					value: 'attribution',
-					label: '仅保留版权声明即可',
-					description: '只需保留原作者版权信息，其余自由使用'
-				},
+				{ value: 'none', label: '无限制，闭源商用均可', description: '使用者可自由使用，无需公开源码（MIT 风格）' },
+				{ value: 'attribution', label: '仅保留版权声明即可', description: '只需保留原作者版权信息，其余自由使用' },
 				{
 					value: 'weak',
 					label: '对文件的修改需开源',
@@ -505,11 +492,7 @@
 			id: 'domestic',
 			text: '是否偏好国产开源许可证？',
 			options: [
-				{
-					value: 'any',
-					label: '不关心，国内外均可',
-					description: '许可证产地不影响选择，按其他条件匹配即可'
-				},
+				{ value: 'any', label: '不关心，国内外均可', description: '许可证产地不影响选择，按其他条件匹配即可' },
 				{
 					value: 'prefer',
 					label: '优先国产许可证',
@@ -527,16 +510,8 @@
 			text: '你偏好哪种许可证风格？',
 			options: [
 				{ value: 'short', label: '简短精炼', description: '几十行以内，一目了然，MIT/ISC/BSD 风格' },
-				{
-					value: 'medium',
-					label: '适中即可',
-					description: '关键条款覆盖到位，不需要太啰嗦（Apache/MPL 风格）'
-				},
-				{
-					value: 'full',
-					label: '完整严谨',
-					description: '全面的法律措辞，覆盖各种边界情况（GPL 风格）'
-				}
+				{ value: 'medium', label: '适中即可', description: '关键条款覆盖到位，不需要太啰嗦（Apache/MPL 风格）' },
+				{ value: 'full', label: '完整严谨', description: '全面的法律措辞，覆盖各种边界情况（GPL 风格）' }
 			]
 		}
 	]
@@ -563,64 +538,23 @@
 
 	function computeScores(): ScoredLicense[] {
 		const a = answers.value
-
-		const desiredCopyleftMax =
-			{
-				personal: 4,
-				commercial: 1,
-				library: 2,
-				saas: 1,
-				cli: 3
-			}[a.projectType] ?? 4
-
-		const copyleftTarget =
-			{
-				none: 0,
-				attribution: 1,
-				weak: 2,
-				strong: 3,
-				network: 4
-			}[a.copyleft] ?? 0
-
+		const desiredCopyleftMax = { personal: 4, commercial: 1, library: 2, saas: 1, cli: 3 }[a.projectType] ?? 4
+		const copyleftTarget = { none: 0, attribution: 1, weak: 2, strong: 3, network: 4 }[a.copyleft] ?? 0
 		const needPatent = a.patent === 'yes'
-		const simplicityTarget =
-			{
-				short: 0,
-				medium: 1,
-				full: 2
-			}[a.simplicity] ?? 0
+		const simplicityTarget = { short: 0, medium: 1, full: 2 }[a.simplicity] ?? 0
 
 		const results: ScoredLicense[] = LICENSES.map((license) => {
 			let score = 100
-
 			const copyleftDiff = Math.abs(license.copyleft - copyleftTarget)
 			score -= copyleftDiff * 12
-
-			if (license.copyleft > desiredCopyleftMax) {
-				score -= (license.copyleft - desiredCopyleftMax) * 18
-			}
-
-			if (needPatent && !license.patent) {
-				score -= 15
-			}
-			if (!needPatent && license.patent) {
-				score += 3
-			}
-
+			if (license.copyleft > desiredCopyleftMax) score -= (license.copyleft - desiredCopyleftMax) * 18
+			if (needPatent && !license.patent) score -= 15
+			if (!needPatent && license.patent) score += 3
 			const simplicityDiff = Math.abs(license.simplicity - simplicityTarget)
 			score -= simplicityDiff * 8
-
-			// Domestic preference
-			if (a.domestic === 'only' && !license.domestic) {
-				score -= 50
-			}
-			if (a.domestic === 'prefer' && license.domestic) {
-				score += 12
-			}
-			if (a.domestic === 'only' && license.domestic) {
-				score += 5
-			}
-
+			if (a.domestic === 'only' && !license.domestic) score -= 50
+			if (a.domestic === 'prefer' && license.domestic) score += 12
+			if (a.domestic === 'only' && license.domestic) score += 5
 			if (a.projectType === 'commercial' || a.projectType === 'saas') {
 				if (license.copyleft <= 1) score += 5
 				if (license.patent) score += 3
@@ -629,10 +563,7 @@
 				if (license.copyleft >= 1 && license.copyleft <= 2) score += 5
 				if (license.copyleft === 0) score -= 3
 			}
-			if (a.projectType === 'saas' && license.copyleft >= 4) {
-				score -= 25
-			}
-
+			if (a.projectType === 'saas' && license.copyleft >= 4) score -= 25
 			const highlights: string[] = []
 			if (license.copyleft === copyleftTarget) highlights.push('Copyleft 级别完全匹配')
 			else if (copyleftDiff <= 1) highlights.push('Copyleft 级别接近')
@@ -640,7 +571,6 @@
 			if (simplicityDiff === 0) highlights.push('许可文本风格匹配')
 			if (license.osiApproved) highlights.push('OSI 认证')
 			if (a.domestic !== 'any' && license.domestic) highlights.push('国产许可证')
-
 			return { license, score: Math.max(0, Math.round(score)), highlights }
 		})
 
@@ -656,7 +586,6 @@
 			expandedLicense.value = null
 		} else {
 			expandedLicense.value = id
-			// init language to first available
 			const lic = LICENSES.find((l) => l.id === id)
 			selectedLang.value = lic?.languages[0]?.code ?? 'en'
 		}
@@ -665,10 +594,6 @@
 	async function copyLicense(license: LicenseProfile) {
 		try {
 			await navigator.clipboard.writeText(getLicenseText(license.id, selectedLang.value))
-			copiedId.value = license.id
-			setTimeout(() => {
-				copiedId.value = null
-			}, 2000)
 		} catch {
 			const textarea = document.createElement('textarea')
 			textarea.value = getLicenseText(license.id, selectedLang.value)
@@ -678,11 +603,11 @@
 			textarea.select()
 			document.execCommand('copy')
 			document.body.removeChild(textarea)
-			copiedId.value = license.id
-			setTimeout(() => {
-				copiedId.value = null
-			}, 2000)
 		}
+		copiedId.value = license.id
+		setTimeout(() => {
+			copiedId.value = null
+		}, 2000)
 	}
 
 	function downloadLicense(license: LicenseProfile) {
@@ -711,11 +636,11 @@
 	const simplicityLabels: Record<number, string> = { 0: '简短', 1: '适中', 2: '完整' }
 
 	function scoreColor(score: number): string {
-		if (score >= 90) return 'bg-green-500'
-		if (score >= 75) return 'bg-emerald-400'
-		if (score >= 60) return 'bg-yellow-400'
-		if (score >= 40) return 'bg-orange-400'
-		return 'bg-red-400'
+		if (score >= 90) return '#22c55e'
+		if (score >= 75) return '#34d399'
+		if (score >= 60) return '#eab308'
+		if (score >= 40) return '#f97316'
+		return '#ef4444'
 	}
 
 	function scoreLabel(score: number): string {
@@ -725,6 +650,12 @@
 		if (score >= 40) return '不太匹配'
 		return '不推荐'
 	}
+
+	function scoreStatus(score: number): 'success' | 'warning' | 'error' {
+		if (score >= 75) return 'success'
+		if (score >= 60) return 'warning'
+		return 'error'
+	}
 </script>
 
 <template>
@@ -733,20 +664,23 @@
 		<div class="lg:w-96 shrink-0 space-y-5">
 			<div v-for="q in QUESTIONS" :key="q.id" class="bg-gray-50 rounded-xl p-4 border border-gray-100">
 				<h3 class="text-sm font-semibold text-gray-800 mb-3">{{ q.text }}</h3>
-				<div class="space-y-1.5">
-					<label
-						v-for="opt in q.options"
-						:key="opt.value"
-						:class="answers[q.id] === opt.value ? 'bg-white border-blue-300 shadow-sm' : ''"
-						class="flex items-start gap-2.5 p-2.5 rounded-lg cursor-pointer transition hover:bg-white border border-transparent"
-					>
-						<input v-model="answers[q.id]" :name="q.id" :value="opt.value" class="mt-0.5 shrink-0" type="radio" />
-						<div>
-							<div class="text-sm font-medium text-gray-700">{{ opt.label }}</div>
-							<div class="text-xs text-gray-400 mt-0.5">{{ opt.description }}</div>
+				<n-radio-group :name="q.id" :value="answers[q.id]" @update:value="(v: string) => (answers[q.id] = v)">
+					<div class="space-y-1.5">
+						<div
+							v-for="opt in q.options"
+							:key="opt.value"
+							:class="answers[q.id] === opt.value ? 'bg-white border-blue-300 shadow-sm' : ''"
+							class="flex items-start gap-2.5 p-2.5 rounded-lg cursor-pointer transition hover:bg-white border border-transparent"
+							@click="answers[q.id] = opt.value"
+						>
+							<n-radio :checked="answers[q.id] === opt.value" class="mt-0.5 shrink-0" />
+							<div>
+								<div class="text-sm font-medium text-gray-700">{{ opt.label }}</div>
+								<div class="text-xs text-gray-400 mt-0.5">{{ opt.description }}</div>
+							</div>
 						</div>
-					</label>
-				</div>
+					</div>
+				</n-radio-group>
 			</div>
 		</div>
 
@@ -777,37 +711,23 @@
 									<code class="text-xs bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded font-mono">{{
 										item.license.spdxId
 									}}</code>
-									<span
-										:class="{
-											'bg-green-100 text-green-700': item.score >= 90,
-											'bg-emerald-50 text-emerald-600': item.score >= 75 && item.score < 90,
-											'bg-yellow-50 text-yellow-600': item.score >= 60 && item.score < 75,
-											'bg-orange-50 text-orange-600': item.score >= 40 && item.score < 60,
-											'bg-red-50 text-red-500': item.score < 40
-										}"
-										class="text-xs font-medium px-1.5 py-0.5 rounded"
-										>{{ scoreLabel(item.score) }}</span
-									>
+									<n-tag :bordered="false" :type="scoreStatus(item.score)" size="small">
+										{{ scoreLabel(item.score) }}
+									</n-tag>
 								</div>
 
 								<p class="text-sm text-gray-500 mb-2">{{ item.license.summary }}</p>
 
 								<div class="flex flex-wrap gap-1 mb-2">
-									<span
-										v-for="tag in item.license.tags"
-										:key="tag"
-										class="text-xs bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded"
-										>{{ tag }}</span
-									>
+									<n-tag v-for="tag in item.license.tags" :key="tag" :bordered="false" size="tiny">
+										{{ tag }}
+									</n-tag>
 								</div>
 
 								<div v-if="item.highlights.length" class="flex flex-wrap gap-1 mb-2">
-									<span
-										v-for="h in item.highlights"
-										:key="h"
-										class="text-xs bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded"
-										>✓ {{ h }}</span
-									>
+									<n-tag v-for="h in item.highlights" :key="h" :bordered="false" size="tiny" type="info">
+										✓ {{ h }}
+									</n-tag>
 								</div>
 
 								<div class="flex flex-wrap items-center gap-3 text-xs text-gray-400">
@@ -823,88 +743,35 @@
 							</div>
 
 							<div class="shrink-0 flex flex-col items-center gap-1">
-								<div
-									:class="{
-										'text-green-500': item.score >= 90,
-										'text-emerald-500': item.score >= 75 && item.score < 90,
-										'text-yellow-500': item.score >= 60 && item.score < 75,
-										'text-orange-500': item.score >= 40 && item.score < 60,
-										'text-red-500': item.score < 40
-									}"
-									class="text-2xl font-bold"
-								>
+								<div :style="{ color: scoreColor(item.score) }" class="text-2xl font-bold">
 									{{ item.score }}
 								</div>
-								<div class="w-16 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-									<div
-										:class="scoreColor(item.score)"
-										:style="{ width: item.score + '%' }"
-										class="h-full rounded-full transition-all duration-500"
-									/>
-								</div>
+								<n-progress
+									:color="scoreColor(item.score)"
+									:percentage="item.score"
+									:show-indicator="false"
+									class="w-16"
+								/>
 								<span class="text-[10px] text-gray-400">适配度</span>
 							</div>
 						</div>
 
 						<div class="flex items-center gap-2 mt-3 pt-3 border-t border-gray-100">
-							<button
-								:class="
-									expandedLicense === item.license.id
-										? 'bg-blue-500 text-white'
-										: 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-								"
-								class="px-3 py-1.5 text-xs font-medium rounded-lg transition cursor-pointer flex items-center gap-1"
+							<n-button
+								:type="expandedLicense === item.license.id ? 'primary' : 'default'"
+								size="small"
 								@click="toggleExpand(item.license.id)"
 							>
-								<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-									<path
-										d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										stroke-width="2"
-									/>
-									<path
-										d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										stroke-width="2"
-									/>
-								</svg>
 								{{ expandedLicense === item.license.id ? '收起全文' : '查看全文' }}
-							</button>
-							<button
-								:class="
-									copiedId === item.license.id
-										? 'bg-green-100 text-green-600'
-										: 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-								"
-								class="px-3 py-1.5 text-xs font-medium rounded-lg transition cursor-pointer flex items-center gap-1"
+							</n-button>
+							<n-button
+								:type="copiedId === item.license.id ? 'success' : 'default'"
+								size="small"
 								@click="copyLicense(item.license)"
 							>
-								<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-									<path
-										d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										stroke-width="2"
-									/>
-								</svg>
 								{{ copiedId === item.license.id ? '已复制 ✓' : '复制全文' }}
-							</button>
-							<button
-								class="px-3 py-1.5 text-xs font-medium rounded-lg transition cursor-pointer flex items-center gap-1 bg-gray-100 text-gray-600 hover:bg-gray-200"
-								@click="downloadLicense(item.license)"
-							>
-								<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-									<path
-										d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										stroke-width="2"
-									/>
-								</svg>
-								下载 .txt
-							</button>
+							</n-button>
+							<n-button size="small" @click="downloadLicense(item.license)"> 下载 .txt </n-button>
 						</div>
 					</div>
 
@@ -913,22 +780,16 @@
 						<div class="flex items-center justify-between mb-3 flex-wrap gap-2">
 							<span class="text-xs font-medium text-gray-500">{{ item.license.name }} — 完整协议文本</span>
 							<div class="flex items-center gap-2">
-								<!-- Language selector -->
-								<div v-if="item.license.languages.length > 1" class="flex items-center gap-1">
-									<button
+								<n-button-group v-if="item.license.languages.length > 1" size="tiny">
+									<n-button
 										v-for="lang in item.license.languages"
 										:key="lang.code"
-										:class="
-											selectedLang === lang.code
-												? 'bg-blue-500 text-white'
-												: 'bg-white text-gray-500 border border-gray-200 hover:border-gray-300'
-										"
-										class="px-2 py-0.5 text-[11px] rounded transition cursor-pointer font-medium"
+										:type="selectedLang === lang.code ? 'primary' : 'default'"
 										@click="selectedLang = lang.code"
 									>
 										{{ lang.label }}
-									</button>
-								</div>
+									</n-button>
+								</n-button-group>
 								<span class="text-[10px] text-gray-400"
 									>{{ getLicenseText(item.license.id, selectedLang).length.toLocaleString() }} 字符</span
 								>

@@ -1,12 +1,13 @@
 <script lang="ts" setup>
 	import { computed, ref } from 'vue'
+	import { NInput } from 'naive-ui'
 
 	const text = ref('')
 
 	const stats = computed(() => {
 		const content = text.value
 		if (!content) {
-			return { chars: 0, charsNoSpace: 0, words: 0, lines: 0, paragraphs: 0, bytes: 0 }
+			return { chars: 0, charsNoSpace: 0, words: 0, lines: 0, paragraphs: 0, bytes: 0, chineseChars: 0, numbers: 0 }
 		}
 
 		const chars = content.length
@@ -18,7 +19,6 @@
 			.split(/\n\s*\n/)
 			.filter((p) => p.trim()).length
 		const bytes = new TextEncoder().encode(content).length
-
 		const chineseChars = (content.match(/[一-鿿]/g) || []).length
 		const numbers = (content.match(/\d+/g) || []).length
 
@@ -28,12 +28,7 @@
 
 <template>
 	<div class="space-y-4">
-		<textarea
-			v-model="text"
-			class="w-full p-3 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-y"
-			placeholder="输入或粘贴文本..."
-			rows="10"
-		></textarea>
+		<n-input v-model:value="text" :autosize="{ minRows: 10 }" placeholder="输入或粘贴文本..." type="textarea" />
 
 		<div v-if="text" class="grid grid-cols-2 sm:grid-cols-4 gap-3">
 			<div class="p-3 bg-blue-50 rounded-lg text-center">

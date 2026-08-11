@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 	import { ref } from 'vue'
+	import { NButton, NCheckbox, NInputNumber } from 'naive-ui'
 
 	const uuids = ref<string[]>([])
 	const count = ref(5)
@@ -37,32 +38,12 @@
 	<div class="space-y-4">
 		<div class="flex flex-wrap items-center gap-4">
 			<div class="flex items-center gap-2">
-				<label class="text-sm text-gray-600">生成数量:</label>
-				<input
-					v-model.number="count"
-					class="w-20 p-2 border border-gray-200 rounded-lg text-sm text-center focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-					max="100"
-					min="1"
-					type="number"
-				/>
+				<span class="text-sm text-gray-600">生成数量:</span>
+				<n-input-number v-model:value="count" :max="100" :min="1" class="w-20" />
 			</div>
-			<label class="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
-				<input v-model="uppercase" class="rounded" type="checkbox" />
-				大写
-			</label>
-			<button
-				class="px-4 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition cursor-pointer"
-				@click="generate"
-			>
-				生成
-			</button>
-			<button
-				v-if="uuids.length"
-				class="px-4 py-2 bg-gray-100 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-200 transition cursor-pointer"
-				@click="copyAll"
-			>
-				复制全部
-			</button>
+			<n-checkbox v-model:checked="uppercase"> 大写 </n-checkbox>
+			<n-button type="primary" @click="generate"> 生成 </n-button>
+			<n-button v-if="uuids.length" @click="copyAll"> 复制全部 </n-button>
 		</div>
 
 		<div class="space-y-1">
@@ -72,12 +53,9 @@
 				class="flex items-center justify-between p-3 bg-gray-50 rounded-lg group hover:bg-gray-100 transition"
 			>
 				<code class="text-sm font-mono text-gray-700">{{ uuid }}</code>
-				<button
-					class="px-3 py-1 bg-white border border-gray-200 rounded text-xs opacity-0 group-hover:opacity-100 hover:bg-gray-50 transition cursor-pointer"
-					@click="copyOne(uuid)"
-				>
+				<n-button class="opacity-0 group-hover:opacity-100 transition" size="tiny" @click="copyOne(uuid)">
 					复制
-				</button>
+				</n-button>
 			</div>
 		</div>
 	</div>

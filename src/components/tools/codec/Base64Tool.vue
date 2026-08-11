@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 	import { ref } from 'vue'
+	import { NButton, NButtonGroup, NInput } from 'naive-ui'
 
 	const input = ref('')
 	const output = ref('')
@@ -30,56 +31,26 @@
 
 <template>
 	<div class="space-y-4">
-		<div class="flex gap-2">
-			<button
-				:class="mode === 'encode' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-600'"
-				class="px-4 py-2 rounded-lg text-sm font-medium transition cursor-pointer"
-				@click="mode = 'encode'"
-			>
-				编码
-			</button>
-			<button
-				:class="mode === 'decode' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-600'"
-				class="px-4 py-2 rounded-lg text-sm font-medium transition cursor-pointer"
-				@click="mode = 'decode'"
-			>
-				解码
-			</button>
-		</div>
-		<textarea
-			v-model="input"
+		<n-button-group>
+			<n-button :type="mode === 'encode' ? 'primary' : 'default'" @click="mode = 'encode'"> 编码 </n-button>
+			<n-button :type="mode === 'decode' ? 'primary' : 'default'" @click="mode = 'decode'"> 解码 </n-button>
+		</n-button-group>
+
+		<n-input
+			v-model:value="input"
+			:autosize="{ minRows: 6 }"
+			type="textarea"
 			:placeholder="mode === 'encode' ? '输入要编码的文本...' : '输入 Base64 字符串...'"
-			class="w-full p-3 border border-gray-200 rounded-lg text-sm font-mono focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-y"
-			rows="6"
-		></textarea>
+		/>
+
 		<div class="flex gap-2">
-			<button
-				class="px-4 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition cursor-pointer"
-				@click="process"
-			>
-				转换
-			</button>
-			<button
-				v-if="output"
-				class="px-4 py-2 bg-gray-100 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-200 transition cursor-pointer"
-				@click="swap"
-			>
-				交换
-			</button>
+			<n-button type="primary" @click="process"> 转换 </n-button>
+			<n-button v-if="output" @click="swap"> 交换 </n-button>
 		</div>
+
 		<div v-if="output" class="relative">
-			<textarea
-				:value="output"
-				class="w-full p-3 border border-gray-200 rounded-lg text-sm font-mono bg-gray-50 resize-y"
-				readonly
-				rows="6"
-			></textarea>
-			<button
-				class="absolute top-2 right-2 px-3 py-1 bg-white border border-gray-200 rounded text-xs hover:bg-gray-50 transition cursor-pointer"
-				@click="copy"
-			>
-				复制
-			</button>
+			<n-input :autosize="{ minRows: 6 }" :value="output" readonly type="textarea" />
+			<n-button class="absolute top-2 right-2" size="small" @click="copy"> 复制 </n-button>
 		</div>
 	</div>
 </template>
