@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-	import { NPopover } from 'naive-ui'
-	import { computed, ref, watch } from 'vue'
+	import { NAlert, NButton, NInput, NPopover, NSelect, NSwitch } from 'naive-ui'
+	import { computed, ref, watch } from 'vue' // ---- 预设的 API 格式 ----
 
 	// ---- 预设的 API 格式 ----
 	interface ApiPreset {
@@ -220,6 +220,20 @@
 	})
 
 	const preset = computed(() => presets[selectedPreset.value])
+
+	const presetOptions = computed(() => Object.entries(presets).map(([k, p]) => ({ label: p.label, value: k })))
+
+	const authTypeOptions = [
+		{ label: 'Bearer Token (Authorization: Bearer)', value: 'bearer' },
+		{ label: '自定义 Header', value: 'header' },
+		{ label: 'Query 参数 (?key=)', value: 'query' }
+	]
+
+	function alertType(status: TestStatus): 'info' | 'success' | 'error' {
+		if (status === 'loading') return 'info'
+		if (status === 'success') return 'success'
+		return 'error'
+	}
 
 	function buildHeaders(): Record<string, string> {
 		const headers: Record<string, string> = {
@@ -488,21 +502,10 @@
 					</NPopover>
 				</h2>
 				<div class="flex gap-2">
-					<button
-						:disabled="!apiKey.trim()"
-						class="px-3 py-1.5 rounded-lg text-xs font-medium transition bg-emerald-500 text-white hover:bg-emerald-600 disabled:opacity-40 disabled:cursor-not-allowed"
-						title="保存当前配置到历史"
-						@click="addToHistory"
-					>
-						保存当前
-					</button>
-					<button
-						v-if="historyList.length"
-						class="px-3 py-1.5 rounded-lg text-xs font-medium transition bg-red-100 text-red-600 hover:bg-red-200"
-						@click="clearAllHistory"
-					>
+					<NButton :disabled="!apiKey.trim()" size="small" type="success" @click="addToHistory"> 保存当前 </NButton>
+					<NButton v-if="historyList.length" secondary size="small" type="error" @click="clearAllHistory">
 						清空全部
-					</button>
+					</NButton>
 				</div>
 			</div>
 
@@ -526,15 +529,15 @@
 						<span class="font-mono text-xs text-gray-500">{{ item.baseUrl.replace(/^https?:\/\//, '') }}</span>
 						<span class="ml-2 text-xs text-gray-400">{{ new Date(item.createdAt).toLocaleString('zh-CN') }}</span>
 					</button>
-					<button
-						class="ml-2 p-1 rounded text-gray-300 hover:text-red-500 hover:bg-red-50 opacity-0 group-hover:opacity-100 transition shrink-0"
-						title="删除此记录"
+					<NButton
+						class="opacity-0 group-hover:opacity-100 transition shrink-0"
+						size="tiny"
+						text
+						type="error"
 						@click="deleteHistory(item.id)"
 					>
-						<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-							<path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
-						</svg>
-					</button>
+						✕
+					</NButton>
 				</div>
 			</div>
 		</section>
@@ -547,107 +550,63 @@
 				<!-- API 格式 -->
 				<div>
 					<label class="block text-sm font-medium text-gray-700 mb-1">API 格式</label>
-					<select
-						v-model="selectedPreset"
-						class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white"
-					>
-						<option v-for="(p, k) in presets" :key="k" :value="k">{{ p.label }}</option>
-					</select>
+					<NSelect v-model:value="selectedPreset" :options="presetOptions" placeholder="选择 API 格式" />
 				</div>
 
 				<!-- Base URL -->
 				<div>
 					<label class="block text-sm font-medium text-gray-700 mb-1">Base URL</label>
-					<input
-						v-model="baseUrl"
-						class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none font-mono"
-						placeholder="https://api.openai.com"
-						type="text"
-					/>
+					<NInput v-model:value="baseUrl" placeholder="https://api.openai.com" />
 				</div>
 
 				<!-- 认证方式 -->
 				<div>
 					<label class="block text-sm font-medium text-gray-700 mb-1">认证方式</label>
-					<select
-						v-model="authType"
-						class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none bg-white"
-					>
-						<option value="bearer">Bearer Token (Authorization: Bearer)</option>
-						<option value="header">自定义 Header</option>
-						<option value="query">Query 参数 (?key=)</option>
-					</select>
+					<NSelect v-model:value="authType" :options="authTypeOptions" placeholder="选择认证方式" />
 				</div>
 
 				<!-- 自定义 Header 名称 (仅在 header 模式) -->
 				<div v-if="authType === 'header'">
 					<label class="block text-sm font-medium text-gray-700 mb-1">Header 名称</label>
-					<input
-						v-model="customHeaderName"
-						class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none font-mono"
-						placeholder="X-API-Key"
-						type="text"
-					/>
+					<NInput v-model:value="customHeaderName" placeholder="X-API-Key" />
 				</div>
 			</div>
 
 			<!-- API Key -->
 			<div class="mt-4">
 				<label class="block text-sm font-medium text-gray-700 mb-1">API Key</label>
-				<input
-					v-model="apiKey"
+				<NInput
+					v-model:value="apiKey"
 					:placeholder="authType === 'query' ? 'your-api-key' : 'sk-...'"
-					class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none font-mono"
+					show-password-toggle
 					type="password"
 				/>
 			</div>
 
 			<!-- 代理开关 -->
 			<div class="mt-4 flex items-center gap-3">
-				<label class="relative inline-flex items-center cursor-pointer">
-					<input v-model="useProxy" class="sr-only peer" type="checkbox" />
-					<div
-						class="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-500"
-					></div>
-					<span class="ms-2 text-sm font-medium text-gray-700">通过本地代理请求</span>
-				</label>
+				<NSwitch v-model:value="useProxy" />
+				<span class="text-sm font-medium text-gray-700">通过本地代理请求</span>
 				<span class="text-xs text-gray-400">绕过 CORS 和 HTTP/HTTPS 混合内容限制</span>
 			</div>
 
 			<!-- 操作按钮 -->
 			<div class="flex flex-wrap gap-3 mt-4">
-				<button
-					:disabled="connectionStatus === 'loading'"
-					class="px-4 py-2 rounded-lg text-sm font-medium transition bg-blue-500 text-white hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
-					@click="testConnection"
-				>
+				<NButton :loading="connectionStatus === 'loading'" size="small" type="primary" @click="testConnection">
 					测试连接
-				</button>
-				<button
-					:disabled="modelsStatus === 'loading'"
-					class="px-4 py-2 rounded-lg text-sm font-medium transition bg-green-500 text-white hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed"
-					@click="fetchModels"
-				>
+				</NButton>
+				<NButton :loading="modelsStatus === 'loading'" size="small" type="success" @click="fetchModels">
 					获取模型列表
-				</button>
+				</NButton>
 			</div>
 
 			<!-- 连接状态 -->
-			<div v-if="connectionStatus !== 'idle'" class="mt-3">
-				<div
-					:class="{
-						'bg-green-50 border-green-300 text-green-800': connectionStatus === 'success',
-						'bg-red-50 border-red-300 text-red-800': connectionStatus === 'error',
-						'bg-blue-50 border-blue-300 text-blue-800': connectionStatus === 'loading'
-					}"
-					class="border rounded-lg px-4 py-3 text-sm"
-				>
-					<span v-if="connectionStatus === 'loading'" class="inline-block animate-spin mr-2">⏳</span>
-					<span v-else-if="connectionStatus === 'success'">✅</span>
-					<span v-else>❌</span>
-					<span class="ml-1">{{ connectionMessage }}</span>
-				</div>
-			</div>
+			<NAlert
+				v-if="connectionStatus !== 'idle'"
+				:title="connectionMessage"
+				:type="alertType(connectionStatus)"
+				class="mt-3"
+			/>
 		</section>
 
 		<!-- Section 2: 模型列表 -->
@@ -672,18 +631,7 @@
 					</button>
 				</div>
 			</div>
-			<div v-if="modelsStatus !== 'idle'" class="mt-2">
-				<p
-					:class="{
-						'text-green-600': modelsStatus === 'success',
-						'text-red-600': modelsStatus === 'error',
-						'text-blue-600': modelsStatus === 'loading'
-					}"
-					class="text-sm"
-				>
-					{{ modelsMessage }}
-				</p>
-			</div>
+			<NAlert v-if="modelsStatus !== 'idle'" :title="modelsMessage" :type="alertType(modelsStatus)" class="mt-2" />
 		</section>
 
 		<!-- Section 3: 测试对话 -->
@@ -709,42 +657,17 @@
 				<!-- Prompt -->
 				<div>
 					<label class="block text-sm font-medium text-gray-700 mb-1">测试 Prompt</label>
-					<textarea
-						v-model="testPrompt"
-						class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-y"
-						rows="3"
-					></textarea>
+					<NInput v-model:value="testPrompt" :autosize="{ minRows: 3 }" type="textarea" />
 				</div>
 			</div>
 
-			<button
-				:disabled="testStatus === 'loading'"
-				class="mt-4 px-4 py-2 rounded-lg text-sm font-medium transition bg-purple-500 text-white hover:bg-purple-600 disabled:opacity-50 disabled:cursor-not-allowed"
-				@click="sendTestMessage"
-			>
+			<NButton :loading="testStatus === 'loading'" class="mt-4" size="small" type="primary" @click="sendTestMessage">
 				发送消息
-			</button>
+			</NButton>
 
 			<!-- 响应 -->
 			<div v-if="testStatus !== 'idle'" class="mt-4">
-				<div
-					:class="{
-						'bg-green-50 border-green-300': testStatus === 'success',
-						'bg-red-50 border-red-300': testStatus === 'error',
-						'bg-blue-50 border-blue-300': testStatus === 'loading'
-					}"
-					class="border rounded-lg px-4 py-3 text-sm"
-				>
-					<p
-						:class="{
-							'text-green-700': testStatus === 'success',
-							'text-red-700': testStatus === 'error',
-							'text-blue-700': testStatus === 'loading'
-						}"
-					>
-						{{ testMessage }}
-					</p>
-				</div>
+				<NAlert :title="testMessage" :type="alertType(testStatus)" />
 				<div
 					v-if="testResponse"
 					class="mt-3 bg-gray-50 border border-gray-200 rounded-lg p-4 font-mono text-sm whitespace-pre-wrap text-gray-800 max-h-80 overflow-y-auto"
@@ -755,18 +678,3 @@
 		</section>
 	</div>
 </template>
-
-<style scoped>
-	@keyframes spin {
-		from {
-			transform: rotate(0deg);
-		}
-		to {
-			transform: rotate(360deg);
-		}
-	}
-
-	.animate-spin {
-		animation: spin 1s linear infinite;
-	}
-</style>
