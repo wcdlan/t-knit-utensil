@@ -32,15 +32,22 @@ v4、Vue Router 5（history 模式）、Naive UI 2.44+、JSZip。
 
 ```
 src/
+├── types/
+│   ├── tools.ts         # Tool, ToolGroup — 工具条目与分组
+│   ├── site.ts          # FooterConfig, AuthConfig, SiteConfig — 站点配置
+│   ├── ssh.ts           # KeyType, KeyPairResult, KeyTypeMeta — SSH 密钥
+│   ├── ai.ts            # ApiPreset, HistoryItem, TestStatus, ApiResponse — AI API 测试
+│   ├── license.ts       # LicenseProfile, QuestionOption, Question, ScoredLicense — 许可证
+│   └── image.ts         # FaviconSize — Favicon 尺寸选项
 ├── data/
-│   ├── tools.ts         # 工具定义（ToolGroup[]，getToolById）
-│   ├── siteConfig.ts    # 响应式配置 store + loadConfig/saveConfig
+│   ├── tools.ts         # 工具定义（ToolGroup[]，getToolById），从 types 重导出类型
+│   ├── siteConfig.ts    # 响应式配置 store + loadConfig/saveConfig，从 types 重导出类型
 │   └── auth.ts          # useAuth() — 登录/登出，token 存 localStorage
 ├── router/index.ts      # Vue Router 配置 + beforeEach 守卫
 ├── utils/
 │   ├── clipboard.ts     # copyToClipboard()
 │   ├── download.ts      # downloadBlob(), downloadTextFile()
-│   └── ssh.ts           # SSH 密钥生成（RSA/ECDSA，Web Crypto API）
+│   └── ssh.ts           # SSH 密钥生成（RSA/ECDSA，Web Crypto API），从 types 重导出类型
 ├── views/
 │   ├── Home.vue         # 工具分组展示，顶部快捷导航
 │   ├── ToolPage.vue     # 动态工具加载（按 toolId 的 v-if 链）
@@ -120,6 +127,8 @@ src/
 - 系统中使用 pnpm 而不是 npm
 - 新增的文件，及时添加到 git 中
 - 使用 naive-ui 中的组件 + tailwindcss 进行样式设计，确保一致性和可维护性
+- 所有 interface / type 定义放到 `src/types/` 下按领域分文件管理，禁止在组件或工具文件中内联定义
+- 原有的导出文件（如 `src/data/tools.ts`）通过 `export type { ... } from '@/types/...'` 重导出以保持向后兼容
 - 重复的静态方法提取到 `src/utils` 中，不要散落在各个组件中
 - 新增的工具组件统一使用 `*Tool.vue` 命名后缀
 - 共享状态/逻辑使用 `src/data/` 下的 composable 导出（`use*` 前缀）
