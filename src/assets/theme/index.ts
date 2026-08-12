@@ -101,6 +101,13 @@ export const themeOverrides = {
 		groupTextColor: '#6b7280'
 	},
 
+	// ---- Layout ----
+	Layout: {
+		siderToggleButtonColor: '#ffffff',
+		siderToggleButtonBorder: '1px solid #e2e8f0',
+		siderToggleButtonIconColor: '#2563eb'
+	},
+
 	// ---- Tag ----
 	Tag: {
 		borderRadius: '5px'

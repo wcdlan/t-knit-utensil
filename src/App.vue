@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-	import { computed, h, onMounted, ref } from 'vue';
+	import { computed, h, onBeforeUnmount, onMounted, ref } from 'vue';
 	import { useRoute, useRouter } from 'vue-router';
 	import { type MenuOption, NConfigProvider, NLayout, NLayoutContent, NLayoutSider, NMenu } from 'naive-ui';
 	import { themeOverrides } from './assets/theme';
@@ -8,29 +8,46 @@
 	import { icons } from './data/icons';
 	import TkuIcon from './components/common/TkuIcon.vue';
 	import logoImg from './assets/TKU.png';
+	import logoIconImg from './assets/TKU-U.png';
 
 	const router = useRouter();
 	const route = useRoute();
 	const expandedKeys = ref<string[]>([]);
+	const collapsed = ref(false);
+	let mediaQuery: MediaQueryList | null = null;
 
-	onMounted(() => loadConfig());
+	function syncCollapsed() {
+		if (mediaQuery) collapsed.value = mediaQuery.matches;
+	}
 
-	function renderMenuLabel(icon: string, text: string) {
-		return () =>
-			h('span', { class: 'flex items-center gap-2' }, [h(TkuIcon, { name: icon, size: 18 }), h('span', text)]);
+	onMounted(() => {
+		loadConfig();
+		// 小屏（≤768px）自动收缩侧边栏
+		mediaQuery = window.matchMedia('(max-width: 768px)');
+		syncCollapsed();
+		mediaQuery.addEventListener('change', syncCollapsed);
+	});
+
+	onBeforeUnmount(() => {
+		mediaQuery?.removeEventListener('change', syncCollapsed);
+	});
+
+	function renderMenuIcon(icon: string) {
+		return () => h(TkuIcon, { name: icon, size: 18 });
 	}
 
 	const menuOptions = computed<MenuOption[]>(() => [
-		{ label: renderMenuLabel(icons.home, '首页'), key: 'home' },
+		{ label: '首页', icon: renderMenuIcon(icons.home), key: 'home' },
 		...toolGroups.map((g) => ({
-			label: renderMenuLabel(g.icon, g.name),
+			label: g.name,
+			icon: renderMenuIcon(g.icon),
 			key: g.id,
 			children: g.tools.map((t) => ({
 				label: t.name,
 				key: '/tool/' + t.id
 			}))
 		})),
-		{ label: renderMenuLabel(icons.cog, '设置'), key: 'settings' }
+		{ label: '设置', icon: renderMenuIcon(icons.cog), key: 'settings' }
 	]);
 
 	const activeKey = computed(() => {
@@ -53,18 +70,30 @@
 			<!-- Sidebar with gradient background -->
 			<n-layout-sider
 				:width="220"
+				:collapsed="collapsed"
+				:collapsed-width="64"
+				collapse-mode="width"
+				show-trigger
 				bordered
 				class="sidebar"
 				style="background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%); border-right: 1px solid #e2e8f0"
+				@update:collapsed="(value: boolean) => (collapsed = value)"
 			>
-				<div class="h-18 flex items-center justify-center px-5 border-b border-slate-200/80">
+				<div
+					:class="collapsed ? 'px-2' : 'px-5'"
+					class="h-18 flex items-center justify-center border-b border-slate-200/80"
+				>
 					<router-link class="no-underline flex flex-col items-center gap-1" to="/">
-						<img :src="logoImg" alt="TKU" class="h-8 drop-shadow-sm" />
-						<span class="font-bold text-[18px] text-slate-600 tracking-tight leading-tight">T Knit Utensil</span>
+						<img :src="collapsed ? logoIconImg : logoImg" alt="TKU" class="h-8 drop-shadow-sm" />
+						<span v-if="!collapsed" class="font-bold text-[18px] text-slate-600 tracking-tight leading-tight"
+							>T Knit Utensil</span
+						>
 					</router-link>
 				</div>
-				<div class="px-3 py-3">
+				<div :class="collapsed ? 'px-1' : 'px-3'" class="py-3">
 					<n-menu
+						:collapsed="collapsed"
+						:collapsed-width="56"
 						:expanded-keys="expandedKeys"
 						:indent="20"
 						:options="menuOptions"
