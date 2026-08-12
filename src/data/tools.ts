@@ -11,7 +11,13 @@ export const toolGroups: ToolGroup[] = [
 		tools: [
 			{ id: 'base64', name: 'Base64', description: 'Base64 编码与解码', icon: icons.pencil },
 			{ id: 'url-encode', name: 'URL 编解码', description: 'URL 编码与解码转换', icon: icons.link },
-			{ id: 'unicode', name: 'Unicode', description: 'Unicode 与中文互转', icon: icons.web }
+			{ id: 'unicode', name: 'Unicode', description: 'Unicode 与中文互转', icon: icons.web },
+			{
+				id: 'encoding',
+				name: '编码探测',
+				description: '文本在不同编码间的转换与乱码测试，支持 UTF-8/GBK/Big5 等',
+				icon: icons.encoding
+			}
 		]
 	},
 	{

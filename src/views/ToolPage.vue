@@ -44,6 +44,7 @@
 			<Base64Tool v-else-if="toolId === 'base64'" />
 			<UrlEncode v-else-if="toolId === 'url-encode'" />
 			<UnicodeTool v-else-if="toolId === 'unicode'" />
+			<EncodingTool v-else-if="toolId === 'encoding'" />
 			<SqlFormatter v-else-if="toolId === 'sql-formatter'" />
 			<TimestampTool v-else-if="toolId === 'timestamp'" />
 			<ColorConverter v-else-if="toolId === 'color'" />
@@ -82,6 +83,7 @@
 	import Base64Tool from '@/components/tools/codec/Base64Tool.vue';
 	import UrlEncode from '@/components/tools/codec/UrlEncode.vue';
 	import UnicodeTool from '@/components/tools/codec/UnicodeTool.vue';
+	import EncodingTool from '@/components/tools/codec/EncodingTool.vue';
 	import SqlFormatter from '@/components/tools/formatter/SqlFormatter.vue';
 	import TimestampTool from '@/components/tools/converter/TimestampTool.vue';
 	import ColorConverter from '@/components/tools/converter/ColorConverter.vue';
@@ -103,6 +105,7 @@
 			Base64Tool,
 			UrlEncode,
 			UnicodeTool,
+			EncodingTool,
 			SqlFormatter,
 			TimestampTool,
 			ColorConverter,
