@@ -66,6 +66,25 @@ body {
     background: #9ca3af;
 }
 
+/* ---- Tool switch transitions ---- */
+.tool-enter-active {
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.tool-leave-active {
+    transition: opacity 0.12s ease, transform 0.12s ease;
+}
+
+.tool-enter-from {
+    opacity: 0;
+    transform: translateY(6px);
+}
+
+.tool-leave-to {
+    opacity: 0;
+    transform: translateY(-4px);
+}
+
 /* ---- Page transitions ---- */
 .page-enter-active {
     transition: opacity 0.2s ease,

@@ -6,7 +6,7 @@
 	import TkuIcon from '@/components/common/TkuIcon.vue';
 
 	const route = useRoute();
-	const toolId = computed(() => route.params.toolId as string);
+	const toolId = computed(() => route.path.split('/').pop() || '');
 	const tool = computed(() => getToolById(toolId.value));
 </script>
 
@@ -38,27 +38,15 @@
 			</div>
 		</div>
 
-		<!-- Dynamic Tool Component -->
+		<!-- Dynamic Tool Component via nested route -->
 		<div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-8">
-			<JsonFormatter v-if="toolId === 'json-formatter'" />
-			<Base64Tool v-else-if="toolId === 'base64'" />
-			<UrlEncode v-else-if="toolId === 'url-encode'" />
-			<UnicodeTool v-else-if="toolId === 'unicode'" />
-			<EncodingTool v-else-if="toolId === 'encoding'" />
-			<SqlFormatter v-else-if="toolId === 'sql-formatter'" />
-			<TimestampTool v-else-if="toolId === 'timestamp'" />
-			<ColorConverter v-else-if="toolId === 'color'" />
-			<UuidGenerator v-else-if="toolId === 'uuid'" />
-			<HashTool v-else-if="toolId === 'hash'" />
-			<QrcodeTool v-else-if="toolId === 'qrcode'" />
-			<PasswordTool v-else-if="toolId === 'password'" />
-			<RegexTool v-else-if="toolId === 'regex'" />
-			<DiffTool v-else-if="toolId === 'diff'" />
-			<WordCount v-else-if="toolId === 'word-count'" />
-			<SshKeyGen v-else-if="toolId === 'ssh-keygen'" />
-			<FaviconTool v-else-if="toolId === 'favicon'" />
-			<AiApiTester v-else-if="toolId === 'ai-tester'" />
-			<LicenseSelector v-else-if="toolId === 'license-selector'" />
+			<router-view v-slot="{ Component }">
+				<transition mode="out-in" name="tool">
+					<keep-alive>
+						<component :is="Component" />
+					</keep-alive>
+				</transition>
+			</router-view>
 		</div>
 	</div>
 
@@ -77,49 +65,3 @@
 		</router-link>
 	</div>
 </template>
-
-<script lang="ts">
-	import JsonFormatter from '@/components/tools/formatter/JsonFormatter.vue';
-	import Base64Tool from '@/components/tools/codec/Base64Tool.vue';
-	import UrlEncode from '@/components/tools/codec/UrlEncode.vue';
-	import UnicodeTool from '@/components/tools/codec/UnicodeTool.vue';
-	import EncodingTool from '@/components/tools/codec/EncodingTool.vue';
-	import SqlFormatter from '@/components/tools/formatter/SqlFormatter.vue';
-	import TimestampTool from '@/components/tools/converter/TimestampTool.vue';
-	import ColorConverter from '@/components/tools/converter/ColorConverter.vue';
-	import UuidGenerator from '@/components/tools/generator/UuidGenerator.vue';
-	import HashTool from '@/components/tools/generator/HashTool.vue';
-	import QrcodeTool from '@/components/tools/generator/QrcodeTool.vue';
-	import PasswordTool from '@/components/tools/generator/PasswordTool.vue';
-	import RegexTool from '@/components/tools/text/RegexTool.vue';
-	import DiffTool from '@/components/tools/text/DiffTool.vue';
-	import WordCount from '@/components/tools/text/WordCount.vue';
-	import SshKeyGen from '@/components/tools/ssh/SshKeyGen.vue';
-	import FaviconTool from '@/components/tools/image/FaviconTool.vue';
-	import LicenseSelector from '@/components/tools/common/LicenseSelector.vue';
-	import AiApiTester from '@/components/tools/ai/AiApiTester.vue';
-
-	export default {
-		components: {
-			JsonFormatter,
-			Base64Tool,
-			UrlEncode,
-			UnicodeTool,
-			EncodingTool,
-			SqlFormatter,
-			TimestampTool,
-			ColorConverter,
-			UuidGenerator,
-			HashTool,
-			QrcodeTool,
-			PasswordTool,
-			RegexTool,
-			DiffTool,
-			WordCount,
-			SshKeyGen,
-			FaviconTool,
-			LicenseSelector,
-			AiApiTester
-		}
-	};
-</script>

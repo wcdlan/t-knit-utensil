@@ -36,7 +36,7 @@
 	const activeKey = computed(() => {
 		if (route.path === '/') return 'home';
 		if (route.path === '/settings') return 'settings';
-		if (route.path.startsWith('/tool/')) return '/tool/' + route.params.toolId;
+		if (route.path.startsWith('/tool/')) return route.path;
 		return 'home';
 	});
 
