@@ -15,6 +15,7 @@ stages:
 
 variables:
   TARBALL_NAME: tku-${CI_COMMIT_TAG}.tar.gz
+  NPM_REGISTRY: https://registry.npmmirror.com
   NEXUS: v4.nagioa.cn:35483
   IMAGE_NAME: entropycrop/t-knit-utensil
   DEPLOY_PATH: /home/safeline/resources/nginx/static/static_23
@@ -55,8 +56,12 @@ build:
   before_script:
     # npm prefix 指向 gitlab-runner 可写目录，避开 nvm 权限问题
     - npm config set prefix ~/npm-global
+    # npm 使用国内镜像源，加速 pnpm 安装
+    - npm config set registry ${NPM_REGISTRY}
     - npm install -g pnpm
     - export PATH="$HOME/npm-global/bin:$PATH"
+    # pnpm 使用国内镜像源
+    - pnpm config set registry ${NPM_REGISTRY}
     # pnpm store 指向项目目录，避免全局 store 权限不确定性
     - pnpm config set store-dir .pnpm-store
 
