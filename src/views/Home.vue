@@ -67,6 +67,17 @@
 					面向开发者的在线工具集，{{ toolCount }} 个实用工具，覆盖编解码、格式化、生成、转换等常用场景
 				</p>
 
+				<!-- Search -->
+				<div class="mt-6 w-full max-w-lg">
+					<n-input
+						v-model:value="query"
+						:placeholder="`搜索 ${toolCount} 个工具...`"
+						class="search-input"
+						clearable
+						size="large"
+					/>
+				</div>
+
 				<!-- Stats -->
 				<div class="mt-7 flex flex-wrap items-center justify-center gap-3">
 					<div
@@ -83,17 +94,6 @@
 					</div>
 				</div>
 			</div>
-		</div>
-
-		<!-- Search -->
-		<div class="mb-8">
-			<n-input
-				v-model:value="query"
-				class="search-input"
-				clearable
-				:placeholder="`搜索 ${toolCount} 个工具...`"
-				size="large"
-			/>
 		</div>
 
 		<n-empty v-if="filteredGroups.length === 0" class="py-16" description="未找到匹配的工具" />
