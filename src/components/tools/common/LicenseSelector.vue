@@ -618,7 +618,7 @@
 		<div class="lg:w-96 shrink-0 space-y-5">
 			<div v-for="q in QUESTIONS" :key="q.id" class="bg-gray-50 rounded-xl p-4 border border-gray-100">
 				<h3 class="text-sm font-semibold text-gray-800 mb-3">{{ q.text }}</h3>
-				<n-radio-group :name="q.id" :value="answers[q.id]" @update:value="(v: string) => (answers[q.id] = v)">
+				<n-radio-group :name="q.id" :value="answers[q.id]" @update:value="(v: string) => (answers[q.id] = v)" class="w-full">
 					<div class="space-y-1.5">
 						<div
 							v-for="opt in q.options"
@@ -627,7 +627,7 @@
 							class="flex items-start gap-2.5 p-2.5 rounded-lg cursor-pointer transition hover:bg-white border border-transparent"
 							@click="answers[q.id] = opt.value"
 						>
-							<n-radio :checked="answers[q.id] === opt.value" class="mt-0.5 shrink-0" />
+							<n-radio :value="opt.value" class="mt-0.5 shrink-0" />
 							<div>
 								<div class="text-sm font-medium text-gray-700">{{ opt.label }}</div>
 								<div class="text-xs text-gray-400 mt-0.5">{{ opt.description }}</div>
