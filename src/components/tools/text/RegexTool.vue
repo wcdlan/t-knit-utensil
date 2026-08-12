@@ -111,17 +111,17 @@
 </script>
 
 <template>
-	<div class="space-y-4">
+	<div class="space-y-5">
 		<!-- Pattern -->
 		<div>
-			<label class="block text-xs font-semibold text-gray-500 mb-1">正则表达式</label>
+			<label class="block text-xs font-semibold text-slate-500 mb-2">正则表达式</label>
 			<div class="flex gap-2">
 				<n-input v-model:value="pattern" class="flex-1 !font-mono" placeholder="输入正则表达式">
 					<template #prefix>
-						<span class="text-gray-400 font-mono">/</span>
+						<span class="text-slate-400 font-mono">/</span>
 					</template>
 					<template #suffix>
-						<span class="text-gray-400 font-mono">/</span>
+						<span class="text-slate-400 font-mono">/</span>
 					</template>
 				</n-input>
 				<n-select v-model:value="flags" :options="flagOptions" class="!w-[140px]" />
@@ -130,7 +130,7 @@
 
 		<!-- Common Patterns -->
 		<div>
-			<label class="block text-xs font-semibold text-gray-500 mb-1">常用正则</label>
+			<label class="block text-xs font-semibold text-slate-500 mb-2">常用正则</label>
 			<div class="flex flex-wrap gap-1.5">
 				<n-tag
 					v-for="p in commonPatterns"
@@ -146,7 +146,7 @@
 
 		<!-- Test String -->
 		<div>
-			<label class="block text-xs font-semibold text-gray-500 mb-1">测试文本</label>
+			<label class="block text-xs font-semibold text-slate-500 mb-2">测试文本</label>
 			<n-input v-model:value="testStr" :autosize="{ minRows: 6 }" placeholder="输入要测试的文本..." type="textarea" />
 		</div>
 
@@ -155,15 +155,19 @@
 
 		<!-- Results -->
 		<div v-if="matches.length" class="space-y-2">
-			<div class="text-sm text-gray-600">
+			<div class="text-sm text-slate-600">
 				共匹配 <span class="font-semibold text-blue-600">{{ matches.length }}</span> 处
 			</div>
 			<div class="space-y-1">
-				<div v-for="(m, i) in matches" :key="i" class="p-3 bg-green-50 rounded-lg text-sm font-mono flex gap-4">
-					<span class="text-gray-400 flex-shrink-0">[{{ i }}]</span>
-					<span class="text-gray-700 font-semibold">{{ m.match }}</span>
-					<span class="text-gray-400">index: {{ m.index }}</span>
-					<span v-if="m.groups.length" class="text-gray-500"> groups: {{ m.groups.join(', ') }} </span>
+				<div
+					v-for="(m, i) in matches"
+					:key="i"
+					class="p-3 bg-emerald-50 rounded-lg text-sm font-mono flex gap-4 border-l-3 border-emerald-300"
+				>
+					<span class="text-slate-400 flex-shrink-0">[{{ i }}]</span>
+					<span class="text-slate-700 font-semibold">{{ m.match }}</span>
+					<span class="text-slate-400">index: {{ m.index }}</span>
+					<span v-if="m.groups.length" class="text-slate-500"> groups: {{ m.groups.join(', ') }} </span>
 				</div>
 			</div>
 		</div>

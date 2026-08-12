@@ -43,38 +43,59 @@
 <template>
 	<n-config-provider :theme-overrides="themeOverrides">
 		<n-layout class="h-screen" has-sider>
-			<n-layout-sider :width="220" bordered class="bg-white border-gray-200">
-				<div class="h-14 flex items-center justify-center px-4 border-b border-gray-200">
-					<router-link class="no-underline flex items-center gap-2" to="/">
-						<img :src="logoImg" alt="TKU" class="h-8" />
+			<!-- Sidebar with gradient background -->
+			<n-layout-sider
+				:width="220"
+				bordered
+				class="sidebar"
+				style="background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%); border-right: 1px solid #e2e8f0"
+			>
+				<div class="h-18 flex items-center justify-center px-5 border-b border-slate-200/80">
+					<router-link class="no-underline flex flex-col items-center gap-1" to="/">
+						<img :src="logoImg" alt="TKU" class="h-8 drop-shadow-sm" />
+						<span class="font-bold text-[18px] text-slate-600 tracking-tight leading-tight">T Knit Utensil</span>
 					</router-link>
 				</div>
-				<n-menu
-					:expanded-keys="expandedKeys"
-					:indent="20"
-					:options="menuOptions"
-					:value="activeKey"
-					@update:value="handleMenuUpdate"
-					@update:expanded-keys="(keys: string[]) => (expandedKeys = keys)"
-				/>
+				<div class="px-3 py-3">
+					<n-menu
+						:expanded-keys="expandedKeys"
+						:indent="20"
+						:options="menuOptions"
+						:value="activeKey"
+						@update:value="handleMenuUpdate"
+						@update:expanded-keys="(keys: string[]) => (expandedKeys = keys)"
+					/>
+				</div>
 			</n-layout-sider>
 
-			<div class="flex-1 flex flex-col min-w-0 bg-gray-50">
-				<n-layout-content class="flex-1 p-4">
-					<router-view />
+			<!-- Content area with subtle gradient background -->
+			<div class="flex-1 flex flex-col min-w-0" style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)">
+				<n-layout-content class="flex-1 p-6">
+					<router-view v-slot="{ Component }">
+						<transition mode="out-in" name="page">
+							<component :is="Component" />
+						</transition>
+					</router-view>
 				</n-layout-content>
-				<footer class="text-center text-xs text-gray-500 py-2.5 border-t border-gray-200 bg-white">
-					<span>&copy; {{ new Date().getFullYear() }} {{ siteConfig.footer.copyright || 'TKU' }}</span>
-					<span v-if="siteConfig.footer.icp" class="ml-4">
+
+				<!-- Footer with glass effect -->
+				<footer
+					class="text-center text-xs py-3 border-t border-slate-200/80"
+					style="background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(8px)"
+				>
+					<span class="text-slate-400"
+						>&copy; {{ new Date().getFullYear() }} {{ siteConfig.footer.copyright || 'TKU' }}</span
+					>
+					<span v-if="siteConfig.footer.icp" class="ml-4 text-slate-400">
 						<a
 							:href="siteConfig.footer.icpUrl || 'https://beian.miit.gov.cn'"
-							class="hover:text-gray-700 transition"
+							class="hover:text-slate-600 transition-colors duration-200"
 							target="_blank"
 						>
 							{{ siteConfig.footer.icp }}
 						</a>
 					</span>
-					<span v-if="siteConfig.footer.poweredBy" class="ml-4 text-gray-400">{{ siteConfig.footer.poweredBy }}</span>
+					<span v-if="siteConfig.footer.poweredBy" class="ml-4 text-slate-300">{{ siteConfig.footer.poweredBy }}</span>
 				</footer>
 			</div>
 		</n-layout>

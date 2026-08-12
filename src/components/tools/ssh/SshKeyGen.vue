@@ -76,10 +76,10 @@
 </script>
 
 <template>
-	<div class="space-y-4">
+	<div class="space-y-6">
 		<!-- Key type selector -->
-		<div>
-			<label class="block text-xs font-semibold text-gray-500 mb-2">密钥类型</label>
+		<div class="p-4 bg-slate-50/50 rounded-xl border border-slate-100">
+			<span class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">密钥类型</span>
 			<n-button-group>
 				<n-button
 					v-for="kt in keyTypes"
@@ -94,14 +94,14 @@
 
 		<!-- Comment -->
 		<div>
-			<label class="block text-xs font-semibold text-gray-500 mb-1">注释 (可选)</label>
+			<label class="block text-xs font-semibold text-slate-500 mb-1">注释 (可选)</label>
 			<n-input v-model:value="comment" class="max-w-[360px]" placeholder="user@host" />
 		</div>
 
 		<!-- Passphrase -->
 		<div class="flex flex-wrap gap-4">
 			<div>
-				<label class="block text-xs font-semibold text-gray-500 mb-1">私钥密码 (可选)</label>
+				<label class="block text-xs font-semibold text-slate-500 mb-1">私钥密码 (可选)</label>
 				<n-input
 					v-model:value="passphrase"
 					class="w-52"
@@ -111,7 +111,7 @@
 				/>
 			</div>
 			<div v-if="passphrase">
-				<label class="block text-xs font-semibold text-gray-500 mb-1">确认密码</label>
+				<label class="block text-xs font-semibold text-slate-500 mb-1">确认密码</label>
 				<n-input
 					v-model:value="passphraseConfirm"
 					:status="passphraseMismatch ? 'error' : undefined"
@@ -127,9 +127,9 @@
 		<!-- Generate button -->
 		<div class="flex gap-2">
 			<n-button :loading="generating" type="primary" @click="generate">
-				{{ generating ? '生成中...' : '生成密钥对' }}
+				{{ generating ? '生成中...' : '🔑 生成密钥对' }}
 			</n-button>
-			<n-button :disabled="!privateKey" @click="downloadZip"> 下载 ZIP </n-button>
+			<n-button :disabled="!privateKey" secondary @click="downloadZip"> 📦 下载 ZIP </n-button>
 		</div>
 
 		<!-- Error -->
@@ -138,14 +138,15 @@
 		<!-- Private key output -->
 		<div>
 			<div class="flex items-center justify-between mb-2">
-				<span class="text-xs font-semibold text-gray-500">私钥</span>
+				<span class="text-xs font-semibold text-slate-500">私钥</span>
 				<div class="flex gap-2">
-					<n-button size="small" @click="copyPrivate"> 复制 </n-button>
-					<n-button size="small" @click="downloadPrivate"> 下载 </n-button>
+					<n-button secondary size="small" @click="copyPrivate"> 复制 </n-button>
+					<n-button secondary size="small" @click="downloadPrivate"> 下载 </n-button>
 				</div>
 			</div>
 			<n-input
 				:autosize="{ minRows: 6 }"
+				:class="{ shimmer: generating }"
 				:value="privateKey"
 				placeholder="点击「生成密钥对」生成私钥"
 				readonly
@@ -156,14 +157,15 @@
 		<!-- Public key output -->
 		<div>
 			<div class="flex items-center justify-between mb-2">
-				<span class="text-xs font-semibold text-gray-500">公钥</span>
+				<span class="text-xs font-semibold text-slate-500">公钥</span>
 				<div class="flex gap-2">
-					<n-button size="small" @click="copyPublic"> 复制 </n-button>
-					<n-button size="small" @click="downloadPublic"> 下载 </n-button>
+					<n-button secondary size="small" @click="copyPublic"> 复制 </n-button>
+					<n-button secondary size="small" @click="downloadPublic"> 下载 </n-button>
 				</div>
 			</div>
 			<n-input
 				:autosize="{ minRows: 3 }"
+				:class="{ shimmer: generating }"
 				:value="publicKey"
 				placeholder="点击「生成密钥对」生成公钥"
 				readonly

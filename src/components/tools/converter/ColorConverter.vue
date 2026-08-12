@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 	import { ref, watch } from 'vue';
+	import { NButton, NInput, NInputNumber } from 'naive-ui';
 	import { copyToClipboard } from '@/utils/clipboard';
 
 	const hex = ref('#3b82f6');
@@ -84,88 +85,82 @@
 </script>
 
 <template>
-	<div class="space-y-6">
-		<div class="flex flex-col sm:flex-row gap-6">
-			<!-- Color Preview -->
+	<div class="space-y-8">
+		<!-- Color Preview Card -->
+		<div class="flex flex-col sm:flex-row gap-6 items-start">
+			<!-- Preview swatch -->
 			<div class="flex-shrink-0">
 				<div
 					:style="{ backgroundColor: previewColor }"
-					class="w-32 h-32 rounded-xl border border-gray-200 shadow-sm"
-				></div>
-				<input v-model="hex" class="mt-2 w-full h-10 cursor-pointer" type="color" />
+					class="w-36 h-36 rounded-2xl border border-slate-200 shadow-md relative overflow-hidden"
+				>
+					<div class="absolute inset-0 bg-gradient-to-br from-white/10 to-black/10"></div>
+				</div>
+				<div class="mt-3 flex items-center gap-2">
+					<div class="relative">
+						<input v-model="hex" class="w-10 h-10 rounded-lg cursor-pointer border border-slate-200" type="color" />
+					</div>
+					<span class="text-sm text-slate-500">取色</span>
+				</div>
 			</div>
 
-			<!-- Color Values -->
-			<div class="flex-1 space-y-4">
+			<!-- Value rows -->
+			<div class="flex-1 space-y-4 w-full">
 				<!-- HEX -->
 				<div>
-					<label class="block text-xs font-semibold text-gray-500 mb-1">HEX</label>
+					<label class="block text-xs font-semibold text-slate-500 mb-2">HEX</label>
 					<div class="flex gap-2">
-						<input
-							v-model="hex"
-							class="flex-1 p-2.5 border border-gray-200 rounded-lg text-sm font-mono focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+						<n-input
+							v-model:value="hex"
+							class="flex-1 !font-mono"
 							placeholder="#000000"
-							@input="updateFromHex"
+							@update:value="updateFromHex"
 						/>
-						<button
-							class="px-3 py-2 bg-gray-100 text-gray-600 rounded-lg text-xs hover:bg-gray-200 transition cursor-pointer"
-							@click="copy(hex)"
-						>
-							复制
-						</button>
+						<n-button secondary size="small" @click="copy(hex)">复制</n-button>
 					</div>
 				</div>
 
 				<!-- RGB -->
 				<div>
-					<label class="block text-xs font-semibold text-gray-500 mb-1">RGB</label>
-					<div class="flex gap-2">
-						<input
-							v-model.number="r"
-							class="w-20 p-2.5 border border-gray-200 rounded-lg text-sm font-mono text-center focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-							max="255"
-							min="0"
-							type="number"
-							@input="updateFromRgb"
+					<label class="block text-xs font-semibold text-slate-500 mb-2">RGB</label>
+					<div class="flex items-center gap-2">
+						<n-input-number
+							v-model:value="r"
+							:max="255"
+							:min="0"
+							class="!w-[80px] !font-mono"
+							size="small"
+							@update:value="updateFromRgb"
 						/>
-						<input
-							v-model.number="g"
-							class="w-20 p-2.5 border border-gray-200 rounded-lg text-sm font-mono text-center focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-							max="255"
-							min="0"
-							type="number"
-							@input="updateFromRgb"
+						<n-input-number
+							v-model:value="g"
+							:max="255"
+							:min="0"
+							class="!w-[80px] !font-mono"
+							size="small"
+							@update:value="updateFromRgb"
 						/>
-						<input
-							v-model.number="b"
-							class="w-20 p-2.5 border border-gray-200 rounded-lg text-sm font-mono text-center focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-							max="255"
-							min="0"
-							type="number"
-							@input="updateFromRgb"
+						<n-input-number
+							v-model:value="b"
+							:max="255"
+							:min="0"
+							class="!w-[80px] !font-mono"
+							size="small"
+							@update:value="updateFromRgb"
 						/>
-						<button
-							class="px-3 py-2 bg-gray-100 text-gray-600 rounded-lg text-xs hover:bg-gray-200 transition cursor-pointer"
-							@click="copy(`rgb(${r}, ${g}, ${b})`)"
-						>
-							复制
-						</button>
+						<span class="text-xs text-slate-400 font-mono mx-1">rgb({{ r }}, {{ g }}, {{ b }})</span>
+						<n-button secondary size="small" @click="copy(`rgb(${r}, ${g}, ${b})`)">复制</n-button>
 					</div>
 				</div>
 
 				<!-- HSL -->
 				<div>
-					<label class="block text-xs font-semibold text-gray-500 mb-1">HSL</label>
-					<div class="flex gap-2 items-center">
-						<span class="text-sm font-mono text-gray-600 bg-gray-50 p-2.5 rounded-lg">
+					<label class="block text-xs font-semibold text-slate-500 mb-2">HSL</label>
+					<div class="flex items-center gap-2">
+						<div class="px-3 py-1.5 bg-slate-50 rounded-lg text-sm font-mono text-slate-600">
 							hsl({{ h }}, {{ s }}%, {{ l }}%)
-						</span>
-						<button
-							class="px-3 py-2 bg-gray-100 text-gray-600 rounded-lg text-xs hover:bg-gray-200 transition cursor-pointer"
-							@click="copy(`hsl(${h}, ${s}%, ${l}%)`)"
-						>
-							复制
-						</button>
+						</div>
+						<n-button secondary size="small" @click="copy(`hsl(${h}, ${s}%, ${l}%)`)">复制</n-button>
 					</div>
 				</div>
 			</div>

@@ -25,24 +25,62 @@
 </script>
 
 <template>
-	<div class="space-y-4">
-		<n-button-group>
-			<n-button :type="mode === 'encode' ? 'primary' : 'default'" @click="mode = 'encode'"> 编码 (Encode) </n-button>
-			<n-button :type="mode === 'decode' ? 'primary' : 'default'" @click="mode = 'decode'"> 解码 (Decode) </n-button>
-		</n-button-group>
+	<div class="space-y-6">
+		<!-- Mode selector -->
+		<div class="p-4 bg-slate-50/50 rounded-xl border border-slate-100">
+			<div class="flex items-center gap-3">
+				<span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">操作模式</span>
+				<n-button-group>
+					<n-button :type="mode === 'encode' ? 'primary' : 'default'" @click="mode = 'encode'">
+						编码 (Encode)
+					</n-button>
+					<n-button :type="mode === 'decode' ? 'primary' : 'default'" @click="mode = 'decode'">
+						解码 (Decode)
+					</n-button>
+				</n-button-group>
+			</div>
+		</div>
 
-		<n-input
-			v-model:value="input"
-			:autosize="{ minRows: 6 }"
-			:placeholder="mode === 'encode' ? '输入要编码的 URL 或文本...' : '输入 URL 编码的字符串...'"
-			type="textarea"
-		/>
+		<!-- Input section -->
+		<div>
+			<div class="flex items-center justify-between mb-2">
+				<label class="text-xs font-semibold text-slate-500">
+					{{ mode === 'encode' ? '原始 URL 或文本' : '已编码字符串' }}
+				</label>
+				<span class="text-[10px] text-slate-400">{{ input.length }} 字符</span>
+			</div>
+			<n-input
+				v-model:value="input"
+				:autosize="{ minRows: 6, maxRows: 16 }"
+				:placeholder="mode === 'encode' ? '输入要编码的 URL 或文本...' : '输入 URL 编码的字符串...'"
+				type="textarea"
+			/>
+		</div>
 
-		<n-button type="primary" @click="process"> 转换 </n-button>
+		<!-- Action button -->
+		<n-button type="primary" @click="process">
+			<span class="flex items-center gap-1.5">
+				<span>转换</span>
+				<span class="text-xs opacity-60">&rarr;</span>
+			</span>
+		</n-button>
 
-		<div v-if="output" class="relative">
-			<n-input :autosize="{ minRows: 6 }" :value="output" readonly type="textarea" />
-			<n-button class="absolute top-2" size="small" @click="copy"> 复制 </n-button>
+		<!-- Output section -->
+		<div v-if="output">
+			<div class="flex items-center justify-between mb-2">
+				<label class="text-xs font-semibold text-slate-500">输出结果</label>
+				<div class="flex items-center gap-2">
+					<span class="text-[10px] text-slate-400">{{ output.length }} 字符</span>
+					<n-button secondary size="tiny" @click="copy">复制</n-button>
+				</div>
+			</div>
+			<n-input :autosize="{ minRows: 6, maxRows: 16 }" :value="output" readonly type="textarea" />
+		</div>
+
+		<!-- Empty state -->
+		<div v-if="!input && !output" class="flex flex-col items-center justify-center py-12 text-center">
+			<div class="text-4xl mb-3 opacity-30">🔗</div>
+			<p class="text-slate-400 text-sm">输入文本后点击「转换」开始处理</p>
 		</div>
 	</div>
 </template>

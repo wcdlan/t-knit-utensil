@@ -1,10 +1,18 @@
 <script lang="ts" setup>
-	import { ref } from 'vue';
+	import { computed, ref } from 'vue';
 	import { NButton, NInput } from 'naive-ui';
 
 	const left = ref('');
 	const right = ref('');
 	const diffResult = ref<{ type: 'same' | 'added' | 'removed'; text: string }[]>([]);
+
+	const diffStats = computed(() => {
+		if (!diffResult.value.length) return null;
+		const added = diffResult.value.filter((l) => l.type === 'added').length;
+		const removed = diffResult.value.filter((l) => l.type === 'removed').length;
+		const same = diffResult.value.filter((l) => l.type === 'same').length;
+		return { added, removed, same };
+	});
 
 	function computeDiff() {
 		const leftLines = left.value.split('\n');
@@ -53,35 +61,65 @@
 </script>
 
 <template>
-	<div class="space-y-4">
+	<div class="space-y-6">
+		<!-- Input grids -->
 		<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
 			<div>
-				<label class="block text-xs font-semibold text-gray-500 mb-1">原始文本</label>
+				<div class="flex items-center justify-between mb-2">
+					<label class="text-xs font-semibold text-slate-500">原始文本</label>
+					<span class="text-[10px] text-slate-400">{{ left.length }} 字符</span>
+				</div>
 				<n-input v-model:value="left" :autosize="{ minRows: 10 }" placeholder="粘贴原始文本..." type="textarea" />
 			</div>
 			<div>
-				<label class="block text-xs font-semibold text-gray-500 mb-1">对比文本</label>
+				<div class="flex items-center justify-between mb-2">
+					<label class="text-xs font-semibold text-slate-500">对比文本</label>
+					<span class="text-[10px] text-slate-400">{{ right.length }} 字符</span>
+				</div>
 				<n-input v-model:value="right" :autosize="{ minRows: 10 }" placeholder="粘贴对比文本..." type="textarea" />
 			</div>
 		</div>
 
-		<div class="flex gap-2">
-			<n-button type="primary" @click="computeDiff"> 对比 </n-button>
-			<n-button @click="clearAll"> 清空 </n-button>
+		<!-- Actions -->
+		<div class="flex items-center gap-2">
+			<n-button type="primary" @click="computeDiff">
+				<span class="flex items-center gap-1.5">🔍 对比</span>
+			</n-button>
+			<n-button secondary @click="clearAll">清空</n-button>
 		</div>
 
-		<div v-if="diffResult.length" class="border border-gray-200 rounded-lg overflow-hidden font-mono text-sm">
+		<!-- Diff stats summary -->
+		<div v-if="diffStats" class="flex items-center gap-4 text-sm">
+			<span class="flex items-center gap-1.5">
+				<span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+				<span class="text-slate-600">{{ diffStats.same }} 行未变</span>
+			</span>
+			<span class="flex items-center gap-1.5">
+				<span class="w-2.5 h-2.5 rounded-full bg-green-400"></span>
+				<span class="text-slate-600">{{ diffStats.added }} 行新增</span>
+			</span>
+			<span class="flex items-center gap-1.5">
+				<span class="w-2.5 h-2.5 rounded-full bg-red-400"></span>
+				<span class="text-slate-600">{{ diffStats.removed }} 行删除</span>
+			</span>
+		</div>
+
+		<!-- Diff result -->
+		<div
+			v-if="diffResult.length"
+			class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden font-mono text-sm"
+		>
 			<div
 				v-for="(line, i) in diffResult"
 				:key="i"
 				:class="{
-					'bg-red-50 text-red-700': line.type === 'removed',
-					'bg-green-50 text-green-700': line.type === 'added',
-					'text-gray-700': line.type === 'same'
+					'bg-red-50 text-red-700 border-l-3 border-red-300': line.type === 'removed',
+					'bg-emerald-50 text-emerald-700 border-l-3 border-emerald-300': line.type === 'added',
+					'text-slate-700': line.type === 'same'
 				}"
 				class="px-4 py-1.5 flex items-center gap-2"
 			>
-				<span class="w-5 text-center flex-shrink-0 text-xs">
+				<span class="w-5 text-center flex-shrink-0 text-xs font-medium">
 					{{ line.type === 'added' ? '+' : line.type === 'removed' ? '-' : ' ' }}
 				</span>
 				<span>{{ line.text || ' ' }}</span>

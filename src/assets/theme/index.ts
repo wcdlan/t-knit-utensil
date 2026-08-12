@@ -31,6 +31,99 @@ export const themeOverrides = {
 		errorColor: '#f87171',
 		errorColorHover: '#ef4444',
 		errorColorPressed: '#dc2626',
-		errorColorSuppl: '#f87171'
+		errorColorSuppl: '#f87171',
+
+		// ---- Typography ----
+		fontFamily: '"Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
+		fontFamilyMono: '"JetBrains Mono", "Fira Code", "SF Mono", "Cascadia Code", Consolas, monospace',
+		fontSize: '14px',
+		fontSizeSmall: '12px',
+		fontSizeLarge: '16px',
+		fontSizeHuge: '18px',
+
+		// ---- Border radius ----
+		borderRadius: '8px',
+		borderRadiusSmall: '6px',
+
+		// ---- Height / Sizing ----
+		heightSmall: '28px',
+		heightMedium: '34px',
+		heightLarge: '40px',
+
+		// ---- Elevation shadows ----
+		boxShadow1: '0 1px 2px 0 rgba(0,0,0,0.05)',
+		boxShadow2: '0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05)',
+		boxShadow3: '0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04)'
+	},
+
+	// ---- Button ----
+	Button: {
+		borderRadiusSmall: '6px',
+		borderRadiusMedium: '8px',
+		borderRadiusLarge: '10px',
+		fontWeight: '500'
+	},
+
+	// ---- Card ----
+	Card: {
+		borderRadius: '12px',
+		paddingSmall: '12px',
+		paddingMedium: '20px',
+		paddingLarge: '24px',
+		titleFontSizeSmall: '15px',
+		titleFontSizeMedium: '17px',
+		titleFontSizeLarge: '19px',
+		titleFontWeight: '600',
+		borderColor: '#e5e7eb'
+	},
+
+	// ---- Input ----
+	Input: {
+		borderRadius: '8px',
+		border: '1px solid #e5e7eb',
+		borderFocus: '1px solid #60a5fa',
+		borderHover: '1px solid #93c5fd',
+		boxShadowFocus: '0 0 0 3px rgba(96,165,250,0.15)',
+		placeholderColor: '#9ca3af',
+		paddingMedium: '0 12px',
+		heightMedium: '38px'
+	},
+
+	// ---- Menu ----
+	Menu: {
+		itemHeight: '38px',
+		borderRadius: '6px',
+		itemTextColor: '#4b5563',
+		itemTextColorHover: '#1f2937',
+		itemColorHover: 'rgba(96,165,250,0.08)',
+		itemTextColorActive: '#2563eb',
+		itemColorActive: 'rgba(96,165,250,0.12)',
+		groupTextColor: '#6b7280'
+	},
+
+	// ---- Tag ----
+	Tag: {
+		borderRadius: '5px'
+	},
+
+	// ---- Progress ----
+	Progress: {
+		borderRadius: '4px',
+		height: '6px',
+		fillColor: '#60a5fa',
+		railColor: '#e5e7eb'
+	},
+
+	// ---- Alert ----
+	Alert: {
+		borderRadius: '8px',
+		padding: '12px 16px'
+	},
+
+	// ---- Collapse ----
+	Collapse: {
+		titleFontSize: '14px',
+		titleFontWeight: '500',
+		arrowColor: '#9ca3af'
 	}
 };

@@ -2,6 +2,10 @@
 
 为 Claude Code (claude.ai/code) 在此仓库中工作时提供指导。
 
+## 项目语言规范
+
+请始终使用简体中文与我对话。
+
 ## 命令
 
 - `pnpm dev` — 启动 Vite 开发服务器

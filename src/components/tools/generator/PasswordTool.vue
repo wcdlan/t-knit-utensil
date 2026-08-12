@@ -47,38 +47,44 @@
 </script>
 
 <template>
-	<div class="space-y-4">
-		<div class="flex flex-wrap gap-4 items-end">
-			<div>
-				<label class="block text-xs font-semibold text-gray-500 mb-1">密码长度</label>
-				<n-input-number v-model:value="length" :max="128" :min="4" class="w-20" />
+	<div class="space-y-6">
+		<!-- Controls section -->
+		<div class="p-4 bg-slate-50/50 rounded-xl border border-slate-100">
+			<span class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">生成配置</span>
+			<div class="flex flex-wrap gap-4 items-end">
+				<div>
+					<label class="block text-xs font-semibold text-slate-500 mb-1">密码长度</label>
+					<n-input-number v-model:value="length" :max="128" :min="4" class="w-20" />
+				</div>
+				<div>
+					<label class="block text-xs font-semibold text-slate-500 mb-1">生成数量</label>
+					<n-input-number v-model:value="count" :max="50" :min="1" class="w-20" />
+				</div>
 			</div>
-			<div>
-				<label class="block text-xs font-semibold text-gray-500 mb-1">生成数量</label>
-				<n-input-number v-model:value="count" :max="50" :min="1" class="w-20" />
+
+			<div class="flex flex-wrap gap-4 mt-3">
+				<n-checkbox v-model:checked="upper"> A-Z </n-checkbox>
+				<n-checkbox v-model:checked="lower"> a-z </n-checkbox>
+				<n-checkbox v-model:checked="numbers"> 0-9 </n-checkbox>
+				<n-checkbox v-model:checked="symbols"> !@#$ </n-checkbox>
 			</div>
 		</div>
 
-		<div class="flex flex-wrap gap-4">
-			<n-checkbox v-model:checked="upper"> A-Z </n-checkbox>
-			<n-checkbox v-model:checked="lower"> a-z </n-checkbox>
-			<n-checkbox v-model:checked="numbers"> 0-9 </n-checkbox>
-			<n-checkbox v-model:checked="symbols"> !@#$ </n-checkbox>
-		</div>
-
+		<!-- Action buttons -->
 		<div class="flex gap-2">
-			<n-button type="primary" @click="generate"> 生成 </n-button>
-			<n-button v-if="passwords.length" @click="copyAll"> 复制全部 </n-button>
+			<n-button type="primary" @click="generate">✨ 生成</n-button>
+			<n-button v-if="passwords.length" secondary @click="copyAll">📋 复制全部</n-button>
 		</div>
 
-		<div class="space-y-1">
+		<!-- Results list -->
+		<div class="space-y-1.5">
 			<div
 				v-for="(pwd, i) in passwords"
 				:key="i"
-				class="flex items-center justify-between p-3 bg-gray-50 rounded-lg group hover:bg-gray-100 transition"
+				class="flex items-center justify-between p-3 bg-slate-50 rounded-lg group hover:bg-slate-100 transition animate-fade-in"
 			>
-				<code class="text-sm font-mono text-gray-700">{{ pwd }}</code>
-				<n-button class="opacity-0 group-hover:opacity-100 transition" size="tiny" @click="copyOne(pwd)">
+				<code class="text-sm font-mono text-slate-700">{{ pwd }}</code>
+				<n-button class="opacity-0 group-hover:opacity-100 transition" secondary size="tiny" @click="copyOne(pwd)">
 					复制
 				</n-button>
 			</div>

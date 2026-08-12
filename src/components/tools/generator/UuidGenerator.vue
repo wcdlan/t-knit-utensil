@@ -36,25 +36,34 @@
 </script>
 
 <template>
-	<div class="space-y-4">
-		<div class="flex flex-wrap items-center gap-4">
-			<div class="flex items-center gap-2">
-				<span class="text-sm text-gray-600">生成数量:</span>
-				<n-input-number v-model:value="count" :max="100" :min="1" class="w-20" />
+	<div class="space-y-6">
+		<!-- Controls section -->
+		<div class="p-4 bg-slate-50/50 rounded-xl border border-slate-100">
+			<span class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">生成配置</span>
+			<div class="flex flex-wrap items-center gap-4">
+				<div class="flex items-center gap-2">
+					<span class="text-xs font-semibold text-slate-500">生成数量</span>
+					<n-input-number v-model:value="count" :max="100" :min="1" class="w-20" />
+				</div>
+				<n-checkbox v-model:checked="uppercase"> 大写 </n-checkbox>
 			</div>
-			<n-checkbox v-model:checked="uppercase"> 大写 </n-checkbox>
-			<n-button type="primary" @click="generate"> 生成 </n-button>
-			<n-button v-if="uuids.length" @click="copyAll"> 复制全部 </n-button>
 		</div>
 
-		<div class="space-y-1">
+		<!-- Action buttons -->
+		<div class="flex gap-2">
+			<n-button type="primary" @click="generate">✨ 生成</n-button>
+			<n-button v-if="uuids.length" secondary @click="copyAll">📋 复制全部</n-button>
+		</div>
+
+		<!-- Results list -->
+		<div class="space-y-1.5">
 			<div
 				v-for="(uuid, i) in uuids"
 				:key="i"
-				class="flex items-center justify-between p-3 bg-gray-50 rounded-lg group hover:bg-gray-100 transition"
+				class="flex items-center justify-between p-3 bg-slate-50 rounded-lg group hover:bg-slate-100 transition animate-fade-in"
 			>
-				<code class="text-sm font-mono text-gray-700">{{ uuid }}</code>
-				<n-button class="opacity-0 group-hover:opacity-100 transition" size="tiny" @click="copyOne(uuid)">
+				<code class="text-sm font-mono text-slate-700">{{ uuid }}</code>
+				<n-button class="opacity-0 group-hover:opacity-100 transition" secondary size="tiny" @click="copyOne(uuid)">
 					复制
 				</n-button>
 			</div>

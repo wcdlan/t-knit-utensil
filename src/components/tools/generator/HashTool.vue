@@ -25,16 +25,47 @@
 </script>
 
 <template>
-	<div class="space-y-4">
-		<n-select v-model:value="algorithm" :options="algoOptions" class="max-w-[200px]" />
+	<div class="space-y-6">
+		<!-- Algorithm selector -->
+		<div class="p-4 bg-slate-50/50 rounded-xl border border-slate-100">
+			<div class="flex items-center gap-3">
+				<span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">哈希算法</span>
+				<n-select v-model:value="algorithm" :options="algoOptions" class="!w-[180px]" />
+			</div>
+		</div>
 
-		<n-input v-model:value="input" :autosize="{ minRows: 5 }" placeholder="输入要计算哈希的文本..." type="textarea" />
+		<!-- Input section -->
+		<div>
+			<div class="flex items-center justify-between mb-2">
+				<label class="text-xs font-semibold text-slate-500">输入文本</label>
+				<span class="text-[10px] text-slate-400">{{ input.length }} 字符</span>
+			</div>
+			<n-input
+				v-model:value="input"
+				:autosize="{ minRows: 5, maxRows: 12 }"
+				placeholder="输入要计算哈希的文本..."
+				type="textarea"
+			/>
+		</div>
 
-		<n-button type="primary" @click="generateHash"> 计算 </n-button>
+		<!-- Action button -->
+		<n-button type="primary" @click="generateHash">计算哈希</n-button>
 
-		<div v-if="output" class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-			<code class="text-sm font-mono text-gray-700 break-all">{{ output }}</code>
-			<n-button class="ml-3 flex-shrink-0" size="small" @click="copy"> 复制 </n-button>
+		<!-- Output section -->
+		<div v-if="output">
+			<div class="flex items-center justify-between mb-2">
+				<label class="text-xs font-semibold text-slate-500">哈希结果 ({{ algorithm }})</label>
+				<n-button secondary size="tiny" @click="copy">复制</n-button>
+			</div>
+			<div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+				<code class="text-sm font-mono text-slate-700 break-all leading-relaxed">{{ output }}</code>
+			</div>
+		</div>
+
+		<!-- Empty state -->
+		<div v-if="!input && !output" class="flex flex-col items-center justify-center py-12 text-center">
+			<div class="text-4xl mb-3 opacity-30">🔒</div>
+			<p class="text-slate-400 text-sm">输入文本后点击「计算哈希」生成结果</p>
 		</div>
 	</div>
 </template>

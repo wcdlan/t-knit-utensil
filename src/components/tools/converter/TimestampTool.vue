@@ -55,50 +55,50 @@
 <template>
 	<div class="space-y-6">
 		<!-- Current Time -->
-		<div class="p-4 bg-blue-50 rounded-lg">
-			<h3 class="text-sm font-semibold text-blue-900 mb-2">当前时间</h3>
+		<div class="p-5 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-100">
+			<h3 class="text-sm font-semibold text-blue-800 mb-3">当前时间</h3>
 			<div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
-				<div class="flex items-center justify-between bg-white p-3 rounded border border-blue-100">
-					<span class="text-gray-500">秒级时间戳</span>
-					<code class="font-mono font-semibold text-blue-700">{{ now }}</code>
-					<n-button size="tiny" @click="copy('now')">复制</n-button>
+				<div class="flex items-center justify-between bg-white p-3 rounded-lg border border-blue-100 shadow-sm">
+					<span class="text-slate-500 text-xs">秒级时间戳</span>
+					<code class="font-mono font-semibold text-blue-700 tabular-nums">{{ now }}</code>
+					<n-button secondary size="tiny" @click="copy('now')">复制</n-button>
 				</div>
-				<div class="flex items-center justify-between bg-white p-3 rounded border border-blue-100">
-					<span class="text-gray-500">毫秒级时间戳</span>
-					<code class="font-mono font-semibold text-blue-700">{{ nowMs }}</code>
-					<n-button size="tiny" @click="copy('nowMs')">复制</n-button>
+				<div class="flex items-center justify-between bg-white p-3 rounded-lg border border-blue-100 shadow-sm">
+					<span class="text-slate-500 text-xs">毫秒级时间戳</span>
+					<code class="font-mono font-semibold text-blue-700 tabular-nums">{{ nowMs }}</code>
+					<n-button secondary size="tiny" @click="copy('nowMs')">复制</n-button>
 				</div>
-				<div class="flex items-center justify-between bg-white p-3 rounded border border-blue-100">
-					<span class="text-gray-500">本地时间</span>
-					<span class="font-semibold text-blue-700">{{ nowStr }}</span>
+				<div class="flex items-center justify-between bg-white p-3 rounded-lg border border-blue-100 shadow-sm">
+					<span class="text-slate-500 text-xs">本地时间</span>
+					<span class="font-semibold text-blue-700 tabular-nums">{{ nowStr }}</span>
 				</div>
 			</div>
 		</div>
 
 		<!-- Timestamp to Date -->
 		<div>
-			<h3 class="text-sm font-semibold text-gray-700 mb-2">时间戳 → 日期</h3>
+			<h3 class="text-sm font-semibold text-slate-700 mb-2">时间戳 → 日期</h3>
 			<div class="flex gap-2">
 				<n-input v-model:value="tsInput" class="flex-1" placeholder="输入时间戳 (秒或毫秒)" />
-				<n-button type="primary" @click="tsToDate"> 转换 </n-button>
+				<n-button type="primary" @click="tsToDate">转换</n-button>
 			</div>
-			<div v-if="tsResult" class="mt-2 p-3 bg-gray-50 rounded-lg text-sm font-mono">
+			<div v-if="tsResult" class="mt-2 p-3 bg-slate-50 rounded-lg text-sm font-mono text-slate-700">
 				{{ tsResult }}
 			</div>
 		</div>
 
 		<!-- Date to Timestamp -->
 		<div>
-			<h3 class="text-sm font-semibold text-gray-700 mb-2">日期 → 时间戳</h3>
+			<h3 class="text-sm font-semibold text-slate-700 mb-2">日期 → 时间戳</h3>
 			<div class="flex gap-2">
 				<input
 					v-model="dateInput"
-					class="flex-1 p-2.5 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+					class="flex-1 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 outline-none bg-white transition-shadow duration-200"
 					type="datetime-local"
 				/>
-				<n-button type="primary" @click="dateToTs"> 转换 </n-button>
+				<n-button type="primary" @click="dateToTs">转换</n-button>
 			</div>
-			<div v-if="dateResult" class="mt-2 p-3 bg-gray-50 rounded-lg text-sm font-mono whitespace-pre">
+			<div v-if="dateResult" class="mt-2 p-3 bg-slate-50 rounded-lg text-sm font-mono text-slate-700 whitespace-pre">
 				{{ dateResult }}
 			</div>
 		</div>

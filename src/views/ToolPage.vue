@@ -12,20 +12,32 @@
 	<div v-if="tool">
 		<!-- Breadcrumb -->
 		<div class="mb-6">
-			<router-link class="text-sm text-blue-500 hover:text-blue-700 transition" to="/"> &larr; 返回首页 </router-link>
+			<router-link
+				class="inline-flex items-center gap-1.5 text-sm text-slate-400 hover:text-blue-500 transition-colors duration-200"
+				to="/"
+			>
+				<span class="text-base">&larr;</span>
+				<span>返回首页</span>
+			</router-link>
 		</div>
 
-		<!-- Tool Header -->
-		<div class="mb-6">
-			<div class="flex items-center gap-3 mb-2">
-				<span class="text-3xl">{{ tool.icon }}</span>
-				<h1 class="text-2xl font-bold text-gray-900">{{ tool.name }}</h1>
+		<!-- Tool Header with gradient icon container -->
+		<div class="mb-8">
+			<div class="flex items-center gap-4">
+				<div
+					class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 flex items-center justify-center shadow-sm"
+				>
+					<span class="text-3xl">{{ tool.icon }}</span>
+				</div>
+				<div>
+					<h1 class="text-2xl font-bold text-slate-800 tracking-tight">{{ tool.name }}</h1>
+					<p class="text-slate-500 text-sm mt-0.5">{{ tool.description }}</p>
+				</div>
 			</div>
-			<p class="text-gray-600">{{ tool.description }}</p>
 		</div>
 
 		<!-- Dynamic Tool Component -->
-		<div class="bg-white rounded-xl border border-gray-200 p-6">
+		<div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-8">
 			<JsonFormatter v-if="toolId === 'json-formatter'" />
 			<Base64Tool v-else-if="toolId === 'base64'" />
 			<UrlEncode v-else-if="toolId === 'url-encode'" />
@@ -46,9 +58,18 @@
 			<LicenseSelector v-else-if="toolId === 'license-selector'" />
 		</div>
 	</div>
-	<div v-else class="text-center py-20">
-		<p class="text-gray-500 text-lg">工具未找到</p>
-		<router-link class="text-blue-500 hover:text-blue-700 mt-4 inline-block" to="/"> 返回首页 </router-link>
+
+	<!-- Not found state -->
+	<div v-else class="flex flex-col items-center justify-center py-24 text-center">
+		<div class="text-6xl mb-4">🔍</div>
+		<p class="text-slate-500 text-lg font-medium mb-2">工具未找到</p>
+		<p class="text-slate-400 text-sm mb-6">请检查工具地址是否正确</p>
+		<router-link
+			class="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm font-medium no-underline"
+			to="/"
+		>
+			<span>&larr;</span> 返回首页
+		</router-link>
 	</div>
 </template>
 
