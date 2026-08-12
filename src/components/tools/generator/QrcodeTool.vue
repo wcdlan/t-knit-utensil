@@ -36,7 +36,7 @@
 				</div>
 				<div class="w-full sm:w-auto">
 					<label class="block text-xs font-semibold text-slate-500 mb-2">尺寸</label>
-					<n-select v-model:value="size" :options="sizeOptions" class="!w-[140px]" />
+					<n-select v-model:value="size" :options="sizeOptions" class="!w-[140px] !max-w-full" />
 				</div>
 			</div>
 		</div>

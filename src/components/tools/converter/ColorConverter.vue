@@ -123,7 +123,7 @@
 				<!-- RGB -->
 				<div>
 					<label class="block text-xs font-semibold text-slate-500 mb-2">RGB</label>
-					<div class="flex items-center gap-2">
+					<div class="flex flex-wrap items-center gap-2">
 						<n-input-number
 							v-model:value="r"
 							:max="255"
@@ -156,7 +156,7 @@
 				<!-- HSL -->
 				<div>
 					<label class="block text-xs font-semibold text-slate-500 mb-2">HSL</label>
-					<div class="flex items-center gap-2">
+					<div class="flex flex-wrap items-center gap-2">
 						<div class="px-3 py-1.5 bg-slate-50 rounded-lg text-sm font-mono text-slate-600">
 							hsl({{ h }}, {{ s }}%, {{ l }}%)
 						</div>

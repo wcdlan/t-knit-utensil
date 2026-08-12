@@ -618,7 +618,12 @@
 		<div class="lg:w-96 shrink-0 space-y-5">
 			<div v-for="q in QUESTIONS" :key="q.id" class="bg-gray-50 rounded-xl p-4 border border-gray-100">
 				<h3 class="text-sm font-semibold text-gray-800 mb-3">{{ q.text }}</h3>
-				<n-radio-group :name="q.id" :value="answers[q.id]" @update:value="(v: string) => (answers[q.id] = v)" class="w-full">
+				<n-radio-group
+					:name="q.id"
+					:value="answers[q.id]"
+					class="w-full"
+					@update:value="(v: string) => (answers[q.id] = v)"
+				>
 					<div class="space-y-1.5">
 						<div
 							v-for="opt in q.options"

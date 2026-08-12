@@ -144,7 +144,7 @@
 		</div>
 
 		<!-- Action buttons -->
-		<div class="flex items-center gap-2">
+		<div class="flex flex-wrap items-center gap-2">
 			<n-button type="primary" @click="format">
 				<span class="flex items-center gap-1.5">
 					<TkuIcon :name="icons.star" :size="16" />
@@ -163,7 +163,7 @@
 		<div v-if="output">
 			<div class="flex items-center justify-between mb-2">
 				<label class="text-xs font-semibold text-slate-500">输出结果</label>
-				<div class="flex items-center gap-2">
+				<div class="flex flex-wrap items-center gap-2">
 					<span class="text-[10px] text-slate-400">{{ output.length }} 字符</span>
 					<n-button secondary size="tiny" @click="copy">复制</n-button>
 				</div>

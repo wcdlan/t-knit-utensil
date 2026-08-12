@@ -39,7 +39,7 @@
 		</div>
 
 		<!-- Dynamic Tool Component via nested route -->
-		<div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-8">
+		<div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 sm:p-6 lg:p-8">
 			<router-view v-slot="{ Component }">
 				<transition mode="out-in" name="tool">
 					<keep-alive>

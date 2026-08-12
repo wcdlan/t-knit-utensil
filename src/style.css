@@ -78,11 +78,13 @@ body {
 
 /* ---- Tool switch transitions ---- */
 .tool-enter-active {
-    transition: opacity 0.2s ease, transform 0.2s ease;
+    transition: opacity 0.2s ease,
+    transform 0.2s ease;
 }
 
 .tool-leave-active {
-    transition: opacity 0.12s ease, transform 0.12s ease;
+    transition: opacity 0.12s ease,
+    transform 0.12s ease;
 }
 
 .tool-enter-from {

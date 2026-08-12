@@ -106,7 +106,7 @@
 				<label class="block text-xs font-semibold text-slate-500 mb-1">私钥密码 (可选)</label>
 				<n-input
 					v-model:value="passphrase"
-					class="w-52"
+					class="w-52 max-w-full"
 					placeholder="留空则不加密"
 					show-password-toggle
 					type="password"
@@ -117,7 +117,7 @@
 				<n-input
 					v-model:value="passphraseConfirm"
 					:status="passphraseMismatch ? 'error' : undefined"
-					class="w-52"
+					class="w-52 max-w-full"
 					placeholder="再次输入密码"
 					show-password-toggle
 					type="password"

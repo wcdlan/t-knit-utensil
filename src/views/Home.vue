@@ -57,7 +57,7 @@
 
 				<!-- Title -->
 				<h1
-					class="mb-3 bg-gradient-to-r from-brand-start to-brand-end bg-clip-text text-4xl font-bold tracking-tight text-transparent"
+					class="mb-3 bg-gradient-to-r from-brand-start to-brand-end bg-clip-text text-3xl sm:text-4xl font-bold tracking-tight text-transparent"
 				>
 					T Knit Utensil
 				</h1>
@@ -126,7 +126,7 @@
 			<!-- Tool cards grid -->
 			<div
 				v-show="!collapsed[group.id]"
-				class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-3"
+				class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-3"
 			>
 				<router-link
 					v-for="tool in group.tools"

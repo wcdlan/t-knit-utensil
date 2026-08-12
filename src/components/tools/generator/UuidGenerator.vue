@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 	import { ref } from 'vue';
-	import { NButton, NCheckbox, NInputNumber } from 'naive-ui';
+	import { NButton, NCheckbox, NInputNumber, useMessage } from 'naive-ui';
 	import { copyToClipboard } from '@/utils/clipboard';
 	import { icons } from '@/data/icons';
 	import TkuIcon from '@/components/common/TkuIcon.vue';
@@ -8,6 +8,7 @@
 	const uuids = ref<string[]>([]);
 	const count = ref(5);
 	const uppercase = ref(false);
+	const message = useMessage();
 
 	function generateV4(): string {
 		return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
@@ -26,12 +27,14 @@
 		uuids.value = result;
 	}
 
-	function copyAll() {
-		copyToClipboard(uuids.value.join('\n'));
+	async function copyAll() {
+		await copyToClipboard(uuids.value.join('\n'));
+		message.success('已复制全部');
 	}
 
-	function copyOne(uuid: string) {
-		copyToClipboard(uuid);
+	async function copyOne(uuid: string) {
+		await copyToClipboard(uuid);
+		message.success('已复制');
 	}
 
 	generate();
@@ -72,10 +75,11 @@
 			<div
 				v-for="(uuid, i) in uuids"
 				:key="i"
-				class="flex items-center justify-between p-3 bg-slate-50 rounded-lg group hover:bg-slate-100 transition animate-fade-in"
+				class="flex cursor-pointer items-center justify-between p-3 bg-slate-50 rounded-lg group hover:bg-slate-100 transition animate-fade-in"
+				@click="copyOne(uuid)"
 			>
 				<code class="text-sm font-mono text-slate-700">{{ uuid }}</code>
-				<n-button class="opacity-0 group-hover:opacity-100 transition" secondary size="tiny" @click="copyOne(uuid)">
+				<n-button class="pointer-events-none opacity-0 group-hover:opacity-100 transition" secondary size="tiny">
 					复制
 				</n-button>
 			</div>

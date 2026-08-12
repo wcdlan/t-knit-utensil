@@ -112,7 +112,7 @@
 		<!-- Diff result -->
 		<div
 			v-if="diffResult.length"
-			class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden font-mono text-sm"
+			class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-x-auto font-mono text-sm"
 		>
 			<div
 				v-for="(line, i) in diffResult"
@@ -127,7 +127,7 @@
 				<span class="w-5 text-center flex-shrink-0 text-xs font-medium">
 					{{ line.type === 'added' ? '+' : line.type === 'removed' ? '-' : ' ' }}
 				</span>
-				<span>{{ line.text || ' ' }}</span>
+				<span class="whitespace-pre-wrap break-words">{{ line.text || ' ' }}</span>
 			</div>
 		</div>
 	</div>

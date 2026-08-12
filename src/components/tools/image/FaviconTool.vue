@@ -126,7 +126,7 @@
 		canvas.width = displaySize.value * dpr;
 		canvas.height = displaySize.value * dpr;
 		canvas.style.width = displaySize.value + 'px';
-		canvas.style.height = displaySize.value + 'px';
+		canvas.style.height = 'auto';
 		const ctx = canvas.getContext('2d')!;
 		ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
@@ -439,12 +439,12 @@
 			<!-- Left: Crop area -->
 			<div class="shrink-0">
 				<p class="text-sm text-gray-500 mb-2 font-medium">裁剪区域（拖动调整位置，滚轮调整大小）</p>
-				<div class="relative inline-block bg-gray-100 rounded-lg overflow-hidden shadow-sm border border-gray-200">
+				<div class="relative block bg-gray-100 rounded-lg overflow-hidden shadow-sm border border-gray-200">
 					<canvas
 						v-if="sourceImage"
 						ref="previewCanvas"
 						:class="{ 'cursor-grabbing': isDragging }"
-						class="block cursor-move"
+						class="block cursor-move max-w-full h-auto"
 						@pointerdown="onPointerDown"
 						@pointerleave="onPointerUp"
 						@pointermove="onPointerMove"
@@ -539,8 +539,8 @@
 							<div
 								:class="{ 'ring-2 ring-blue-300': generatedFavicons.has(s.size) }"
 								:style="{
-									width: s.size + 'px',
-									height: s.size + 'px'
+									width: Math.min(s.size, 128) + 'px',
+									height: Math.min(s.size, 128) + 'px'
 								}"
 								class="bg-gray-50 border border-gray-200 rounded-sm flex items-center justify-center overflow-hidden"
 							>
@@ -548,8 +548,8 @@
 									v-if="generatedFavicons.get(s.size)"
 									:src="generatedFavicons.get(s.size)!"
 									:style="{
-										width: s.size + 'px',
-										height: s.size + 'px',
+										width: '100%',
+										height: '100%',
 										imageRendering: s.size <= 32 ? 'pixelated' : 'auto'
 									}"
 									alt=""

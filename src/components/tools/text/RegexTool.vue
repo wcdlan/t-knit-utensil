@@ -153,7 +153,7 @@
 						<span class="text-slate-400 font-mono">/</span>
 					</template>
 				</n-input>
-				<n-select v-model:value="flags" :options="flagOptions" class="!w-[140px]" />
+				<n-select v-model:value="flags" :options="flagOptions" class="!w-[140px] !max-w-full" />
 			</div>
 		</div>
 

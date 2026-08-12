@@ -32,7 +32,7 @@
 		<div class="p-4 bg-slate-50/50 rounded-xl border border-slate-100">
 			<div class="flex items-center gap-3">
 				<span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">哈希算法</span>
-				<n-select v-model:value="algorithm" :options="algoOptions" class="!w-[180px]" />
+				<n-select v-model:value="algorithm" :options="algoOptions" class="!w-[180px] !max-w-full" />
 			</div>
 		</div>
 

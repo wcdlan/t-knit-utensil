@@ -57,7 +57,7 @@
 				<n-select
 					v-model:value="sourceEncoding"
 					:options="SUPPORTED_ENCODINGS"
-					class="!w-[190px]"
+					class="!w-[190px] !max-w-full"
 					placeholder="选择输入文本的原始编码"
 					size="small"
 				/>
