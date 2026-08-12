@@ -147,7 +147,16 @@ deploy:
   image: alpine:latest
 
   before_script:
-    - apk add --no-cache openssh-client sshpass
+    # shell executor 忽略 image，直接跑在宿主机上
+    # 确保 sshpass 可用（Alpine → apk，Debian/Ubuntu → apt）
+    - |
+      if command -v sshpass &>/dev/null; then
+        echo ">>> sshpass 已安装"
+      elif command -v apk &>/dev/null; then
+        apk add --no-cache openssh-client sshpass
+      else
+        apt-get update -qq && apt-get install -y -qq sshpass
+      fi
     - mkdir -p ~/.ssh
     - |
       if [ -n "$SSH_PRIVATE_KEY" ]; then
