@@ -7,12 +7,13 @@
 
 	// --- State ---
 	const faviconSizes = ref<FaviconSize[]>([
-		{ size: 16, label: '16×16', selected: true },
+		{ size: 16, label: '16×16', selected: false },
 		{ size: 32, label: '32×32', selected: true },
 		{ size: 48, label: '48×48', selected: true },
-		{ size: 64, label: '64×64', selected: false },
+		{ size: 64, label: '64×64', selected: true },
 		{ size: 128, label: '128×128', selected: false },
-		{ size: 256, label: '256×256', selected: false }
+		{ size: 256, label: '256×256', selected: false },
+		{ size: 512, label: '512×512', selected: false }
 	]);
 
 	const outputFormats = ref({ png: true, ico: false });
@@ -28,7 +29,7 @@
 	const isDragging = ref(false);
 	const uploading = ref(false);
 	const generating = ref(false);
-
+	let wheelDebounceTimer: ReturnType<typeof setTimeout> | null = null;
 	// Generated results: map of size -> data URL
 	const generatedFavicons = ref<Map<number, string>>(new Map());
 
@@ -246,24 +247,34 @@
 		const newSize = Math.max(16, Math.min(crop.value.size + delta, maxSize));
 		if (newSize === crop.value.size) return;
 
+		const ratio = newSize / crop.value.size;
 		let cx: number, cy: number;
 		if (imgPt) {
-			const ratio = newSize / crop.value.size;
+			// new top-left that keeps cursor at same proportional position
 			cx = imgPt.x - (imgPt.x - crop.value.x) * ratio;
 			cy = imgPt.y - (imgPt.y - crop.value.y) * ratio;
 		} else {
-			cx = crop.value.x + crop.value.size / 2;
-			cy = crop.value.y + crop.value.size / 2;
+			// center-zoom: new top-left
+			cx = crop.value.x + (crop.value.size - newSize) / 2;
+			cy = crop.value.y + (crop.value.size - newSize) / 2;
 		}
 		crop.value = {
-			x: Math.round(Math.max(0, Math.min(cx - newSize / 2, w - newSize))),
-			y: Math.round(Math.max(0, Math.min(cy - newSize / 2, h - newSize))),
+			x: Math.round(Math.max(0, Math.min(cx, w - newSize))),
+			y: Math.round(Math.max(0, Math.min(cy, h - newSize))),
 			size: Math.round(newSize)
 		};
 		drawPreview();
+		debouncedGenerate();
 	}
 
 	// --- Favicon generation ---
+	function debouncedGenerate() {
+		if (wheelDebounceTimer) clearTimeout(wheelDebounceTimer);
+		wheelDebounceTimer = setTimeout(() => {
+			wheelDebounceTimer = null;
+			generateAll();
+		}, 200);
+	}
 	function generateFavicon(size: number): string {
 		const img = sourceImage.value;
 		if (!img) return '';
@@ -522,10 +533,10 @@
 							<div
 								:class="{ 'ring-2 ring-blue-300': generatedFavicons.has(s.size) }"
 								:style="{
-									width: Math.max(s.size + 24, 80) + 'px',
-									height: Math.max(s.size + 24, 80) + 'px'
+									width: s.size + 'px',
+									height: s.size + 'px'
 								}"
-								class="bg-gray-50 border border-gray-200 rounded-lg flex items-center justify-center overflow-hidden"
+								class="bg-gray-50 border border-gray-200 rounded-sm flex items-center justify-center overflow-hidden"
 							>
 								<img
 									v-if="generatedFavicons.get(s.size)"
