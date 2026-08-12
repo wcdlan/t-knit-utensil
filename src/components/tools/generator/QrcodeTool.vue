@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 	import { computed, ref } from 'vue';
 	import { NInput, NSelect } from 'naive-ui';
+	import { icons } from '@/data/icons';
+	import TkuIcon from '@/components/common/TkuIcon.vue';
 
 	const text = ref('');
 	const size = ref(200);
@@ -46,7 +48,9 @@
 			</div>
 			<div v-else class="flex flex-col items-center justify-center py-16 text-center w-full">
 				<div class="w-20 h-20 mb-4 rounded-2xl bg-slate-100 flex items-center justify-center">
-					<span class="text-3xl opacity-30">📱</span>
+					<span class="text-slate-300">
+						<TkuIcon :name="icons.qrcode" :size="32" />
+					</span>
 				</div>
 				<p class="text-slate-400 text-sm">输入内容后自动生成二维码</p>
 				<p class="text-slate-300 text-xs mt-1">支持文本、网址等内容</p>

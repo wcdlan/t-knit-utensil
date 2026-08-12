@@ -1,10 +1,12 @@
 <script lang="ts" setup>
-	import { computed, onMounted, ref } from 'vue';
+	import { computed, h, onMounted, ref } from 'vue';
 	import { useRoute, useRouter } from 'vue-router';
 	import { type MenuOption, NConfigProvider, NLayout, NLayoutContent, NLayoutSider, NMenu } from 'naive-ui';
 	import { themeOverrides } from './assets/theme';
 	import { loadConfig, siteConfig } from './data/siteConfig';
 	import { toolGroups } from './data/tools';
+	import { icons } from './data/icons';
+	import TkuIcon from './components/common/TkuIcon.vue';
 	import logoImg from './assets/TKU.png';
 
 	const router = useRouter();
@@ -13,17 +15,22 @@
 
 	onMounted(() => loadConfig());
 
+	function renderMenuLabel(icon: string, text: string) {
+		return () =>
+			h('span', { class: 'flex items-center gap-2' }, [h(TkuIcon, { name: icon, size: 18 }), h('span', text)]);
+	}
+
 	const menuOptions = computed<MenuOption[]>(() => [
-		{ label: '🏠 首页', key: 'home' },
+		{ label: renderMenuLabel(icons.home, '首页'), key: 'home' },
 		...toolGroups.map((g) => ({
-			label: g.icon + ' ' + g.name,
+			label: renderMenuLabel(g.icon, g.name),
 			key: g.id,
 			children: g.tools.map((t) => ({
 				label: t.name,
 				key: '/tool/' + t.id
 			}))
 		})),
-		{ label: '⚙️ 设置', key: 'settings' }
+		{ label: renderMenuLabel(icons.cog, '设置'), key: 'settings' }
 	]);
 
 	const activeKey = computed(() => {

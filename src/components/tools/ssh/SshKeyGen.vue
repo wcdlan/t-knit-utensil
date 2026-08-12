@@ -5,6 +5,8 @@
 	import { generateKeyPair, KEY_TYPES, type KeyType } from '@/utils/ssh';
 	import { copyToClipboard } from '@/utils/clipboard';
 	import { downloadBlob, downloadTextFile } from '@/utils/download';
+	import { icons } from '@/data/icons';
+	import TkuIcon from '@/components/common/TkuIcon.vue';
 
 	const keyType = ref<KeyType>('rsa-2048');
 	const passphrase = ref('');
@@ -127,9 +129,18 @@
 		<!-- Generate button -->
 		<div class="flex gap-2">
 			<n-button :loading="generating" type="primary" @click="generate">
-				{{ generating ? '生成中...' : '🔑 生成密钥对' }}
+				<span v-if="!generating" class="flex items-center gap-1.5">
+					<TkuIcon :name="icons.key" :size="16" />
+					<span>生成密钥对</span>
+				</span>
+				<span v-else>生成中...</span>
 			</n-button>
-			<n-button :disabled="!privateKey" secondary @click="downloadZip"> 📦 下载 ZIP </n-button>
+			<n-button :disabled="!privateKey" secondary @click="downloadZip">
+				<span class="flex items-center gap-1.5">
+					<TkuIcon :name="icons.package" :size="16" />
+					<span>下载 ZIP</span>
+				</span>
+			</n-button>
 		</div>
 
 		<!-- Error -->

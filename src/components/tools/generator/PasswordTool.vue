@@ -2,6 +2,8 @@
 	import { ref } from 'vue';
 	import { NButton, NCheckbox, NInputNumber } from 'naive-ui';
 	import { copyToClipboard } from '@/utils/clipboard';
+	import { icons } from '@/data/icons';
+	import TkuIcon from '@/components/common/TkuIcon.vue';
 
 	const length = ref(16);
 	const upper = ref(true);
@@ -72,8 +74,18 @@
 
 		<!-- Action buttons -->
 		<div class="flex gap-2">
-			<n-button type="primary" @click="generate">✨ 生成</n-button>
-			<n-button v-if="passwords.length" secondary @click="copyAll">📋 复制全部</n-button>
+			<n-button type="primary" @click="generate">
+				<span class="flex items-center gap-1.5">
+					<TkuIcon :name="icons.star" :size="16" />
+					<span>生成</span>
+				</span>
+			</n-button>
+			<n-button v-if="passwords.length" secondary @click="copyAll">
+				<span class="flex items-center gap-1.5">
+					<TkuIcon :name="icons.clipboard" :size="16" />
+					<span>复制全部</span>
+				</span>
+			</n-button>
 		</div>
 
 		<!-- Results list -->

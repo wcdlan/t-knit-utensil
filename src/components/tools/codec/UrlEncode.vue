@@ -2,6 +2,8 @@
 	import { ref } from 'vue';
 	import { NButton, NButtonGroup, NInput } from 'naive-ui';
 	import { copyToClipboard } from '@/utils/clipboard';
+	import { icons } from '@/data/icons';
+	import TkuIcon from '@/components/common/TkuIcon.vue';
 
 	const input = ref('');
 	const output = ref('');
@@ -79,7 +81,9 @@
 
 		<!-- Empty state -->
 		<div v-if="!input && !output" class="flex flex-col items-center justify-center py-12 text-center">
-			<div class="text-4xl mb-3 opacity-30">🔗</div>
+			<div class="mb-3 text-slate-300">
+				<TkuIcon :name="icons.link" :size="36" />
+			</div>
 			<p class="text-slate-400 text-sm">输入文本后点击「转换」开始处理</p>
 		</div>
 	</div>

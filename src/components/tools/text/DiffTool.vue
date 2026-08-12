@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 	import { computed, ref } from 'vue';
 	import { NButton, NInput } from 'naive-ui';
+	import { icons } from '@/data/icons';
+	import TkuIcon from '@/components/common/TkuIcon.vue';
 
 	const left = ref('');
 	const right = ref('');
@@ -83,7 +85,10 @@
 		<!-- Actions -->
 		<div class="flex items-center gap-2">
 			<n-button type="primary" @click="computeDiff">
-				<span class="flex items-center gap-1.5">🔍 对比</span>
+				<span class="flex items-center gap-1.5">
+					<TkuIcon :name="icons.magnify" :size="16" />
+					<span>对比</span>
+				</span>
 			</n-button>
 			<n-button secondary @click="clearAll">清空</n-button>
 		</div>

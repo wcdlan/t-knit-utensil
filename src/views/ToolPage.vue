@@ -2,6 +2,8 @@
 	import { computed } from 'vue';
 	import { useRoute } from 'vue-router';
 	import { getToolById } from '@/data/tools';
+	import { icons } from '@/data/icons';
+	import TkuIcon from '@/components/common/TkuIcon.vue';
 
 	const route = useRoute();
 	const toolId = computed(() => route.params.toolId as string);
@@ -27,7 +29,7 @@
 				<div
 					class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 flex items-center justify-center shadow-sm"
 				>
-					<span class="text-3xl">{{ tool.icon }}</span>
+					<TkuIcon :name="tool.icon" :size="28" />
 				</div>
 				<div>
 					<h1 class="text-2xl font-bold text-slate-800 tracking-tight">{{ tool.name }}</h1>
@@ -61,7 +63,9 @@
 
 	<!-- Not found state -->
 	<div v-else class="flex flex-col items-center justify-center py-24 text-center">
-		<div class="text-6xl mb-4">🔍</div>
+		<div class="mb-4 text-slate-300">
+			<TkuIcon :name="icons.magnify" :size="48" />
+		</div>
 		<p class="text-slate-500 text-lg font-medium mb-2">工具未找到</p>
 		<p class="text-slate-400 text-sm mb-6">请检查工具地址是否正确</p>
 		<router-link

@@ -407,7 +407,7 @@
 						type="error"
 						@click="deleteHistory(item.id)"
 					>
-						✕
+						×
 					</n-button>
 				</div>
 			</div>

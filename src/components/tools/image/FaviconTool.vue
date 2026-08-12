@@ -4,6 +4,8 @@
 	import { NAlert, NButton, NCheckbox } from 'naive-ui';
 	import { downloadBlob } from '@/utils/download';
 	import type { FaviconSize } from '@/types/image';
+	import { icons } from '@/data/icons';
+	import TkuIcon from '@/components/common/TkuIcon.vue';
 
 	// --- State ---
 	const faviconSizes = ref<FaviconSize[]>([
@@ -425,7 +427,9 @@
 			@click="fileInput?.click()"
 		>
 			<input ref="fileInput" accept="image/*" class="hidden" type="file" @change="handleFileSelect" />
-			<div class="text-5xl mb-4">🖼️</div>
+			<div class="mb-4 text-slate-300">
+				<TkuIcon :name="icons.image" :size="48" />
+			</div>
 			<p class="text-gray-600 text-lg font-medium mb-1">点击上传或拖拽图片到此处</p>
 			<p class="text-gray-400 text-sm">支持 PNG、JPG、GIF、WebP、SVG 等常见图片格式</p>
 		</div>
@@ -525,7 +529,9 @@
 					<div class="flex items-center justify-between mb-2">
 						<p class="text-sm text-gray-500 font-medium">预览</p>
 						<n-button v-if="selectedSizes.length && selectedFormats.length" type="primary" @click="downloadZip">
-							📦 打包下载 ZIP
+							<span class="flex items-center gap-1.5"
+								><TkuIcon :name="icons.package" :size="16" /><span>打包下载 ZIP</span></span
+							>
 						</n-button>
 					</div>
 					<div class="flex flex-wrap gap-4">
@@ -562,7 +568,7 @@
 				<!-- Usage tips -->
 				<n-alert class="text-sm" type="warning">
 					<template #header>
-						<span class="font-medium">💡 使用提示</span>
+						<span class="font-medium">使用提示</span>
 					</template>
 					<ul class="space-y-1 text-amber-700">
 						<li>• 推荐上传至少 260×260 的图片，以确保所有尺寸清晰</li>

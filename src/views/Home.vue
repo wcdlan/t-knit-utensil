@@ -2,6 +2,8 @@
 	import { computed, ref } from 'vue';
 	import { NEmpty, NInput } from 'naive-ui';
 	import { toolGroups } from '@/data/tools';
+	import { icons } from '@/data/icons';
+	import TkuIcon from '@/components/common/TkuIcon.vue';
 
 	const query = ref('');
 	const collapsed = ref<Record<string, boolean>>({});
@@ -29,7 +31,9 @@
 		<!-- Hero section -->
 		<div class="mb-8">
 			<div class="flex flex-col items-center text-center py-8">
-				<div class="text-5xl mb-4">🛠️</div>
+				<div class="mb-4 text-blue-500">
+					<TkuIcon :name="icons.tools" :size="48" />
+				</div>
 				<h1 class="text-3xl font-bold text-slate-800 mb-2 tracking-tight">T Knit Utensil</h1>
 				<p class="text-slate-500 max-w-md leading-relaxed">
 					面向开发者的在线工具集，{{ toolCount }} 个实用工具，覆盖编解码、格式化、生成、转换等常用场景
@@ -47,7 +51,7 @@
 				size="large"
 			>
 				<template #prefix>
-					<span class="text-slate-400 text-lg">🔍</span>
+					<TkuIcon :name="icons.magnify" :size="20" class="text-slate-400" />
 				</template>
 			</n-input>
 		</div>
@@ -84,8 +88,8 @@
 					:to="`/tool/${tool.id}`"
 					class="flex flex-col items-center gap-2 p-4 rounded-xl border border-slate-200 bg-white hover:border-blue-300 hover:shadow-md hover:shadow-blue-100/50 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer group/card"
 				>
-					<span class="text-2xl transition-transform duration-200 group-hover/card:scale-110">
-						{{ tool.icon }}
+					<span class="text-slate-500 transition-transform duration-200 group-hover/card:scale-110">
+						<TkuIcon :name="tool.icon" :size="24" />
 					</span>
 					<span class="text-sm font-medium text-slate-700 text-center leading-tight">
 						{{ tool.name }}

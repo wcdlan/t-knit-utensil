@@ -2,6 +2,8 @@
 	import { ref } from 'vue';
 	import { NButton, NInput } from 'naive-ui';
 	import { copyToClipboard } from '@/utils/clipboard';
+	import { icons } from '@/data/icons';
+	import TkuIcon from '@/components/common/TkuIcon.vue';
 
 	const input = ref('');
 	const output = ref('');
@@ -144,10 +146,16 @@
 		<!-- Action buttons -->
 		<div class="flex items-center gap-2">
 			<n-button type="primary" @click="format">
-				<span class="flex items-center gap-1.5">✨ 格式化</span>
+				<span class="flex items-center gap-1.5">
+					<TkuIcon :name="icons.star" :size="16" />
+					<span>格式化</span>
+				</span>
 			</n-button>
 			<n-button type="info" @click="compress">
-				<span class="flex items-center gap-1.5">📦 压缩</span>
+				<span class="flex items-center gap-1.5">
+					<TkuIcon :name="icons.package" :size="16" />
+					<span>压缩</span>
+				</span>
 			</n-button>
 		</div>
 
@@ -165,7 +173,9 @@
 
 		<!-- Empty state -->
 		<div v-if="!input && !output" class="flex flex-col items-center justify-center py-12 text-center">
-			<div class="text-4xl mb-3 opacity-30">📋</div>
+			<div class="mb-3 text-slate-300">
+				<TkuIcon :name="icons.clipboard" :size="36" />
+			</div>
 			<p class="text-slate-400 text-sm">输入 SQL 语句后选择操作</p>
 		</div>
 	</div>
