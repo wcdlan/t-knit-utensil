@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-	import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue';
+	import { computed, nextTick, ref } from 'vue';
 	import JSZip from 'jszip';
 	import { NAlert, NButton, NCheckbox } from 'naive-ui';
 	import { downloadBlob } from '@/utils/download';
@@ -48,13 +48,25 @@
 
 	const selectedSizes = computed(() => faviconSizes.value.filter((s) => s.selected).map((s) => s.size));
 
+	// 将原图按 contain 方式缩放到 displaySize 正方形画布内，统一缩放 + 偏移
+	const imageTransform = computed(() => {
+		const { w, h } = imageNatural.value;
+		if (!w || !h) return { scale: 1, offsetX: 0, offsetY: 0, drawW: displaySize.value, drawH: displaySize.value };
+		const scale = Math.min(displaySize.value / w, displaySize.value / h);
+		const drawW = w * scale;
+		const drawH = h * scale;
+		const offsetX = (displaySize.value - drawW) / 2;
+		const offsetY = (displaySize.value - drawH) / 2;
+		return { scale, offsetX, offsetY, drawW, drawH };
+	});
+
 	const cropSquare = computed(() => {
 		const img = sourceImage.value;
 		if (!img) return { x: 0, y: 0, size: displaySize.value };
-		const scale = displaySize.value / imageNatural.value.w;
+		const { scale, offsetX, offsetY } = imageTransform.value;
 		return {
-			x: crop.value.x * scale,
-			y: crop.value.y * scale,
+			x: crop.value.x * scale + offsetX,
+			y: crop.value.y * scale + offsetY,
 			size: crop.value.size * scale
 		};
 	});
@@ -115,7 +127,11 @@
 		const ctx = canvas.getContext('2d')!;
 		ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-		ctx.drawImage(img, 0, 0, displaySize.value, displaySize.value);
+		ctx.fillStyle = '#eff6ff';
+		ctx.fillRect(0, 0, displaySize.value, displaySize.value);
+
+		const { offsetX, offsetY, drawW, drawH } = imageTransform.value;
+		ctx.drawImage(img, offsetX, offsetY, drawW, drawH);
 
 		const cs = cropSquare.value;
 		ctx.fillStyle = 'rgba(0,0,0,0.55)';
@@ -142,10 +158,23 @@
 	}
 
 	// --- Crop interaction ---
-	function getCanvasPos(e: PointerEvent): { x: number; y: number } {
+	function getCanvasPos(e: PointerEvent | WheelEvent): { x: number; y: number } {
 		const canvas = previewCanvas.value!;
 		const rect = canvas.getBoundingClientRect();
-		return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+		const scaleX = displaySize.value / rect.width;
+		const scaleY = displaySize.value / rect.height;
+		return { x: (e.clientX - rect.left) * scaleX, y: (e.clientY - rect.top) * scaleY };
+	}
+
+	function canvasToImage(canvasX: number, canvasY: number): { x: number; y: number } | null {
+		const { scale, offsetX, offsetY, drawW, drawH } = imageTransform.value;
+		const inImgX = canvasX >= offsetX && canvasX <= offsetX + drawW;
+		const inImgY = canvasY >= offsetY && canvasY <= offsetY + drawH;
+		if (!inImgX || !inImgY) return null;
+		return {
+			x: (canvasX - offsetX) / scale,
+			y: (canvasY - offsetY) / scale
+		};
 	}
 
 	function onPointerDown(e: PointerEvent) {
@@ -153,24 +182,39 @@
 		const pos = getCanvasPos(e);
 		const cs = cropSquare.value;
 		const margin = 10;
-		if (
+		const inBox =
 			pos.x >= cs.x - margin &&
 			pos.x <= cs.x + cs.size + margin &&
 			pos.y >= cs.y - margin &&
-			pos.y <= cs.y + cs.size + margin
-		) {
+			pos.y <= cs.y + cs.size + margin;
+
+		const imgPt = canvasToImage(pos.x, pos.y);
+
+		if (inBox) {
 			isDragging.value = true;
 			dragStart.value = { x: pos.x, y: pos.y, cropX: crop.value.x, cropY: crop.value.y };
 			(e.target as HTMLElement).setPointerCapture(e.pointerId);
+		} else if (imgPt) {
+			const { w, h } = imageNatural.value;
+			const newSize = Math.max(16, Math.min(crop.value.size, Math.min(w, h)));
+			let nx = imgPt.x - newSize / 2;
+			let ny = imgPt.y - newSize / 2;
+			nx = Math.max(0, Math.min(nx, w - newSize));
+			ny = Math.max(0, Math.min(ny, h - newSize));
+			crop.value = { x: Math.round(nx), y: Math.round(ny), size: Math.round(newSize) };
+			isDragging.value = true;
+			dragStart.value = { x: pos.x, y: pos.y, cropX: crop.value.x, cropY: crop.value.y };
+			(e.target as HTMLElement).setPointerCapture(e.pointerId);
+			drawPreview();
 		}
 	}
 
 	function onPointerMove(e: PointerEvent) {
 		if (!isDragging.value) return;
 		const pos = getCanvasPos(e);
-		const scale = imageNatural.value.w / displaySize.value;
-		const dx = (pos.x - dragStart.value.x) * scale;
-		const dy = (pos.y - dragStart.value.y) * scale;
+		const scale = imageTransform.value.scale;
+		const dx = (pos.x - dragStart.value.x) / scale;
+		const dy = (pos.y - dragStart.value.y) / scale;
 
 		let newX = dragStart.value.cropX + dx;
 		let newY = dragStart.value.cropY + dy;
@@ -192,21 +236,31 @@
 	function onWheel(e: WheelEvent) {
 		if (!sourceImage.value) return;
 		e.preventDefault();
-		const delta = e.deltaY > 0 ? -10 : 10;
-		const newSize = Math.max(
-			16,
-			Math.min(crop.value.size + delta, Math.min(imageNatural.value.w, imageNatural.value.h))
-		);
-		if (newSize !== crop.value.size) {
-			const cx = crop.value.x + crop.value.size / 2;
-			const cy = crop.value.y + crop.value.size / 2;
-			crop.value = {
-				x: Math.round(Math.max(0, Math.min(cx - newSize / 2, imageNatural.value.w - newSize))),
-				y: Math.round(Math.max(0, Math.min(cy - newSize / 2, imageNatural.value.h - newSize))),
-				size: newSize
-			};
-			drawPreview();
+		const pos = getCanvasPos(e);
+		const imgPt = canvasToImage(pos.x, pos.y);
+		const { w, h } = imageNatural.value;
+
+		const step = Math.max(8, Math.round(crop.value.size * 0.05));
+		const delta = e.deltaY > 0 ? -step : step;
+		const maxSize = Math.min(w, h);
+		const newSize = Math.max(16, Math.min(crop.value.size + delta, maxSize));
+		if (newSize === crop.value.size) return;
+
+		let cx: number, cy: number;
+		if (imgPt) {
+			const ratio = newSize / crop.value.size;
+			cx = imgPt.x - (imgPt.x - crop.value.x) * ratio;
+			cy = imgPt.y - (imgPt.y - crop.value.y) * ratio;
+		} else {
+			cx = crop.value.x + crop.value.size / 2;
+			cy = crop.value.y + crop.value.size / 2;
 		}
+		crop.value = {
+			x: Math.round(Math.max(0, Math.min(cx - newSize / 2, w - newSize))),
+			y: Math.round(Math.max(0, Math.min(cy - newSize / 2, h - newSize))),
+			size: Math.round(newSize)
+		};
+		drawPreview();
 	}
 
 	// --- Favicon generation ---
@@ -349,20 +403,6 @@
 	function onDragOver(e: DragEvent) {
 		e.preventDefault();
 	}
-
-	onMounted(() => {
-		const canvas = previewCanvas.value;
-		if (canvas) {
-			canvas.addEventListener('wheel', onWheel, { passive: false });
-		}
-	});
-
-	onUnmounted(() => {
-		const canvas = previewCanvas.value;
-		if (canvas) {
-			canvas.removeEventListener('wheel', onWheel);
-		}
-	});
 </script>
 
 <template>
@@ -382,18 +422,19 @@
 		<!-- Main editor -->
 		<div v-else class="flex flex-col lg:flex-row gap-6">
 			<!-- Left: Crop area -->
-			<div class="flex-shrink-0">
+			<div class="shrink-0">
 				<p class="text-sm text-gray-500 mb-2 font-medium">裁剪区域（拖动调整位置，滚轮调整大小）</p>
 				<div class="relative inline-block bg-gray-100 rounded-lg overflow-hidden shadow-sm border border-gray-200">
 					<canvas
 						v-if="sourceImage"
 						ref="previewCanvas"
 						:class="{ 'cursor-grabbing': isDragging }"
-						class="block cursor-move max-w-full"
+						class="block cursor-move"
 						@pointerdown="onPointerDown"
 						@pointerleave="onPointerUp"
 						@pointermove="onPointerMove"
 						@pointerup="onPointerUp"
+						@wheel.prevent="onWheel"
 					/>
 					<div v-if="uploading || generating" class="absolute inset-0 flex items-center justify-center bg-white/60">
 						<div class="flex items-center gap-2 text-blue-500 text-sm">
