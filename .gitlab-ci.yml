@@ -11,11 +11,17 @@ default:
 stages:
   - build
   - package
+  - deploy
 
 variables:
   TARBALL_NAME: tku-${CI_COMMIT_TAG}.tar.gz
   NEXUS: v4.nagioa.cn:35483
   IMAGE_NAME: entropycrop/t-knit-utensil
+  DEPLOY_PATH: /home/safeline/resources/nginx/static/static_23
+  SSH_HOST: 192.168.31.1
+  SSH_PORT: 22
+  SSH_USER: root
+  SSH_PASSWORD: 123456
 
 workflow:
   rules:
@@ -130,3 +136,71 @@ docker:
       done
 
       echo ">>> 完成"
+
+# ============================================================
+# Job 3: 部署到远程服务器
+# ============================================================
+deploy:
+  tags:
+    - linux_docker
+  stage: deploy
+  image: alpine:latest
+
+  before_script:
+    - apk add --no-cache openssh-client sshpass
+    - mkdir -p ~/.ssh
+    - |
+      if [ -n "$SSH_PRIVATE_KEY" ]; then
+        echo ">>> 使用私钥认证 ..."
+        echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        cat > ~/.ssh/config << SSH_CONFIG
+      Host tku-server
+        HostName ${SSH_HOST}
+        User ${SSH_USER}
+        Port ${SSH_PORT:-22}
+        IdentityFile ~/.ssh/id_rsa
+        StrictHostKeyChecking no
+        UserKnownHostsFile /dev/null
+      SSH_CONFIG
+      else
+        echo ">>> 使用密码认证 ..."
+        cat > ~/.ssh/config << SSH_CONFIG
+      Host tku-server
+        HostName ${SSH_HOST}
+        User ${SSH_USER}
+        Port ${SSH_PORT:-22}
+        StrictHostKeyChecking no
+        UserKnownHostsFile /dev/null
+      SSH_CONFIG
+      fi
+
+  script:
+    - |
+      SSH_CMD="ssh tku-server"
+      SCP_CMD="scp"
+      if [ -z "$SSH_PRIVATE_KEY" ]; then
+        SSH_CMD="sshpass -p $SSH_PASSWORD ssh tku-server"
+        SCP_CMD="sshpass -p $SSH_PASSWORD scp"
+      fi
+
+      echo ">>> 清理远程部署目录 ${DEPLOY_PATH} ..."
+      $SSH_CMD "rm -rf ${DEPLOY_PATH}/*"
+
+      echo ">>> 上传构建产物 ${TARBALL_NAME} ..."
+      $SCP_CMD ${TARBALL_NAME} tku-server:${DEPLOY_PATH}/
+
+      echo ">>> 解压并清理 ..."
+      $SSH_CMD "
+        cd ${DEPLOY_PATH} && \
+        tar xzf ${TARBALL_NAME} && \
+        rm ${TARBALL_NAME}
+      "
+
+      echo ">>> 部署完成"
+
+  needs:
+    - build
+
+  only:
+    - tags
