@@ -66,6 +66,16 @@ body {
     background: #9ca3af;
 }
 
+/* ---- Hide main content scrollbar ---- */
+.n-layout-scroll-container {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.n-layout-scroll-container::-webkit-scrollbar {
+    display: none;
+}
+
 /* ---- Tool switch transitions ---- */
 .tool-enter-active {
     transition: opacity 0.2s ease, transform 0.2s ease;
