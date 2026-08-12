@@ -198,3 +198,8 @@ body {
     box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.12),
     0 4px 12px rgba(96, 165, 250, 0.08);
 }
+
+.search-input .n-input__input-el,
+.search-input .n-input__placeholder {
+    text-align: center;
+}

@@ -37,6 +37,7 @@ export const icons = {
 	home: 'mdi:home-outline',
 	cog: 'mdi:cog-outline',
 	tools: 'mdi:tools',
+	chevronRight: 'mdi:chevron-right',
 	// 编码
 	encoding: 'mdi:code-string',
 	// 操作
