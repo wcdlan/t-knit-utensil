@@ -43,7 +43,7 @@
 				v-model:value="query"
 				class="search-input"
 				clearable
-				placeholder="搜索 {{ toolCount }} 个工具..."
+				:placeholder="`搜索 ${toolCount} 个工具...`"
 				size="large"
 			>
 				<template #prefix>
