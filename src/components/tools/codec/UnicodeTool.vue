@@ -1,7 +1,8 @@
 <script lang="ts" setup>
-	import { ref } from 'vue';
+	import { ref, watch } from 'vue';
 	import { NButton, NButtonGroup, NInput } from 'naive-ui';
 	import { copyToClipboard } from '@/utils/clipboard';
+	import { useDebounceFn } from '@/utils/debounce';
 	import { icons } from '@/data/icons';
 	import TkuIcon from '@/components/common/TkuIcon.vue';
 
@@ -10,6 +11,10 @@
 	const mode = ref<'to-unicode' | 'to-chinese'>('to-unicode');
 
 	function process() {
+		if (!input.value) {
+			output.value = '';
+			return;
+		}
 		try {
 			if (mode.value === 'to-unicode') {
 				output.value = input.value
@@ -26,7 +31,11 @@
 		}
 	}
 
+	const debouncedProcess = useDebounceFn(process, 500);
+	watch([input, mode], debouncedProcess);
+
 	function copy() {
+		if (!output.value) return;
 		copyToClipboard(output.value);
 	}
 </script>
@@ -56,12 +65,19 @@
 				</label>
 				<span class="text-[10px] text-slate-400">{{ input.length }} 字符</span>
 			</div>
-			<n-input
-				v-model:value="input"
-				:autosize="{ minRows: 6, maxRows: 16 }"
-				:placeholder="mode === 'to-unicode' ? '输入中文文本...' : '输入 Unicode 编码 (如 \\u4e2d\\u6587)...'"
-				type="textarea"
-			/>
+			<div class="relative">
+				<n-input v-model:value="input" :autosize="{ minRows: 6, maxRows: 16 }" type="textarea" />
+				<!-- 空态覆盖层：输入为空时叠加在输入框上，点击穿透聚焦输入框 -->
+				<div
+					v-if="!input"
+					class="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center text-center"
+				>
+					<div class="mb-2 text-slate-300">
+						<TkuIcon :name="icons.textFormat" :size="28" />
+					</div>
+					<p class="text-slate-400 text-xs">输入文本，结果将自动更新</p>
+				</div>
+			</div>
 		</div>
 
 		<!-- Action button -->
@@ -73,30 +89,57 @@
 		</n-button>
 
 		<!-- Output section -->
-		<div v-if="output">
+		<div>
 			<div class="flex items-center justify-between mb-2">
 				<label class="text-xs font-semibold text-slate-500">输出结果</label>
 				<div class="flex items-center gap-2">
 					<span class="text-[10px] text-slate-400">{{ output.length }} 字符</span>
-					<n-button secondary size="tiny" @click="copy">复制</n-button>
+					<n-button :disabled="!output" secondary size="tiny" @click="copy">复制</n-button>
 				</div>
 			</div>
-			<n-input
-				:autosize="{ minRows: 6, maxRows: 16 }"
-				:value="output"
-				class="cursor-pointer"
-				readonly
-				type="textarea"
-				@click="copy"
-			/>
+			<div class="relative">
+				<n-input
+					:autosize="{ minRows: 6, maxRows: 16 }"
+					:value="output"
+					class="cursor-pointer"
+					readonly
+					type="textarea"
+					@click="copy"
+				/>
+				<!-- 无结果占位层 -->
+				<div v-if="!output" class="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
+					<span class="text-slate-300 text-xs">结果将自动显示在这里</span>
+				</div>
+			</div>
 		</div>
 
-		<!-- Empty state -->
-		<div v-if="!input && !output" class="flex flex-col items-center justify-center py-12 text-center">
-			<div class="mb-3 text-slate-300">
-				<TkuIcon :name="icons.textFormat" :size="36" />
-			</div>
-			<p class="text-slate-400 text-sm">输入文本后点击「转换」开始处理</p>
+		<!-- About Unicode -->
+		<div class="p-5 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-100">
+			<h3 class="text-sm font-semibold text-blue-800 mb-3">什么是 Unicode 转义？</h3>
+			<p class="text-sm text-slate-600 leading-relaxed mb-2">
+				Unicode 为世界上几乎所有的字符分配了唯一的编号（码点），用十六进制表示。在 JavaScript / JSON / HTML
+				中，可以将字符写成
+				<code class="font-mono text-blue-700 bg-white/60 px-1 rounded">\uXXXX</code>
+				形式的转义序列（4 位十六进制），例如中文字符「{{ '中' }}」的码点是
+				<code class="font-mono text-blue-700 bg-white/60 px-1 rounded">U+4E2D</code>，写成转义即
+				<code class="font-mono text-blue-700 bg-white/60 px-1 rounded">&#92;u4E2D</code>。
+			</p>
+			<p class="text-sm text-slate-600 leading-relaxed mb-2">
+				常见的 ASCII 范围转义：换行符对应
+				<code class="font-mono text-blue-700 bg-white/60 px-1 rounded">&#92;u000A</code>，大写字母「A」对应
+				<code class="font-mono text-blue-700 bg-white/60 px-1 rounded">&#92;u0041</code>。
+			</p>
+			<p class="text-sm text-slate-600 leading-relaxed mb-2">
+				需要注意：Basic Multilingual Plane（BMP, U+0000 ~ U+FFFF）内的字符可以用 4 位「<code
+					class="font-mono text-blue-700 bg-white/60 px-1 rounded"
+					>\uXXXX</code
+				>」表示。 BMP 之外的字符（如 emoji「{{ '😀' }}」）码点超过 4 位十六进制，需使用扩展写法
+				<code class="font-mono text-blue-700 bg-white/60 px-1 rounded">\u{XXXXX}</code>
+				或「代理对」表示——本工具仅支持 BMP 内的字符。
+			</p>
+			<p class="text-sm text-slate-600 leading-relaxed">
+				Unicode 转义常用于在代码、配置文件与网络协议中安全地传递特殊字符，避免字符集不兼容带来的乱码问题。
+			</p>
 		</div>
 	</div>
 </template>

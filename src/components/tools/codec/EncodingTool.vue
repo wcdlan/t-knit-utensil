@@ -3,14 +3,13 @@
 	import { NButton, NInput, NSelect } from 'naive-ui';
 	import { copyToClipboard } from '@/utils/clipboard';
 	import { convertEncoding, SUPPORTED_ENCODINGS } from '@/utils/encoding';
+	import { useDebounceFn } from '@/utils/debounce';
 	import { icons } from '@/data/icons';
 	import TkuIcon from '@/components/common/TkuIcon.vue';
 
 	const input = ref('');
 	const sourceEncoding = ref('utf8');
 	const results = ref<{ encoding: string; label: string; text: string }[]>([]);
-
-	let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 
 	function process() {
 		if (!input.value.trim()) {
@@ -34,14 +33,8 @@
 		});
 	}
 
-	function debouncedProcess() {
-		if (debounceTimer) clearTimeout(debounceTimer);
-		debounceTimer = setTimeout(process, 1000);
-	}
-
-	watch([input, sourceEncoding], () => {
-		debouncedProcess();
-	});
+	const debouncedProcess = useDebounceFn(process, 500);
+	watch([input, sourceEncoding], debouncedProcess);
 
 	function copyResult(text: string) {
 		copyToClipboard(text);
@@ -70,12 +63,24 @@
 				<label class="text-xs font-semibold text-slate-500">输入文本</label>
 				<span class="text-[10px] text-slate-400">{{ input.length }} 字符</span>
 			</div>
-			<n-input
-				v-model:value="input"
-				:autosize="{ minRows: 6, maxRows: 16 }"
-				placeholder="输入要测试的文本，结果将自动更新..."
-				type="textarea"
-			/>
+			<div class="relative">
+				<n-input
+					v-model:value="input"
+					:autosize="{ minRows: 6, maxRows: 16 }"
+					placeholder="输入要测试的文本，结果将自动更新..."
+					type="textarea"
+				/>
+				<!-- 空态覆盖层：输入为空时叠加在输入框上，点击穿透聚焦输入框 -->
+				<div
+					v-if="!input"
+					class="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center text-center"
+				>
+					<div class="mb-2 text-slate-300">
+						<TkuIcon :name="icons.textFormat" :size="28" />
+					</div>
+					<p class="text-slate-400 text-xs">输入文本即可自动查看所有编码下的显示效果</p>
+				</div>
+			</div>
 		</div>
 
 		<!-- Results grid -->
@@ -115,12 +120,24 @@
 			</div>
 		</div>
 
-		<!-- Empty state -->
-		<div v-if="!input && results.length === 0" class="flex flex-col items-center justify-center py-12 text-center">
-			<div class="mb-3 text-slate-300">
-				<TkuIcon :name="icons.textFormat" :size="36" />
-			</div>
-			<p class="text-slate-400 text-sm">输入文本即可自动查看所有编码下的显示效果</p>
+		<!-- About encoding conversion -->
+		<div class="p-5 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-100">
+			<h3 class="text-sm font-semibold text-blue-800 mb-3">什么是编码转换？</h3>
+			<p class="text-sm text-slate-600 leading-relaxed mb-2">
+				同一段字节序列，用不同的字符集去解读，会得到完全不同的文字。例如中文「{{ '中' }}」按 UTF-8 编码为字节
+				<code class="font-mono text-blue-700 bg-white/60 px-1 rounded">E4 B8 AD</code>；若误用 GBK 去解码，就会显示成
+				<code class="font-mono text-blue-700 bg-white/60 px-1 rounded">涓</code>——这就是常见的「乱码」。
+			</p>
+			<p class="text-sm text-slate-600 leading-relaxed mb-2">
+				本工具将输入文本按
+				<code class="font-mono text-blue-700 bg-white/60 px-1 rounded">输入编码</code>
+				转成字节，再用下方的
+				<code class="font-mono text-blue-700 bg-white/60 px-1 rounded">12</code>
+				种常见字符集逐一解码，让你一眼看到同一份文本在各种编码下的真实效果。
+			</p>
+			<p class="text-sm text-slate-600 leading-relaxed">
+				常见应用场景：排查网页或数据库乱码、判断文本的真实编码、在不同系统间搬运含中文的文件。
+			</p>
 		</div>
 	</div>
 </template>
