@@ -67,8 +67,8 @@ build:
 
   script:
     - pnpm install --frozen-lockfile
-    # 将 Git Tag（如 v1.2.3 → 1.2.3）注入构建，前端显示版本号
-    - export VITE_APP_VERSION="${CI_COMMIT_TAG#v}"
+    # 将 Git Tag（如 v1.2.3）注入构建，前端显示版本号（保留 v 前缀）
+    - export VITE_APP_VERSION="${CI_COMMIT_TAG}"
     - pnpm build
     - cd dist && tar czf ../${TARBALL_NAME} .
 
@@ -129,7 +129,7 @@ docker:
       echo ">>> 标签: latest, ${CI_COMMIT_TAG}, ${MAJOR}, ${MAJOR}.${MINOR}, ${MAJOR}.${MINOR}.${PATCH}"
 
       docker build \
-        --build-arg VITE_APP_VERSION=${CI_COMMIT_TAG#v} \
+        --build-arg VITE_APP_VERSION=${CI_COMMIT_TAG} \
         -t ${IMAGE}:latest \
         -t ${IMAGE}:${CI_COMMIT_TAG} \
         -t ${IMAGE}:${MAJOR} \
