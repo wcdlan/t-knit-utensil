@@ -48,7 +48,7 @@ export const toolGroups: ToolGroup[] = [
 		name: '数据生成',
 		icon: icons.lightning,
 		tools: [
-			{ id: 'uuid', name: 'UUID 生成器', description: '生成 UUID v1/v4', icon: icons.identifier },
+			{ id: 'uuid', name: 'UUID 生成器', description: '生成自定义版本 UUID（v1-v7）', icon: icons.identifier },
 			{ id: 'hash', name: '哈希计算', description: 'MD5 / SHA 系列哈希计算', icon: icons.shieldLock },
 			{ id: 'qrcode', name: '二维码生成', description: '在线生成二维码', icon: icons.qrcode },
 			{ id: 'password', name: '密码生成', description: '随机安全密码生成', icon: icons.key }
