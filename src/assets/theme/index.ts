@@ -77,6 +77,45 @@ export const themeOverrides = {
 		borderColor: '#e5e7eb'
 	},
 
+	// ---- Message ----
+	Message: {
+		borderRadius: '10px',
+		padding: '10px 16px',
+		boxShadow: '0 4px 12px -2px rgba(0,0,0,0.08), 0 2px 6px -2px rgba(0,0,0,0.04)',
+
+		// info
+		colorInfo: '#dbeafe',
+		textColorInfo: '#1e40af',
+		iconColorInfo: '#3b82f6',
+
+		// success
+		colorSuccess: '#d1fae5',
+		textColorSuccess: '#065f46',
+		iconColorSuccess: '#10b981',
+
+		// warning
+		colorWarning: '#fef3c7',
+		textColorWarning: '#92400e',
+		iconColorWarning: '#f59e0b',
+
+		// error
+		colorError: '#fee2e2',
+		textColorError: '#991b1b',
+		iconColorError: '#ef4444',
+
+		// loading
+		colorLoading: '#e0f2fe',
+		textColorLoading: '#075985',
+		iconColorLoading: '#0ea5e9',
+
+		// close
+		closeColorHover: 'rgba(0,0,0,0.06)',
+		closeColorPressed: 'rgba(0,0,0,0.1)',
+		closeIconColor: 'rgba(0,0,0,0.45)',
+		closeIconColorHover: 'rgba(0,0,0,0.75)',
+		closeIconColorPressed: 'rgba(0,0,0,0.75)'
+	},
+
 	// ---- Input ----
 	Input: {
 		borderRadius: '8px',
