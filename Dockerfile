@@ -8,6 +8,11 @@ COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 
 COPY . .
+
+ARG VITE_APP_VERSION
+# 由 CI 传入（--build-arg VITE_APP_VERSION=<tag>），Vite 构建时内联为前端常量
+ENV VITE_APP_VERSION=$VITE_APP_VERSION
+
 RUN pnpm build
 
 # ---- Serve Stage ----

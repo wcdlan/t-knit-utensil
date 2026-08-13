@@ -8,6 +8,9 @@
 	const query = ref('');
 	const collapsed = ref<Record<string, boolean>>({});
 
+	// CI 构建时由 Git Tag 注入（VITE_APP_VERSION），本地开发回退 dev-build
+	const appVersion = (import.meta.env.VITE_APP_VERSION as string | undefined) ?? 'dev-build';
+
 	const toolCount = computed(() => toolGroups.reduce((sum, g) => sum + g.tools.length, 0));
 
 	const filteredGroups = computed(() => {
@@ -56,11 +59,20 @@
 				</span>
 
 				<!-- Title -->
-				<h1
-					class="mb-3 bg-gradient-to-r from-brand-start to-brand-end bg-clip-text text-3xl sm:text-4xl font-bold tracking-tight text-transparent"
-				>
-					T Knit Utensil
-				</h1>
+				<div class="flex items-end justify-center gap-2.5">
+					<h1
+						class="mb-3 bg-gradient-to-r from-brand-start to-brand-end bg-clip-text text-3xl sm:text-4xl font-bold tracking-tight text-transparent"
+					>
+						T Knit Utensil
+					</h1>
+					<!-- Version badge: injected by CI build via git tag, dev-build in local dev -->
+					<span
+						class="mb-3 rounded-md border border-slate-200 bg-slate-100 px-1.5 py-0.5 text-[10px] font-mono text-slate-500"
+						title="当前版本"
+					>
+						{{ appVersion }}
+					</span>
+				</div>
 
 				<!-- Description -->
 				<p class="max-w-md leading-relaxed text-slate-500">
