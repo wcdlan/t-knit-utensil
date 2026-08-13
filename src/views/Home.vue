@@ -50,29 +50,30 @@
 					</div>
 				</div>
 
-				<!-- Eyebrow badge -->
-				<span
-					class="mb-4 inline-flex items-center gap-1.5 rounded-full border border-blue-200/70 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-600"
-				>
-					<TkuIcon :name="icons.lightning" :size="14" />
-					开发者工具箱
-				</span>
-
-				<!-- Title -->
-				<div class="flex items-end justify-center gap-2.5">
-					<h1
-						class="mb-3 bg-gradient-to-r from-brand-start to-brand-end bg-clip-text text-3xl sm:text-4xl font-bold tracking-tight text-transparent"
+				<!-- Eyebrow + version row -->
+				<div class="mb-4 flex items-center justify-center gap-2">
+					<!-- Eyebrow badge -->
+					<span
+						class="inline-flex items-center gap-1.5 rounded-full border border-blue-200/70 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-600"
 					>
-						T Knit Utensil
-					</h1>
+						<TkuIcon :name="icons.lightning" :size="14" />
+						开发者工具箱
+					</span>
 					<!-- Version badge: injected by CI build via git tag, dev-build in local dev -->
 					<span
-						class="mb-3 rounded-md border border-slate-200 bg-slate-100 px-1.5 py-0.5 text-[10px] font-mono text-slate-500"
+						class="inline-flex items-center rounded-full border border-green-200/70 bg-green-50 px-3 py-1 text-xs font-semibold text-green-600"
 						title="当前版本"
 					>
 						{{ appVersion }}
 					</span>
 				</div>
+
+				<!-- Title -->
+				<h1
+					class="mb-3 bg-gradient-to-r from-brand-start to-brand-end bg-clip-text text-3xl sm:text-4xl font-bold tracking-tight text-transparent"
+				>
+					T Knit Utensil
+				</h1>
 
 				<!-- Description -->
 				<p class="max-w-md leading-relaxed text-slate-500">
