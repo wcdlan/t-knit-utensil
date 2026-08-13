@@ -17,20 +17,25 @@
 ## 项目架构
 
 TKU（T Knit Utensil，在线工具站）是一个 Vue 3 + TypeScript + Vite 单页应用。 技术栈：Vue 3.5、Vite 8、TypeScript 6、Tailwind CSS
-v4、Vue Router 5（history 模式）、Naive UI 2.44+、JSZip。
+v4、Vue Router 5（history 模式）、Naive UI 2.44+、JSZip、Iconify（`@iconify/vue`）、iconv-lite（编码探测）。
 
 要求 Node >= 24，pnpm >= 10（`package.json` 中 `packageManager` 固定为 `pnpm@10.26.1`）。
 
 ### 路由
 
-| 路径            | 组件           | 说明                   |
-|-----------------|----------------|------------------------|
-| `/`             | `Home.vue`     | 直接加载，工具分组卡片 |
-| `/tool/:toolId` | `ToolPage.vue` | 懒加载，按工具 id 渲染 |
-| `/settings`     | `Settings.vue` | 懒加载，路由守卫保护   |
-| `/login`        | `Login.vue`    | 懒加载                 |
+| 路径            | 组件           | 说明                                  |
+|-----------------|----------------|---------------------------------------|
+| `/`             | `Home.vue`     | 直接加载，工具分组卡片 + 搜索         |
+| `/tool`         | `ToolPage.vue` | 懒加载，外层框架（面包屑 + 工具标题） |
+| `/tool/:toolId` | 各工具组件     | ToolPage 的**嵌套子路由**，懒加载     |
+| `/settings`     | `Settings.vue` | 懒加载，路由守卫保护                  |
+| `/login`        | `Login.vue`    | 懒加载                                |
 
-路由守卫：访问 `/settings` 时如无 auth token，重定向到 `/login`。
+`router/index.ts` 中 `/tool` 路由含 `children` 数组，每个工具一条子路由（`path: 'base64'` →
+`@/components/tools/codec/Base64Tool.vue`），`ToolPage.vue` 用内嵌 `<router-view>` + `<keep-alive>` 渲染子路由组件。所有工具子路由都在
+`src/router/index.ts` 内定义。
+
+路由守卫（`router.beforeEach`）：访问 `/settings` 时如无 auth token（`localStorage.tku-auth-token`），重定向到 `/login`。
 
 ### 目录结构
 
@@ -42,56 +47,69 @@ src/
 │   ├── ssh.ts           # KeyType, KeyPairResult, KeyTypeMeta — SSH 密钥
 │   ├── ai.ts            # ApiPreset, HistoryItem, TestStatus, ApiResponse — AI API 测试
 │   ├── license.ts       # LicenseProfile, QuestionOption, Question, ScoredLicense — 许可证
-│   └── image.ts         # FaviconSize — Favicon 尺寸选项
+│   ├── image.ts         # FaviconSize — Favicon 尺寸选项
+│   └── encoding.ts      # 编码定义相关类型 — 编码探测工具
 ├── data/
 │   ├── tools.ts         # 工具定义（ToolGroup[]，getToolById），从 types 重导出类型
 │   ├── siteConfig.ts    # 响应式配置 store + loadConfig/saveConfig，从 types 重导出类型
-│   └── auth.ts          # useAuth() — 登录/登出，token 存 localStorage
-├── router/index.ts      # Vue Router 配置 + beforeEach 守卫
+│   ├── auth.ts          # useAuth() — 登录/登出，token 存 localStorage
+│   └── icons.ts         # 图标名注册表（Iconify mdi: 前缀），导出 icons 对象 + IconKey 类型
+├── router/index.ts      # Vue Router 配置（含 /tool 嵌套子路由）+ beforeEach 守卫
 ├── utils/
-│   ├── clipboard.ts     # copyToClipboard()
+│   ├── clipboard.ts     # copyToClipboard(text, successText?) — 复制 + 成功提示
 │   ├── download.ts      # downloadBlob(), downloadTextFile()
-│   └── ssh.ts           # SSH 密钥生成（RSA/ECDSA，Web Crypto API），从 types 重导出类型
+│   ├── ssh.ts           # SSH 密钥生成（RSA/ECDSA，Web Crypto API），从 types 重导出类型
+│   └── encoding.ts      # convertEncoding(), SUPPORTED_ENCODINGS — 编码转换（iconv-lite）
 ├── views/
-│   ├── Home.vue         # 工具分组展示，顶部快捷导航
-│   ├── ToolPage.vue     # 动态工具加载（按 toolId 的 v-if 链）
+│   ├── Home.vue         # 工具分组展示，顶部搜索 + 快捷导航
+│   ├── ToolPage.vue     # 工具外层框架（面包屑 + 标题 + 嵌套 <router-view>）
 │   ├── Settings.vue     # 站点配置编辑（需登录）
 │   └── Login.vue        # 登录表单
-├── components/tools/
-│   ├── codec/           # Base64、URL 编解码、Unicode
-│   ├── formatter/       # JSON、SQL
-│   ├── converter/       # 时间戳、颜色
-│   ├── generator/       # UUID、哈希、二维码、密码
-│   ├── ssh/             # SSH 密钥对生成
-│   ├── image/           # Favicon 生成器
-│   ├── text/            # 正则、文本对比、字数统计
-│   ├── ai/              # AI API 测试
-│   └── common/          # 开源许可证选择器
-├── assets/theme/index.ts # Naive UI 蓝色主题覆盖
+├── components/
+│   ├── common/TkuIcon.vue # Iconify 图标封装（:name 传 icons 里的图标名）
+│   └── tools/
+│       ├── codec/       # Base64Tool, UrlEncode, UnicodeTool, EncodingTool
+│       ├── formatter/   # JsonFormatter, SqlFormatter
+│       ├── converter/   # TimestampTool, ColorConverter
+│       ├── generator/   # UuidGenerator, HashTool, QrcodeTool, PasswordTool
+│       ├── ssh/         # SshKeyGen
+│       ├── image/       # FaviconTool
+│       ├── text/        # RegexTool, DiffTool, WordCount
+│       ├── ai/          # AiApiTester
+│       └── common/      # LicenseSelector
+├── assets/
+│   ├── theme/index.ts   # Naive UI 蓝色主题覆盖（含 Message 等组件主题）
+│   ├── license/         # 开源许可证全文 .txt（LicenseSelector 用 import.meta.glob 加载）
+│   ├── TKU.png / TKU-U.png  # 站点 Logo（完整 / 折叠图标）
 └── App.vue              # 外层框架：侧边栏、顶栏、<router-view>、页脚
 ```
 
 ### 添加新工具
 
-`ToolPage.vue` 使用 **双 script 块**模式注册工具组件，添加新工具的完整步骤：
+工具通过 **嵌套路由**注册（已重构，不再是 `ToolPage.vue` 双 script 块 + v-if 链模式），添加新工具的完整步骤：
 
 1. **在 `src/data/tools.ts` 对应分组中添加 Tool 条目：**
 
    ```ts
-   { id: 'my-tool', name: '我的工具', description: '工具描述', icon: '🔧' }
+   { id: 'my-tool', name: '我的工具', description: '工具描述', icon: icons.someIcon }
    ```
+
+   `icon` 字段使用 `src/data/icons.ts` 中的 Iconify 图标名（`mdi:` 前缀），而不是 emoji。
 
 2. **在 `src/components/tools/<分组>/` 下创建工具组件：**
    - 使用 `<script lang="ts" setup>` 编写组件逻辑
    - 表单控件使用 Naive UI（NButton, NInput, NSelect 等）
    - 布局/间距使用 Tailwind 工具类
+   - 图标显示用 `<TkuIcon :name="icons.xxx" :size="16" />`
    - 命名约定：使用 `*Tool.vue` 后缀
 
-3. **在 `src/views/ToolPage.vue` 中注册 — 该文件有两个 `<script>` 块：**
-   - **第二个 `<script lang="ts">` 块（第 55-97 行）：** import 组件，添加到 `export default { components: { ... } }` 中
-   - **模板（第 11-53 行）：** 添加 `<YourTool v-else-if="toolId === 'my-tool'" />` 分支
-   - 标签名必须与 `export default` 的 `components` 对象中的 key 一致
-   - 第一个 `<script lang="ts" setup>` 块（第 1-9 行）处理路由逻辑， **不要修改**
+3. **在 `src/router/index.ts` 的 `/tool` 路由 `children` 数组中添加子路由：**
+
+   ```ts
+   { path: 'my-tool', component: () => import('@/components/tools/<分组>/MyTool.vue') }
+   ```
+
+   路由 path 与 `tools.ts` 中的工具 `id` 一致（`/tool/my-tool`）。子路由懒加载，工具组件无需在 `ToolPage.vue` 中注册。
 
 ### 样式：Tailwind CSS v4 + Naive UI
 
@@ -102,6 +120,10 @@ src/
   `<n-config-provider :theme-overrides="themeOverrides">` 包裹整个应用
 - 不要编写自定义 CSS 类；使用 Tailwind 工具类或 Naive UI 组件属性
 - Tailwind v4 使用 `@import 'tailwindcss'`（无 `tailwind.config.js`）
+- **图标**：统一用 `TkuIcon` 组件（`@iconify/vue` 封装），图标名从 `src/data/icons.ts` 的 `icons` 对象取（`mdi:` 前缀），
+  **不直接写裸 SVG 或 emoji**
+- `themeOverrides` 含 `Message` 等组件主题（浅色背景 + 主色图标/文字），`copyToClipboard` 内部的 `createDiscreteApi` 也复用同一
+  `themeOverrides`，与全局视觉一致
 
 ### 状态管理
 
@@ -110,6 +132,14 @@ src/
 - `ref()` 用于所有组件本地状态
 - **Composable 模式**（`use*` 前缀）用于共享逻辑：`useAuth()`（`src/data/auth.ts`）
 - `localStorage` 用于客户端持久化：auth token（`tku-auth-token`）、AI 测试器历史（`ai-api-tester-history`）
+
+### 复制交互
+
+- 所有复制统一走 `src/utils/clipboard.ts` 的 `copyToClipboard(text, successText?)`：成功复制后自动弹 message
+  提示（第二参数可自定义文案，默认「复制成功」）
+- 工具组件支持 **点击文本即复制**：readonly 输出框、结果卡片、哈希结果等可点击文本元素直接绑定 `@click="copy"`
+  （同时保留复制按钮），批量复制按钮（如「复制全部」）不受影响
+- 可交互元素（可编辑 input、日期选择器等） **不加**点击复制，避免干扰编辑
 
 ### 配置与数据库系统（仅开发模式）
 
