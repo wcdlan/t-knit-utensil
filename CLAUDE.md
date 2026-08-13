@@ -76,6 +76,7 @@ src/
 `ToolPage.vue` 使用 **双 script 块**模式注册工具组件，添加新工具的完整步骤：
 
 1. **在 `src/data/tools.ts` 对应分组中添加 Tool 条目：**
+
    ```ts
    { id: 'my-tool', name: '我的工具', description: '工具描述', icon: '🔧' }
    ```
