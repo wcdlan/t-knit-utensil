@@ -159,9 +159,11 @@
 				:autosize="{ minRows: 6 }"
 				:class="{ shimmer: generating }"
 				:value="privateKey"
+				class="cursor-pointer"
 				placeholder="点击「生成密钥对」生成私钥"
 				readonly
 				type="textarea"
+				@click="copyPrivate"
 			/>
 		</div>
 
@@ -178,9 +180,11 @@
 				:autosize="{ minRows: 3 }"
 				:class="{ shimmer: generating }"
 				:value="publicKey"
+				class="cursor-pointer"
 				placeholder="点击「生成密钥对」生成公钥"
 				readonly
 				type="textarea"
+				@click="copyPublic"
 			/>
 		</div>
 	</div>

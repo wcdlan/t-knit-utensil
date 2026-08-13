@@ -106,7 +106,8 @@
 						</div>
 					</div>
 					<div
-						class="text-sm font-mono text-slate-600 bg-white rounded border border-slate-100 p-2 min-h-[2rem] max-h-[6rem] overflow-y-auto whitespace-pre-wrap break-all"
+						class="text-sm font-mono text-slate-600 bg-white rounded border border-slate-100 p-2 min-h-[2rem] max-h-[6rem] overflow-y-auto whitespace-pre-wrap break-all cursor-pointer transition hover:bg-blue-50/40"
+						@click="copyResult(result.text)"
 					>
 						{{ result.text || '(空)' }}
 					</div>

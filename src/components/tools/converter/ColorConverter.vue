@@ -148,7 +148,11 @@
 							size="small"
 							@update:value="updateFromRgb"
 						/>
-						<span class="text-xs text-slate-400 font-mono mx-1">rgb({{ r }}, {{ g }}, {{ b }})</span>
+						<span
+							class="text-xs text-slate-400 font-mono mx-1 cursor-pointer transition hover:text-blue-600"
+							@click="copy(`rgb(${r}, ${g}, ${b})`)"
+							>rgb({{ r }}, {{ g }}, {{ b }})</span
+						>
 						<n-button secondary size="small" @click="copy(`rgb(${r}, ${g}, ${b})`)">复制</n-button>
 					</div>
 				</div>
@@ -157,7 +161,10 @@
 				<div>
 					<label class="block text-xs font-semibold text-slate-500 mb-2">HSL</label>
 					<div class="flex flex-wrap items-center gap-2">
-						<div class="px-3 py-1.5 bg-slate-50 rounded-lg text-sm font-mono text-slate-600">
+						<div
+							class="px-3 py-1.5 bg-slate-50 rounded-lg text-sm font-mono text-slate-600 cursor-pointer transition hover:bg-blue-50/60"
+							@click="copy(`hsl(${h}, ${s}%, ${l}%)`)"
+						>
 							hsl({{ h }}, {{ s }}%, {{ l }}%)
 						</div>
 						<n-button secondary size="small" @click="copy(`hsl(${h}, ${s}%, ${l}%)`)">复制</n-button>

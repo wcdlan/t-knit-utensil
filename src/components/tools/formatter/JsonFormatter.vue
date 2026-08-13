@@ -100,7 +100,14 @@
 					<n-button secondary size="tiny" @click="copyOutput">复制</n-button>
 				</div>
 			</div>
-			<n-input :autosize="{ minRows: 10, maxRows: 24 }" :value="output" readonly type="textarea" />
+			<n-input
+				:autosize="{ minRows: 10, maxRows: 24 }"
+				:value="output"
+				class="cursor-pointer"
+				readonly
+				type="textarea"
+				@click="copyOutput"
+			/>
 		</div>
 
 		<!-- Empty state -->

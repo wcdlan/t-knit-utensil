@@ -755,7 +755,8 @@
 							</div>
 						</div>
 						<pre
-							class="text-xs font-mono text-gray-700 whitespace-pre-wrap overflow-x-auto max-h-96 overflow-y-auto bg-white border border-gray-200 rounded-lg p-4 leading-relaxed"
+							class="text-xs font-mono text-gray-700 whitespace-pre-wrap overflow-x-auto max-h-96 overflow-y-auto bg-white border border-gray-200 rounded-lg p-4 leading-relaxed cursor-pointer transition hover:border-blue-200 hover:bg-blue-50/20"
+							@click="copyLicense(item.license)"
 							>{{ getLicenseText(item.license.id, selectedLang) }}</pre>
 					</div>
 				</div>

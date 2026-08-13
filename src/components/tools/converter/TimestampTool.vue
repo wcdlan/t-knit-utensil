@@ -55,8 +55,16 @@
 	watch(dateInput, dateToTs);
 
 	function copy(el: string) {
-		const text = el === 'now' ? String(now.value) : el === 'nowMs' ? String(nowMs.value) : secResult.value;
-		copyToClipboard(text);
+		const text = el === 'now' ? String(now.value) : el === 'nowMs' ? String(nowMs.value) : '';
+		if (text) copyToClipboard(text);
+	}
+
+	function copySec() {
+		if (secResult.value) copyToClipboard(secResult.value);
+	}
+
+	function copyMs() {
+		if (msResult.value) copyToClipboard(msResult.value);
 	}
 </script>
 
@@ -90,14 +98,22 @@
 				<div>
 					<label class="block text-xs font-semibold text-slate-500 mb-2">秒级时间戳 (10 位)</label>
 					<n-input v-model:value="secInput" class="!font-mono" placeholder="输入秒级时间戳" />
-					<div v-if="secResult" class="mt-2 p-3 bg-slate-50 rounded-lg text-sm font-mono text-slate-700">
+					<div
+						v-if="secResult"
+						class="mt-2 p-3 bg-slate-50 rounded-lg text-sm font-mono text-slate-700 cursor-pointer transition hover:bg-blue-50/60"
+						@click="copySec"
+					>
 						{{ secResult }}
 					</div>
 				</div>
 				<div>
 					<label class="block text-xs font-semibold text-slate-500 mb-2">毫秒级时间戳 (13 位)</label>
 					<n-input v-model:value="msInput" class="!font-mono" placeholder="输入毫秒级时间戳" />
-					<div v-if="msResult" class="mt-2 p-3 bg-slate-50 rounded-lg text-sm font-mono text-slate-700">
+					<div
+						v-if="msResult"
+						class="mt-2 p-3 bg-slate-50 rounded-lg text-sm font-mono text-slate-700 cursor-pointer transition hover:bg-blue-50/60"
+						@click="copyMs"
+					>
 						{{ msResult }}
 					</div>
 				</div>
@@ -110,7 +126,11 @@
 			<div class="flex gap-2">
 				<n-date-picker v-model:value="dateInput" class="flex-1" type="datetime" />
 			</div>
-			<div v-if="dateResult" class="mt-2 p-3 bg-slate-50 rounded-lg text-sm font-mono text-slate-700 whitespace-pre">
+			<div
+				v-if="dateResult"
+				class="mt-2 p-3 bg-slate-50 rounded-lg text-sm font-mono text-slate-700 whitespace-pre cursor-pointer transition hover:bg-blue-50/60"
+				@click="copyToClipboard(dateResult)"
+			>
 				{{ dateResult }}
 			</div>
 		</div>

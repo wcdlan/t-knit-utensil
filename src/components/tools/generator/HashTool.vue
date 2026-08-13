@@ -59,7 +59,10 @@
 				<label class="text-xs font-semibold text-slate-500">哈希结果 ({{ algorithm }})</label>
 				<n-button secondary size="tiny" @click="copy">复制</n-button>
 			</div>
-			<div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+			<div
+				class="p-4 bg-slate-50 rounded-xl border border-slate-200 cursor-pointer transition hover:bg-slate-100"
+				@click="copy"
+			>
 				<code class="text-sm font-mono text-slate-700 break-all leading-relaxed">{{ output }}</code>
 			</div>
 		</div>
