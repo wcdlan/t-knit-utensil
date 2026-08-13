@@ -135,12 +135,24 @@
 				<label class="text-xs font-semibold text-slate-500">SQL 输入</label>
 				<span class="text-[10px] text-slate-400">{{ input.length }} 字符</span>
 			</div>
-			<n-input
-				v-model:value="input"
-				:autosize="{ minRows: 8, maxRows: 20 }"
-				placeholder="输入 SQL 语句..."
-				type="textarea"
-			/>
+			<div class="relative">
+				<n-input
+					v-model:value="input"
+					:autosize="{ minRows: 8, maxRows: 20 }"
+					placeholder="输入 SQL 语句..."
+					type="textarea"
+				/>
+				<!-- 空态覆盖层：输入为空时叠加在输入框上，点击穿透聚焦输入框 -->
+				<div
+					v-if="!input"
+					class="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center text-center"
+				>
+					<div class="mb-2 text-slate-300">
+						<TkuIcon :name="icons.clipboard" :size="28" />
+					</div>
+					<p class="text-slate-400 text-xs">输入 SQL 语句后选择操作</p>
+				</div>
+			</div>
 		</div>
 
 		<!-- Action buttons -->
@@ -178,12 +190,22 @@
 			/>
 		</div>
 
-		<!-- Empty state -->
-		<div v-if="!input && !output" class="flex flex-col items-center justify-center py-12 text-center">
-			<div class="mb-3 text-slate-300">
-				<TkuIcon :name="icons.clipboard" :size="36" />
-			</div>
-			<p class="text-slate-400 text-sm">输入 SQL 语句后选择操作</p>
+		<!-- About SQL formatting -->
+		<div class="p-5 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-100">
+			<h3 class="text-sm font-semibold text-blue-800 mb-3">为什么需要格式化 SQL？</h3>
+			<p class="text-sm text-slate-600 leading-relaxed mb-2">
+				手写或从日志抓取的 SQL 往往挤在一行、大小写混乱。格式化会将
+				<code class="font-mono text-blue-700 bg-white/60 px-1 rounded">SELECT</code>、
+				<code class="font-mono text-blue-700 bg-white/60 px-1 rounded">FROM</code>、
+				<code class="font-mono text-blue-700 bg-white/60 px-1 rounded">WHERE</code>
+				等关键字换行对齐、统一关键字大小写、对条件子句做两级缩进，让语句结构一目了然。
+			</p>
+			<p class="text-sm text-slate-600 leading-relaxed mb-2">
+				压缩操作会移除多余空白，把整条语句压成一行，适合贴进脚本或作为参数传递，减小日志与请求体积。
+			</p>
+			<p class="text-sm text-slate-600 leading-relaxed">
+				常见应用场景：复盘线上慢查询日志、解读 ORM 生成的 SQL、以及把多行 SQL 压缩后写入配置文件。
+			</p>
 		</div>
 	</div>
 </template>
