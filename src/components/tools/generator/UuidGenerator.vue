@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 	import { ref } from 'vue';
-	import { NButton, NCheckbox, NInputNumber, useMessage } from 'naive-ui';
+	import { NButton, NCheckbox, NInputNumber } from 'naive-ui';
 	import { copyToClipboard } from '@/utils/clipboard';
 	import { icons } from '@/data/icons';
 	import TkuIcon from '@/components/common/TkuIcon.vue';
@@ -8,7 +8,6 @@
 	const uuids = ref<string[]>([]);
 	const count = ref(5);
 	const uppercase = ref(false);
-	const message = useMessage();
 
 	function generateV4(): string {
 		return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
@@ -27,14 +26,12 @@
 		uuids.value = result;
 	}
 
-	async function copyAll() {
-		await copyToClipboard(uuids.value.join('\n'));
-		message.success('已复制全部');
+	function copyAll() {
+		copyToClipboard(uuids.value.join('\n'), '已复制全部');
 	}
 
-	async function copyOne(uuid: string) {
-		await copyToClipboard(uuid);
-		message.success('已复制');
+	function copyOne(uuid: string) {
+		copyToClipboard(uuid, '已复制');
 	}
 
 	generate();

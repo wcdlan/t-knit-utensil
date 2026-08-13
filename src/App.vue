@@ -2,13 +2,15 @@
 	import { computed, h, onBeforeUnmount, onMounted, ref } from 'vue';
 	import { useRoute, useRouter } from 'vue-router';
 	import {
+		dateZhCN,
 		type MenuOption,
 		NConfigProvider,
 		NLayout,
 		NLayoutContent,
 		NLayoutSider,
 		NMenu,
-		NMessageProvider
+		NMessageProvider,
+		zhCN
 	} from 'naive-ui';
 	import { themeOverrides } from './assets/theme';
 	import { loadConfig, siteConfig } from './data/siteConfig';
@@ -73,7 +75,7 @@
 </script>
 
 <template>
-	<n-config-provider :theme-overrides="themeOverrides">
+	<n-config-provider :date-locale="dateZhCN" :locale="zhCN" :theme-overrides="themeOverrides">
 		<n-message-provider>
 			<n-layout class="h-screen" has-sider>
 				<!-- Sidebar with gradient background -->

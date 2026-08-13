@@ -1,14 +1,16 @@
 <script lang="ts" setup>
-	import { onMounted, onUnmounted, ref } from 'vue';
-	import { NButton, NInput } from 'naive-ui';
+	import { onMounted, onUnmounted, type Ref, ref, watch } from 'vue';
+	import { NButton, NDatePicker, NInput } from 'naive-ui';
 	import { copyToClipboard } from '@/utils/clipboard';
 
 	const now = ref(Math.floor(Date.now() / 1000));
 	const nowMs = ref(Date.now());
 	const nowStr = ref('');
-	const tsInput = ref('');
-	const tsResult = ref('');
-	const dateInput = ref('');
+	const secInput = ref('');
+	const secResult = ref('');
+	const msInput = ref('');
+	const msResult = ref('');
+	const dateInput = ref<number | null>(null);
 	const dateResult = ref('');
 
 	let timer: ReturnType<typeof setInterval>;
@@ -22,32 +24,38 @@
 	onMounted(() => {
 		updateNow();
 		timer = setInterval(updateNow, 1000);
-		dateInput.value = new Date().toISOString().slice(0, 16);
+		dateInput.value = Date.now();
 	});
 
 	onUnmounted(() => clearInterval(timer));
 
-	function tsToDate() {
-		const ts = parseInt(tsInput.value);
-		if (isNaN(ts)) {
-			tsResult.value = '请输入有效的时间戳';
+	function tsToDate(input: string, result: Ref<string>, ms: boolean) {
+		if (input.trim() === '') {
+			result.value = '';
 			return;
 		}
-		const ms = ts > 9999999999 ? ts : ts * 1000;
-		tsResult.value = new Date(ms).toLocaleString('zh-CN');
+		const ts = parseInt(input);
+		if (isNaN(ts)) {
+			result.value = '请输入有效的时间戳';
+			return;
+		}
+		result.value = new Date(ms ? ts : ts * 1000).toLocaleString('zh-CN');
 	}
 
 	function dateToTs() {
-		const d = new Date(dateInput.value);
-		if (isNaN(d.getTime())) {
+		if (dateInput.value === null) {
 			dateResult.value = '请输入有效的日期时间';
 			return;
 		}
-		dateResult.value = `秒级: ${Math.floor(d.getTime() / 1000)}\n毫秒级: ${d.getTime()}`;
+		dateResult.value = `秒级: ${Math.floor(dateInput.value / 1000)}\n毫秒级: ${dateInput.value}`;
 	}
 
+	watch(secInput, (v) => tsToDate(v, secResult, false));
+	watch(msInput, (v) => tsToDate(v, msResult, true));
+	watch(dateInput, dateToTs);
+
 	function copy(el: string) {
-		const text = el === 'now' ? String(now.value) : el === 'nowMs' ? String(nowMs.value) : tsResult.value;
+		const text = el === 'now' ? String(now.value) : el === 'nowMs' ? String(nowMs.value) : secResult.value;
 		copyToClipboard(text);
 	}
 </script>
@@ -78,12 +86,21 @@
 		<!-- Timestamp to Date -->
 		<div>
 			<h3 class="text-sm font-semibold text-slate-700 mb-2">时间戳 → 日期</h3>
-			<div class="flex gap-2">
-				<n-input v-model:value="tsInput" class="flex-1" placeholder="输入时间戳 (秒或毫秒)" />
-				<n-button type="primary" @click="tsToDate">转换</n-button>
-			</div>
-			<div v-if="tsResult" class="mt-2 p-3 bg-slate-50 rounded-lg text-sm font-mono text-slate-700">
-				{{ tsResult }}
+			<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+				<div>
+					<label class="block text-xs font-semibold text-slate-500 mb-2">秒级时间戳 (10 位)</label>
+					<n-input v-model:value="secInput" class="!font-mono" placeholder="输入秒级时间戳" />
+					<div v-if="secResult" class="mt-2 p-3 bg-slate-50 rounded-lg text-sm font-mono text-slate-700">
+						{{ secResult }}
+					</div>
+				</div>
+				<div>
+					<label class="block text-xs font-semibold text-slate-500 mb-2">毫秒级时间戳 (13 位)</label>
+					<n-input v-model:value="msInput" class="!font-mono" placeholder="输入毫秒级时间戳" />
+					<div v-if="msResult" class="mt-2 p-3 bg-slate-50 rounded-lg text-sm font-mono text-slate-700">
+						{{ msResult }}
+					</div>
+				</div>
 			</div>
 		</div>
 
@@ -91,16 +108,45 @@
 		<div>
 			<h3 class="text-sm font-semibold text-slate-700 mb-2">日期 → 时间戳</h3>
 			<div class="flex gap-2">
-				<input
-					v-model="dateInput"
-					class="flex-1 px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 outline-none bg-white transition-shadow duration-200"
-					type="datetime-local"
-				/>
-				<n-button type="primary" @click="dateToTs">转换</n-button>
+				<n-date-picker v-model:value="dateInput" class="flex-1" type="datetime" />
 			</div>
 			<div v-if="dateResult" class="mt-2 p-3 bg-slate-50 rounded-lg text-sm font-mono text-slate-700 whitespace-pre">
 				{{ dateResult }}
 			</div>
+		</div>
+
+		<!-- About Timestamp -->
+		<div class="p-5 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-100">
+			<h3 class="text-sm font-semibold text-blue-800 mb-3">什么是时间戳？</h3>
+			<p class="text-sm text-slate-600 leading-relaxed mb-3">
+				时间戳（Unix 时间戳）是从
+				<code class="font-mono text-blue-700 bg-white/60 px-1 rounded">1970-01-01 00:00:00 UTC</code>
+				起经过的秒数或毫秒数。它用一个整数记录时刻，与时区无关，因此在数据传输、存储与对比时不会因时区不同而产生歧义。
+			</p>
+			<div class="text-sm text-slate-600 leading-relaxed mb-3">
+				<p class="mb-1">根据精度的不同，时间戳分为两种：</p>
+				<ul class="list-disc pl-5 space-y-1">
+					<li>
+						<span class="font-medium">秒级时间戳</span>（10 位数字，如
+						<code class="font-mono text-blue-700 bg-white/60 px-1 rounded">{{ now }}</code
+						>）：单位是秒，最常见的格式。
+					</li>
+					<li>
+						<span class="font-medium">毫秒级时间戳</span>（13 位数字，如
+						<code class="font-mono text-blue-700 bg-white/60 px-1 rounded">{{ nowMs }}</code
+						>）：单位是毫秒，精度更高，常见于 JavaScript、Java 等语言中的默认值。
+					</li>
+				</ul>
+			</div>
+			<p class="text-sm text-slate-600 leading-relaxed mb-3">
+				判断技巧：数一下位数即可，<code class="font-mono text-blue-700 bg-white/60 px-1 rounded">10 位</code>是秒级，
+				<code class="font-mono text-blue-700 bg-white/60 px-1 rounded">13 位</code>是毫秒级。本工具的 「时间戳 →
+				日期」会自动识别并转换。
+			</p>
+			<p class="text-sm text-slate-600 leading-relaxed">
+				常见应用场景：数据库与日志中记录时间、API 接口传参、Session / Token 过期校验、以及缓存过期时间设置等。顶部
+				「当前时间」区域每秒实时刷新，可直接复制使用。
+			</p>
 		</div>
 	</div>
 </template>
