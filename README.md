@@ -45,19 +45,81 @@ pnpm format        # Prettier 格式化代码
 pnpm format:check  # 检查格式
 ```
 
+## 部署
+
+项目由两部分组成： **前端静态资源**（Vite 构建产物，由 nginx 托管）+ **API 服务**（Node.js，提供 `/api/config`、`/api/auth`、
+`/api/proxy`、`/api/health`，数据存 SQLite）。生产模式下配置管理页允许直接修改配置。
+
+### 方案一：本地部署（Node + nginx）
+
+```bash
+# 1. 构建前端
+pnpm install
+pnpm build          # 产物在 dist/
+
+# 2. 启动 API 服务（默认端口 8080，可用 PORT 覆盖，数据持久化目录可设 DB_PATH）
+DB_PATH=./data/site.db pnpm serve
+
+# 3. 用 nginx 托管 dist/ 并反代 /api/ → localhost:8080
+#    参考 docker/nginx.conf（将 proxy_pass http://api:8080 改为 http://localhost:8080）
+```
+
+### 方案二：Docker 部署（单 API 容器）
+
+```bash
+# 构建 API 镜像（含前端构建产物验证，但镜像本身只跑 API）
+pnpm build
+docker build -f docker/Dockerfile -t tku-api .
+
+# 运行（需先建 data 目录持久化配置）
+mkdir -p data
+docker run -d --name tku-api -p 8080:8080 \
+  -e DB_PATH=/tmp/site.db \
+  -v "$(pwd)/data:/tmp" \
+  tku-api
+```
+
+### 方案三：Docker Compose 部署（推荐，拉取已构建镜像）
+
+GitLab CI 打标签即推两镜像至私有 Nexus（`v4.nagioa.cn:35483`）：
+
+- `entropycrop/t-knit-utensil:latest` — API 服务
+- `entropycrop/t-knit-utensil-web:latest` — 前端 nginx（含 dist + `/api` 反代）
+
+`docker/docker-compose.yml` 编排两个容器， **无需本地构建**，直接拉取即用：
+
+```bash
+# 1. 登录私有 Nexus
+docker login v4.nagioa.cn:35483
+
+# 2. 启动（docker 目录下，首次自动拉 latest 镜像）
+cd docker
+mkdir -p data
+docker compose up -d
+
+# 3. 访问：http://localhost:8080
+```
+
+镜像版本默认 `latest`；如拉旧版本可将 compose 中 `:latest` 改为 `:vX.Y.Z` 标签（CI 会推完整 tag、主版本、主.次、主.次.修）。
+
+部署后配置入口在配置页（首页「系统管理」→「系统配置」`/admin/config`），默认密码 `admin`，登录后可修改站点信息、页脚、登录密码，保存即持久化到
+SQLite；无 token 时自动重定向到 `/login`。
+
 ## 配置与认证
 
-开发模式下提供配置管理 API：
+配置管理 API（生产与开发均可用）：
 
 | 端点          | 方法 | 说明                     |
 |---------------|------|--------------------------|
 | `/api/config` | GET  | 读取完整站点配置         |
 | `/api/config` | POST | 覆写配置                 |
 | `/api/auth`   | POST | 校验密码，返回认证 token |
+| `/api/health` | GET  | 健康检查                 |
 
-密码读取优先级：运行时 `site.db.json` → 默认 `site.config.json` → `"admin"`。
+配置存储：运行时数据存 `site.db`（better-sqlite3）。默认配置 `site.config.json` 仅作初始默认值。 密码读取优先级：运行时
+`site.db` → 默认 `site.config.json` → `"admin"`。
 
-访问 `/settings` 需先登录，无 token 时自动重定向到 `/login`。
+访问 `/admin/config` 需先登录，无 token 时自动重定向到 `/login`。
 
 ## 添加新工具
 
@@ -74,7 +136,7 @@ pnpm format:check  # 检查格式
 - [Tailwind CSS](https://tailwindcss.com/) — 实用优先的 CSS 框架
 - [Naive UI](https://www.naiveui.com/) — Vue 3 组件库
 - [JSZip](https://stuk.github.io/jszip/) — 浏览器端 ZIP 生成库
-- [node-json-db](https://github.com/Belphemur/node-json-db) — 轻量 JSON 数据库
+- [better-sqlite3](https://github.com/WiseLibs/better-sqlite3) — SQLite 驱动
 
 ## 许可证
 

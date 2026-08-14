@@ -1,0 +1,29 @@
+# TKU — Docker Compose 部署（拉镜像方案）
+#
+# 前置：镜像已由 GitLab CI 推送至私有 Nexus（v4.nagioa.cn:35483）
+#   - entropycrop/t-knit-utensil:latest      API 服务（Node + SQLite）
+#   - entropycrop/t-knit-utensil-web:latest  前端 nginx（含 dist + /api 反代）
+#
+# 用法（docker 目录下，需 docker login Nexus 后）：
+#   docker compose up -d
+# 访问：http://localhost:8080（nginx，前端 + /api 反代）
+# 配置持久化：api 容器挂载 ./data 卷，site.db 存于此（Dockerfile 默认 DB_PATH=/app/data/site.db）
+
+services:
+  api:
+    image: v4.nagioa.cn:35483/entropycrop/t-knit-utensil:latest
+    environment:
+      - PORT=8080
+      # 与 docker/Dockerfile 运行时一致：数据持久化卷
+      - DB_PATH=/app/data/site.db
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+
+  nginx:
+    image: v4.nagioa.cn:35483/entropycrop/t-knit-utensil-web:latest
+    ports:
+      - "8080:80"
+    depends_on:
+      - api
+    restart: unless-stopped

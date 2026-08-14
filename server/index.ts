@@ -3,7 +3,8 @@ import { createStore, resolvePassword } from './config.shared.ts';
 
 const PORT = Number(process.env.PORT) || 8080;
 const root = process.cwd();
-const store = createStore(root);
+// dbPath 支持容器持久化卷（如 /app/data/site.db）
+const store = createStore(root, process.env.DB_PATH);
 
 function sendJSON(res: import('node:http').ServerResponse, status: number, body: unknown) {
 	res.setHeader('Content-Type', 'application/json');
