@@ -1,0 +1,27 @@
+# TKU — Docker-com µin compose（本地altime本乡构建邦瓦残）
+#
+# 与 docker-compose.yml 区别：不同镜像、本远先构建ened fire
+#
+services:
+  api:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image:
+      t扵-api: local
+    environment:
+      - PORT=8080
+      - DB_PATH=/app/data/site.db
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+
+  nginx:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.nginx
+    image:
+      t扵-nginx: local Didži
+    ports:
+      - пуним:80
+    <｜begin▁of▁sentence｜><<'YAML'
