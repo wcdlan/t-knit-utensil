@@ -37,14 +37,14 @@ const router = createRouter({
 			component: () => import('@/views/Login.vue')
 		},
 		{
-			path: '/settings',
+			path: '/admin/config',
 			component: () => import('@/views/Settings.vue')
 		}
 	]
 });
 
 router.beforeEach((to) => {
-	if (to.path === '/settings') {
+	if (to.path === '/admin/config') {
 		const token = localStorage.getItem(TOKEN_KEY);
 		if (!token) return '/login';
 	}

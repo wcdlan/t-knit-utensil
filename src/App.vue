@@ -56,20 +56,17 @@
 				label: t.name,
 				key: '/tool/' + t.id
 			}))
-		})),
-		{ label: '设置', icon: renderMenuIcon(icons.cog), key: 'settings' }
+		}))
 	]);
 
 	const activeKey = computed(() => {
 		if (route.path === '/') return 'home';
-		if (route.path === '/settings') return 'settings';
 		if (route.path.startsWith('/tool/')) return route.path;
 		return 'home';
 	});
 
 	function handleMenuUpdate(key: string) {
 		if (key === 'home') router.push('/');
-		else if (key === 'settings') router.push('/settings');
 		else if (key.startsWith('/tool/')) router.push(key);
 	}
 </script>

@@ -5,22 +5,22 @@ import type { SiteConfig } from '@/types/site';
 export type { FooterConfig, AuthConfig, SiteConfig } from '@/types/site';
 
 export const siteConfig = reactive<SiteConfig>({ ...defaultConfig });
-export const isDev = import.meta.env.DEV;
-export const configLoaded = isDev ? false : true;
 
 export async function loadConfig() {
-	if (!isDev) return;
 	try {
 		const res = await fetch('/api/config');
 		const data = await res.json();
-		Object.assign(siteConfig, data);
+		// 深合并：保留默认值，运行时 db 缺字段时落默认，避免嵌套对象被整体替换清空
+		siteConfig.siteName = data.siteName ?? siteConfig.siteName;
+		siteConfig.siteDescription = data.siteDescription ?? siteConfig.siteDescription;
+		siteConfig.footer = { ...siteConfig.footer, ...data.footer };
+		siteConfig.auth = { ...siteConfig.auth, ...data.auth };
 	} catch {
 		// use default config
 	}
 }
 
 export async function saveConfig(): Promise<boolean> {
-	if (!isDev) return false;
 	try {
 		const res = await fetch('/api/config', {
 			method: 'POST',

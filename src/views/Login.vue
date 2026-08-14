@@ -19,7 +19,7 @@
 		const ok = await login(password.value);
 		loading.value = false;
 		if (ok) {
-			router.replace('/settings');
+			router.replace('/admin/config');
 		} else {
 			error.value = '密码错误';
 			password.value = '';
