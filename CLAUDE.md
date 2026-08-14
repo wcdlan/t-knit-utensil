@@ -161,7 +161,7 @@ src/
 
 - 系统中不要在目录名称中出现多个单词组成的文件夹名称，尽可能的使用单个单词作为文件夹名称
 - 系统中使用 pnpm 而不是 npm
-- 新增的文件，及时添加到 git 中
+- 新增的文件，及时添加到 git 中，add即可，不用commit
 - 使用 naive-ui 中的组件 + tailwindcss 进行样式设计，确保一致性和可维护性
 - 所有 interface / type 定义放到 `src/types/` 下按领域分文件管理，禁止在组件或工具文件中内联定义
 - 原有的导出文件（如 `src/data/tools.ts`）通过 `export type { ... } from '@/types/...'` 重导出以保持向后兼容
