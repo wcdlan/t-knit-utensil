@@ -27,10 +27,11 @@
 	"packageManager": "pnpm@10.26.1",
 	"devDependencies": {
 		"@tailwindcss/vite": "^4.3.3",
+		"@types/better-sqlite3": "^9.6.0",
 		"@types/node": "^24.13.3",
 		"@vitejs/plugin-vue": "^6.0.8",
 		"@vue/tsconfig": "^0.9.1",
-		"node-json-db": "^2.6.0",
+		"better-sqlite3": "^13.0.3",
 		"prettier": "^3.9.6",
 		"tailwindcss": "^4.3.3",
 		"typescript": "~6.0.2",

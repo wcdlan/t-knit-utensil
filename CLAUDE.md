@@ -144,17 +144,18 @@ src/
 ### 配置与数据库系统（仅开发模式）
 
 - `site.config.json` — 人类可读的默认配置（纳入版本控制）
-- `site.db.json` — node-json-db 管理的运行时数据库（已 gitignore）
+- `site.db` — better-sqlite3 管理的运行时数据库（已 gitignore），单表 `config(id=1, value)` 存整个配置 JSON
+- `server/config.shared.ts` — 存储层（`createStore`/`resolvePassword`），被 `server/index.ts`（生产 API）与 `vite-plugin-config.ts`（dev 中间件）共享
 - `vite-plugin-config.ts` — Vite 插件，提供以下 API 端点：
 
 | 端点          | 方法 | 说明                                                                                           |
 |---------------|------|------------------------------------------------------------------------------------------------|
-| `/api/config` | GET  | 从 node-json-db 读取完整配置                                                                   |
-| `/api/config` | POST | 覆写配置，保存到 site.db.json                                                                  |
+| `/api/config` | GET  | 从 site.db 读取完整配置                                                                       |
+| `/api/config` | POST | 覆写配置，保存到 site.db                                                                      |
 | `/api/auth`   | POST | 校验密码，返回 token                                                                           |
 | `/api/proxy`  | POST | 服务端转发外部 HTTP 请求以绕过 CORS。Body: `{url, method, headers, body}`。由 AiApiTester 使用 |
 
-密码读取优先级：运行时 `site.db.json` → 默认 `site.config.json` → `"admin"`。
+密码读取优先级：运行时 `site.db` → 默认 `site.config.json` → `"admin"`。
 
 ### 编码规范
 
@@ -178,7 +179,8 @@ src/
 
 ### CI/CD 与 DevOps
 
-- **Dockerfile**：多阶段构建（node:24-alpine 构建 → nginx:stable-alpine 运行），端口 80，含 healthcheck
-- **nginx.conf**：SPA 回退（`try_files ... /index.html`），gzip 开启，`/assets/` 静态资源 1 年缓存
+- **部署文件**：集中在 `docker/`（`Dockerfile`、`nginx.conf`）。CI 用 `docker build -f docker/Dockerfile .`（build context 为仓库根）
+- **Dockerfile**：多阶段构建（node:24-alpine 构建 → node:24-alpine 运行时，只跑 `server/index.ts` API，端口 8080；nginx 由外部 compose 编排）
+- **nginx.conf**：compose 编排参考模板。SPA 回退（`try_files ... /index.html`），gzip 开启，`/api/` 反代到 API 服务（`proxy_pass http://api:8080`）
 - **GitLab CI**（`.gitlab-ci.yml`）：仅 Git Tag 触发，构建 dist 压缩包 + 多标签 Docker 镜像推送至私有 Nexus 仓库
 - 项目目前 **没有配置任何测试框架**

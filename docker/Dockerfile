@@ -3,8 +3,11 @@ FROM node:24-alpine AS builder
 
 RUN corepack enable && corepack prepare pnpm@10.26.1 --activate
 
+# better-sqlite3 原生模块编译兜底（musl prebuilt 缺失时）
+RUN apk add --no-cache python3 make g++
+
 WORKDIR /app
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN pnpm install --frozen-lockfile
 
 COPY . .

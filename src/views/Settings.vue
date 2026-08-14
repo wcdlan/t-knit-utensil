@@ -119,7 +119,7 @@
 		</div>
 
 		<div class="mt-6 p-4 bg-slate-50 rounded-xl border border-slate-100 text-xs text-slate-500 leading-relaxed">
-			运行时数据文件：<code class="bg-slate-100 px-1 rounded">site.db.json</code>（node-json-db 管理）。
+			运行时数据文件：<code class="bg-slate-100 px-1 rounded">site.db</code>（better-sqlite3 管理）。
 			默认配置文件：<code class="bg-slate-100 px-1 rounded">site.config.json</code>（仅作初始默认值）。
 		</div>
 	</div>

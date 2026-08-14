@@ -1,9 +1,9 @@
 import { createServer } from 'node:http';
-import { createDB, resolvePassword } from './config.shared.ts';
+import { createStore, resolvePassword } from './config.shared.ts';
 
 const PORT = Number(process.env.PORT) || 8080;
 const root = process.cwd();
-const db = createDB(root);
+const store = createStore(root);
 
 function sendJSON(res: import('node:http').ServerResponse, status: number, body: unknown) {
 	res.setHeader('Content-Type', 'application/json');
@@ -27,7 +27,7 @@ const server = createServer(async (req, res) => {
 	if (url === '/api/auth' && req.method === 'POST') {
 		try {
 			const { password } = JSON.parse(await readBody(req));
-			if (password === (await resolvePassword(db, root))) {
+			if (password === resolvePassword(store, root)) {
 				sendJSON(res, 200, { ok: true, token: 'tku-' + Date.now().toString(36) });
 			} else {
 				sendJSON(res, 401, { ok: false, error: '密码错误' });
@@ -38,27 +38,17 @@ const server = createServer(async (req, res) => {
 		return;
 	}
 
-	// GET /api/config — 读运行时配置（site.db.json）
+	// GET /api/config — 读运行时配置（site.db）
 	if (url === '/api/config' && req.method === 'GET') {
-		try {
-			sendJSON(res, 200, await db.getData('/'));
-		} catch {
-			sendJSON(res, 200, {});
-		}
+		sendJSON(res, 200, store.getConfig());
 		return;
 	}
 
-	// POST /api/config — 覆写配置并保存（幂等 reset）
+	// POST /api/config — 覆写配置并保存（幂等覆盖）
 	if (url === '/api/config' && req.method === 'POST') {
 		try {
 			const data = JSON.parse(await readBody(req));
-			try {
-				await db.getData('/');
-			} catch {
-				/* ensure loaded */
-			}
-			db.resetData(data);
-			await db.save();
+			store.setConfig(data);
 			sendJSON(res, 200, { ok: true });
 		} catch (e) {
 			sendJSON(res, 400, { ok: false, error: String(e) });
@@ -97,7 +87,7 @@ const server = createServer(async (req, res) => {
 		return;
 	}
 
-	// 其余路径 / 方法统一 404（未匹配）
+	// 其余路径 / 方法统一 404
 	sendJSON(res, 404, { ok: false, error: 'Not found' });
 });
 

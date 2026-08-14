@@ -1,11 +1,38 @@
 import path from 'node:path';
 import fs from 'node:fs';
-import { Config, JsonDB } from 'node-json-db';
+import Database from 'better-sqlite3';
 
-export type { JsonDB };
+export interface Store {
+	getConfig(): object;
+	setConfig(data: unknown): void;
+	close(): void;
+}
 
-export function createDB(root: string) {
-	return new JsonDB(new Config(path.resolve(root, 'site.db.json'), true, true, '/'));
+/**
+ * 运行时配置存储：SQLite 单行 JSON（config 表 id=1 存整个配置 JSON 字符串）。
+ * 语义对齐原 node-json-db：GET 全量读、POST 全量覆写。
+ */
+export function createStore(root: string): Store {
+	const db = new Database(path.resolve(root, 'site.db'));
+	db.exec(
+		'CREATE TABLE IF NOT EXISTS config (id INTEGER PRIMARY KEY CHECK (id = 1), value TEXT NOT NULL)'
+	);
+	return {
+		getConfig(): object {
+			const row = db
+				.prepare('SELECT value FROM config WHERE id = 1')
+				.get() as { value: string } | undefined;
+			return row ? JSON.parse(row.value) : {};
+		},
+		setConfig(data: unknown): void {
+			db.prepare(
+				'INSERT INTO config (id, value) VALUES (1, ?) ON CONFLICT(id) DO UPDATE SET value = excluded.value'
+			).run(JSON.stringify(data));
+		},
+		close(): void {
+			db.close();
+		}
+	};
 }
 
 export function readDefaultConfig(root: string) {
@@ -17,14 +44,13 @@ export function readDefaultConfig(root: string) {
 }
 
 /**
- * 解析密码，与 vite-plugin-config.ts 保持一致：
- * 运行时 site.db.json → 默认 site.config.json → "admin"
+ * 密码解析，与既有优先级一致：运行时 site.db → 默认 site.config.json → "admin"
  */
-export async function resolvePassword(db: JsonDB, root: string): Promise<string> {
-	try {
-		const data = (await db.getData('/auth/password')) as unknown;
-		return String(data);
-	} catch {
-		return (readDefaultConfig(root) as { auth?: { password?: string } })?.auth?.password || 'admin';
-	}
+export function resolvePassword(store: Store, root: string): string {
+	const runtime = store.getConfig() as { auth?: { password?: string } };
+	return (
+		runtime.auth?.password ||
+		(readDefaultConfig(root) as { auth?: { password?: string } })?.auth?.password ||
+		'admin'
+	);
 }

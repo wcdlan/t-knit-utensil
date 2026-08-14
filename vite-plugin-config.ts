@@ -1,19 +1,19 @@
 import crypto from 'node:crypto';
 import type { Plugin } from 'vite';
-import { createDB, resolvePassword } from './server/config.shared.ts';
-import type { JsonDB } from './server/config.shared.ts';
+import { createStore, resolvePassword } from './server/config.shared.ts';
+import type { Store } from './server/config.shared.ts';
 
 const validTokens = new Set<string>();
 
 export function configPlugin(): Plugin {
-	let db: JsonDB;
+	let store: Store;
 	let root = process.cwd();
 
 	return {
 		name: 'vite-plugin-config',
 		configResolved(config) {
 			root = config.root;
-			db = createDB(root);
+			store = createStore(root);
 		},
 		configureServer(server) {
 			// Config API
@@ -21,25 +21,14 @@ export function configPlugin(): Plugin {
 				res.setHeader('Content-Type', 'application/json');
 
 				if (req.method === 'GET') {
-					try {
-						const data = await db.getData('/');
-						res.end(JSON.stringify(data));
-					} catch {
-						res.end(JSON.stringify({}));
-					}
+					res.end(JSON.stringify(store.getConfig()));
 				} else if (req.method === 'POST') {
 					let body = '';
 					req.on('data', (chunk) => (body += chunk));
-					req.on('end', async () => {
+					req.on('end', () => {
 						try {
 							const data = JSON.parse(body);
-							try {
-								await db.getData('/');
-							} catch {
-								/* ensure loaded */
-							}
-							db.resetData(data);
-							await db.save();
+							store.setConfig(data);
 							res.end(JSON.stringify({ ok: true }));
 						} catch (e) {
 							res.statusCode = 400;
@@ -105,11 +94,11 @@ export function configPlugin(): Plugin {
 
 				let body = '';
 				req.on('data', (chunk) => (body += chunk));
-				req.on('end', async () => {
+				req.on('end', () => {
 					try {
 						const { password } = JSON.parse(body);
 
-						const expected = await resolvePassword(db, root);
+						const expected = resolvePassword(store, root);
 
 						if (password === expected) {
 							const token = crypto.randomBytes(32).toString('hex');
