@@ -65,21 +65,33 @@ DB_PATH=./data/site.db pnpm serve
 #    参考 docker/nginx.conf（将 proxy_pass http://api:8080 改为 http://localhost:8080）
 ```
 
-### 方案二：Docker 单独部署 API 服务（不含前端）
+### 方案二：Docker 手工部署（API + 前端两个容器）
 
-仅启动 API 容器（`/api/*` JSON 接口），前端站点需另行托管到你的 nginx 并反代 `/api/` 到本容器。完整开箱即用请看方案三。
+先构建两个镜像，再手动启动（等价于方案三 compose 的手工版）。
 
 ```bash
-# 构建 API 镜像（仅 API，不含 dist 前端页面）
-docker build -f docker/Dockerfile -t tku-api .
+# 1. 构建 API + 前端两个镜像（前端 nginx 镜像会在 builder 阶段自动 pnpm build）
 
-# 运行（挂 data 目录持久化数据库）
+docker build -f docker/Dockerfile -t tku-api .
+docker build -f docker/Dockerfile.nginx -t tku-web .
+
+# 2. 建网络 + 数据目录，启动 API 容器（挂 data 卷持久化）
+docker network create tku-net
 mkdir -p data
-docker run -d --name tku-api -p 8080:8080 \
+docker run -d --name api --network tku-net \
   -e DB_PATH=/app/data/site.db \
   -v "$(pwd)/data:/app/data" \
   tku-api
+
+# 3. 启动前端 nginx 容器，映射 8080 并反代同网段 api
+docker run -d --name tku-web --network tku-net \
+  -p 8080:80 \
+  tku-web
+
+# 4. 访问：http://localhost:8080（nginx 内置 nginx.conf 反向代理 /api/ → http://api:8080）
 ```
+
+> API 容器必须命名为 `api` 且与 nginx 同网络，`nginx.conf` 内置反代目标 `http://api:8080` 才能解析。
 
 ### 方案三：Docker Compose 部署（推荐，拉取已构建镜像）
 
