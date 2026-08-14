@@ -57,25 +57,27 @@ pnpm format:check  # 检查格式
 pnpm install
 pnpm build          # 产物在 dist/
 
-# 2. 启动 API 服务（默认端口 8080，可用 PORT 覆盖，数据持久化目录可设 DB_PATH）
+# 2. 启动 API 服务（默认端口 8080，可用 PORT 覆盖，DB_PATH 指定运行时数据库路径）
+mkdir -p data       # 数据目录（server 也会自动创建，手动建是惯例）
 DB_PATH=./data/site.db pnpm serve
 
 # 3. 用 nginx 托管 dist/ 并反代 /api/ → localhost:8080
 #    参考 docker/nginx.conf（将 proxy_pass http://api:8080 改为 http://localhost:8080）
 ```
 
-### 方案二：Docker 部署（单 API 容器）
+### 方案二：Docker 单独部署 API 服务（不含前端）
+
+仅启动 API 容器（`/api/*` JSON 接口），前端站点需另行托管到你的 nginx 并反代 `/api/` 到本容器。完整开箱即用请看方案三。
 
 ```bash
-# 构建 API 镜像（含前端构建产物验证，但镜像本身只跑 API）
-pnpm build
+# 构建 API 镜像（仅 API，不含 dist 前端页面）
 docker build -f docker/Dockerfile -t tku-api .
 
-# 运行（需先建 data 目录持久化配置）
+# 运行（挂 data 目录持久化数据库）
 mkdir -p data
 docker run -d --name tku-api -p 8080:8080 \
-  -e DB_PATH=/tmp/site.db \
-  -v "$(pwd)/data:/tmp" \
+  -e DB_PATH=/app/data/site.db \
+  -v "$(pwd)/data:/app/data" \
   tku-api
 ```
 
@@ -89,10 +91,10 @@ GitLab CI 打标签即推两镜像至私有 Nexus（`v4.nagioa.cn:35483`）：
 `docker/docker-compose.yml` 编排两个容器， **无需本地构建**，直接拉取即用：
 
 ```bash
-# 1. 登录私有 Nexus
+# 1. 登录私有 Nexus 拉取镜像（私有仓需凭据；不打算发布到 Git/Docker Hub）
 docker login v4.nagioa.cn:35483
 
-# 2. 启动（docker 目录下，首次自动拉 latest 镜像）
+# 2. 启动（docker 目录，首次自动拉 latest 镜像）
 cd docker
 mkdir -p data
 docker compose up -d

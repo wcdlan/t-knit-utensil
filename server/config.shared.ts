@@ -13,7 +13,10 @@ export interface Store {
  * 语义对齐原 node-json-db：GET 全量读、POST 全量覆写。
  */
 export function createStore(root: string, dbPath?: string): Store {
-	const db = new Database(dbPath ? path.resolve(root, dbPath) : path.resolve(root, 'site.db'));
+	const dbFile = dbPath ? path.resolve(root, dbPath) : path.resolve(root, 'site.db');
+	// better-sqlite3 不自动建目录；DB_PATH 指向无目录时先建，避免 SQLITE_CANTOPEN
+	fs.mkdirSync(path.dirname(dbFile), { recursive: true });
+	const db = new Database(dbFile);
 	db.exec('CREATE TABLE IF NOT EXISTS config (id INTEGER PRIMARY KEY CHECK (id = 1), value TEXT NOT NULL)');
 	return {
 		getConfig(): object {
