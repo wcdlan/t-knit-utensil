@@ -15,15 +15,16 @@ ENV VITE_APP_VERSION=$VITE_APP_VERSION
 
 RUN pnpm build
 
-# ---- Serve Stage ----
-FROM nginx:stable-alpine
+# ---- Runtime: TKU API server ----
+# nginx 由外部 compose 编排（反代 /api/* → 本服务），本镜像只跑 Node API
+FROM node:24-alpine AS runtime
 
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=builder /app/dist /usr/share/nginx/html
+WORKDIR /app
+COPY --from=builder /app/package.json ./
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/server ./server
+COPY --from=builder /app/site.config.json ./site.config.json
 
-EXPOSE 80
+EXPOSE 8080
 
-HEALTHCHECK --interval=30s --timeout=3s --retries=3 \
-  CMD wget -qO- http://localhost:80/ || exit 1
-
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["node", "server/index.ts"]

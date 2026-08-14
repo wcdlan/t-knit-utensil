@@ -1,20 +1,7 @@
-import path from 'node:path';
-import fs from 'node:fs';
 import crypto from 'node:crypto';
-import { Config, JsonDB } from 'node-json-db';
 import type { Plugin } from 'vite';
-
-function createDB(root: string) {
-	return new JsonDB(new Config(path.resolve(root, 'site.db.json'), true, true, '/'));
-}
-
-function readDefaultConfig(root: string) {
-	try {
-		return JSON.parse(fs.readFileSync(path.resolve(root, 'site.config.json'), 'utf-8'));
-	} catch {
-		return {};
-	}
-}
+import { createDB, resolvePassword } from './server/config.shared.ts';
+import type { JsonDB } from './server/config.shared.ts';
 
 const validTokens = new Set<string>();
 
@@ -122,14 +109,7 @@ export function configPlugin(): Plugin {
 					try {
 						const { password } = JSON.parse(body);
 
-						// Get password: runtime db first, fallback to default config
-						let expected = '';
-						try {
-							const data = await db.getData('/auth/password');
-							expected = data;
-						} catch {
-							expected = readDefaultConfig(root)?.auth?.password || 'admin';
-						}
+						const expected = await resolvePassword(db, root);
 
 						if (password === expected) {
 							const token = crypto.randomBytes(32).toString('hex');
