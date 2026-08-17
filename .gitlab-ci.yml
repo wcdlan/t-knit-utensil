@@ -1,29 +1,18 @@
 # ============================================================
 # GitLab CI/CD — t-knit-utensil
 # ============================================================
-# 触发：仅推送 Git Tag（如 v1.0.0）
-# Runner：linux_docker（docker executor + shell executor 均可）
-# ============================================================
-
 default:
   image: node:24-alpine
 
 stages:
   - build
-  - package
-  - deploy
+  - build-docker
 
 variables:
-  TARBALL_NAME: tku-${CI_COMMIT_TAG}.tar.gz
-  NPM_REGISTRY: https://registry.npmmirror.com
+  TARBALL_NAME: tku-${CI_COMMIT_TAG}.tgz
   NEXUS: v4.nagioa.cn:35483
   IMAGE_NAME: entropycrop/t-knit-utensil
   IMAGE_NAME_WEB: entropycrop/t-knit-utensil-web
-  DEPLOY_PATH: /home/safeline/resources/nginx/static/static_23
-  SSH_HOST: 192.168.31.1
-  SSH_PORT: 22
-  SSH_USER: root
-  SSH_PASSWORD: 123456
 
 workflow:
   rules:
@@ -34,37 +23,10 @@ workflow:
 # ============================================================
 # Job 1: 构建 & 打包
 # ============================================================
-# 权限说明：
-#   shell executor 以 gitlab-runner 用户运行，而 nvm/Node 装在
-#   /home/ubuntu/.nvm，属主为 ubuntu。npm 默认 prefix 指向该目录，
-#   任何全局安装（corepack enable / npm install -g）均 EACCES。
-#   解决：重设 npm prefix 到 gitlab-runner 家目录 ~/npm-global，
-#   全局包写入该路径，无需 root，不影响 ubuntu 的 nvm。
-#   Docker executor 下容器以 root 运行无此问题，prefix 重设同样安全。
-# ============================================================
 build:
   tags:
     - linux_docker
   stage: build
-
-  cache:
-    key:
-      files:
-        - pnpm-lock.yaml
-    paths:
-      - .pnpm-store
-
-  before_script:
-    # npm prefix 指向 gitlab-runner 可写目录，避开 nvm 权限问题
-    - npm config set prefix ~/npm-global
-    # npm 使用国内镜像源，加速 pnpm 安装
-    - npm config set registry ${NPM_REGISTRY}
-    - npm install -g pnpm
-    - export PATH="$HOME/npm-global/bin:$PATH"
-    # pnpm 使用国内镜像源
-    - pnpm config set registry ${NPM_REGISTRY}
-    # pnpm store 指向项目目录，避免全局 store 权限不确定性
-    - pnpm config set store-dir .pnpm-store
 
   script:
     - pnpm install --frozen-lockfile
@@ -74,34 +36,17 @@ build:
     - cd dist && tar czf ../${TARBALL_NAME} .
 
   artifacts:
-    name: ${TARBALL_NAME%.tar.gz}
+    name: ${TARBALL_NAME%.tgz}
     paths:
       - ${TARBALL_NAME}
 
 # ============================================================
 # Job 2: Docker 镜像构建 & 推送
 # ============================================================
-# 权限说明：
-#   docker:dind 以 TLS 通信，需显式声明 DOCKER_TLS_CERTDIR
-#   避免 "Cannot connect to Docker daemon" 权限错误。
-#   until docker info 等待 dind 就绪，防止竞态失败。
-#
-#   如需 shell executor 直接调用宿主机 Docker：
-#   1. 确保 gitlab-runner 用户在 docker 组：usermod -aG docker gitlab-runner
-#   2. 去掉 services 和 variables 中的 TLS 配置
-#   3. 去掉 until docker info 等待循环
-#
-# 标签策略（v1.2.3 示例）：
-#   latest  → 最新版本
-#   v1.2.3  → 完整 Git Tag
-#   1       → 主版本号
-#   1.2     → 主版本 + 次版本
-#   1.2.3   → 完整语义化版本
-# ============================================================
 docker:
   tags:
     - linux_docker
-  stage: package
+  stage: build-docker
   image: docker:stable
   services:
     - docker:dind
@@ -111,8 +56,6 @@ docker:
     DOCKER_TLS_CERTDIR: '/certs'
 
   before_script:
-    # 等待 docker:dind 就绪
-    - until docker info &>/dev/null; do echo "等待 Docker daemon..."; sleep 1; done
     # 安全登录 Nexus（密码走 stdin，不出现在进程列表）
     - echo "$NEXUS_PASSWORD" | docker login "$NEXUS" -u "$NEXUS_USER" --password-stdin
 
@@ -158,80 +101,3 @@ docker:
       done
 
       echo ">>> 完成"
-
-# ============================================================
-# Job 3: 部署到远程服务器
-# ============================================================
-deploy:
-  tags:
-    - linux_docker
-  stage: deploy
-  image: alpine:latest
-
-  before_script:
-    # shell executor 忽略 image，直接跑在宿主机上
-    # 确保 sshpass 可用（Alpine → apk，Debian/Ubuntu → apt）
-    - |
-      if command -v sshpass &>/dev/null; then
-        echo ">>> sshpass 已安装"
-      elif command -v apk &>/dev/null; then
-        apk add --no-cache openssh-client sshpass
-      else
-        apt-get update -qq && apt-get install -y -qq sshpass
-      fi
-    - mkdir -p ~/.ssh
-    - |
-      if [ -n "$SSH_PRIVATE_KEY" ]; then
-        echo ">>> 使用私钥认证 ..."
-        echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        cat > ~/.ssh/config << SSH_CONFIG
-      Host tku-server
-        HostName ${SSH_HOST}
-        User ${SSH_USER}
-        Port ${SSH_PORT:-22}
-        IdentityFile ~/.ssh/id_rsa
-        StrictHostKeyChecking no
-        UserKnownHostsFile /dev/null
-      SSH_CONFIG
-      else
-        echo ">>> 使用密码认证 ..."
-        cat > ~/.ssh/config << SSH_CONFIG
-      Host tku-server
-        HostName ${SSH_HOST}
-        User ${SSH_USER}
-        Port ${SSH_PORT:-22}
-        StrictHostKeyChecking no
-        UserKnownHostsFile /dev/null
-      SSH_CONFIG
-      fi
-
-  script:
-    - |
-      SSH_CMD="ssh tku-server"
-      SCP_CMD="scp"
-      if [ -z "$SSH_PRIVATE_KEY" ]; then
-        SSH_CMD="sshpass -p $SSH_PASSWORD ssh tku-server"
-        SCP_CMD="sshpass -p $SSH_PASSWORD scp"
-      fi
-
-      echo ">>> 清理远程部署目录 ${DEPLOY_PATH} ..."
-      $SSH_CMD "rm -rf ${DEPLOY_PATH}/*"
-
-      echo ">>> 上传构建产物 ${TARBALL_NAME} ..."
-      $SCP_CMD ${TARBALL_NAME} tku-server:${DEPLOY_PATH}/
-
-      echo ">>> 解压并清理 ..."
-      $SSH_CMD "
-        cd ${DEPLOY_PATH} && \
-        tar xzf ${TARBALL_NAME} && \
-        rm ${TARBALL_NAME}
-      "
-
-      echo ">>> 部署完成"
-
-  needs:
-    - build
-
-  only:
-    - tags
