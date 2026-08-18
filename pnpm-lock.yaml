@@ -11,6 +11,9 @@ importers:
       '@iconify/vue':
         specifier: ^5.0.1
         version: 5.0.1(vue@3.5.41(typescript@6.0.3))
+      better-sqlite3:
+        specifier: ^13.0.3
+        version: 13.0.3
       iconv-lite:
         specifier: ^0.7.3
         version: 0.7.3
@@ -48,9 +51,6 @@ importers:
       '@vue/tsconfig':
         specifier: ^0.9.1
         version: 0.9.1(typescript@6.0.3)(vue@3.5.41(typescript@6.0.3))
-      better-sqlite3:
-        specifier: ^13.0.3
-        version: 13.0.3
       prettier:
         specifier: ^3.9.6
         version: 3.9.6

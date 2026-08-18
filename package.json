@@ -13,6 +13,7 @@
 	},
 	"dependencies": {
 		"@iconify/vue": "^5.0.1",
+		"better-sqlite3": "^13.0.3",
 		"iconv-lite": "^0.7.3",
 		"jszip": "^3.10.1",
 		"naive-ui": "^2.44.1",
@@ -31,7 +32,6 @@
 		"@types/node": "^24.13.3",
 		"@vitejs/plugin-vue": "^6.0.8",
 		"@vue/tsconfig": "^0.9.1",
-		"better-sqlite3": "^13.0.3",
 		"prettier": "^3.9.6",
 		"tailwindcss": "^4.3.3",
 		"typescript": "~6.0.2",
