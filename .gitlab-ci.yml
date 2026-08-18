@@ -139,7 +139,10 @@ deploy:
   needs:
     - docker
   before_script:
+    - set -x
     - sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
+    - cat /etc/apk/repositories
+    - wget -qO- http://mirrors.tuna.tsinghua.edu.cn || echo "NETWORK UNREACHABLE"
     - apk add --no-cache openssh-client
     - mkdir -p ~/.ssh
     - cp "$SSH_PRIVATE_KEY" ~/.ssh/id_rsa
