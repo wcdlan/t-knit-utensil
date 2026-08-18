@@ -1,6 +1,8 @@
 # ---- Build Stage: 前端构建 ----
 FROM node:24-alpine AS builder
 
+ENV NPM_CONFIG_REGISTRY=https://registry.npmmirror.com
+
 RUN corepack enable && corepack prepare pnpm@10.26.1 --activate
 
 WORKDIR /app
