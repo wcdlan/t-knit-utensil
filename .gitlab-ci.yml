@@ -139,8 +139,6 @@ deploy:
   needs:
     - docker
   before_script:
-    - sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
-    - apk update
     - apk add --no-cache openssh-client
     - mkdir -p ~/.ssh
     - cp "$SSH_PRIVATE_KEY" ~/.ssh/id_rsa
