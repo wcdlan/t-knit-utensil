@@ -12,6 +12,8 @@ variables:
   NEXUS: v4.nagioa.cn:35483
   IMAGE_NAME: entropycrop/t-knit-utensil
   IMAGE_NAME_WEB: entropycrop/t-knit-utensil-web
+  NODEJS_ORG_MIRROR: "https://registry.npmmirror.com/dist"
+  NPM_CONFIG_REGISTRY: "https://registry.npmmirror.com"
 
 workflow:
   rules:
@@ -28,13 +30,17 @@ build:
     - docker
   stage: build
 
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - .pnpm-store
+      - node_modules
+
   before_script:
     - apk add --no-cache python3 make g++
     - corepack enable && corepack prepare pnpm@10.26.1 --activate
-    - npm config set registry https://registry.npmmirror.com
-    - npm config set disturl https://registry.npmmirror.com/dist
-    - pnpm config set registry https://registry.npmmirror.com
-    - pnpm config set disturl https://registry.npmmirror.com/dist
+    - pnpm config set store-dir .pnpm-store
+    - pnpm config set registry $NPM_CONFIG_REGISTRY
 
   script:
     - pnpm install --frozen-lockfile
