@@ -143,7 +143,7 @@ deploy:
     - apk update
     - apk add --no-cache openssh-client
     - mkdir -p ~/.ssh
-    - printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+    - cp "$SSH_PRIVATE_KEY" ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
     - ssh-keyscan -p "$DEPLOY_PORT" -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts
   script:
