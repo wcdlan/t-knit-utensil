@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 	import { computed, ref } from 'vue';
-	import { NEmpty, NInput } from 'naive-ui';
+	import { NEmpty, NInput, NTooltip } from 'naive-ui';
 	import { toolGroups } from '@/data/tools';
 	import { icons } from '@/data/icons';
+	import { siteConfig } from '@/data/siteConfig';
 	import TkuIcon from '@/components/common/TkuIcon.vue';
 
 	const query = ref('');
@@ -37,6 +38,23 @@
 			<div class="pointer-events-none absolute inset-0">
 				<div class="absolute -top-24 -right-20 h-72 w-72 rounded-full bg-blue-400/15 blur-3xl"></div>
 				<div class="absolute -bottom-28 -left-24 h-80 w-80 rounded-full bg-blue-500/10 blur-3xl"></div>
+			</div>
+
+			<!-- Quick links -->
+			<div v-if="siteConfig.quickLinks.length" class="absolute right-4 top-4 z-10 flex items-center gap-1.5">
+				<n-tooltip v-for="link in siteConfig.quickLinks" :key="link.url">
+					<template #trigger>
+						<a
+							:href="link.url"
+							class="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200/80 bg-white/80 text-slate-500 shadow-sm backdrop-blur transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-300 hover:text-blue-500"
+							:rel="link.newTab ? 'noopener noreferrer' : undefined"
+							:target="link.newTab ? '_blank' : '_self'"
+						>
+							<TkuIcon :name="link.icon" :size="18" />
+						</a>
+					</template>
+					{{ link.name || link.url }}
+				</n-tooltip>
 			</div>
 
 			<div class="relative flex flex-col items-center text-center">

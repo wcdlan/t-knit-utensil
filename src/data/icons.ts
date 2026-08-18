@@ -45,7 +45,33 @@ export const icons = {
 	close: 'mdi:close',
 	package: 'mdi:package-variant-closed',
 	lightbulb: 'mdi:lightbulb-on-outline',
-	textFormat: 'mdi:format-text'
+	textFormat: 'mdi:format-text',
+	// 快捷连接
+	gitHub: 'mdi:github',
+	gitlab: 'mdi:gitlab',
+	sourceBranch: 'mdi:source-branch',
+	telegram: 'mdi:telegram',
+	email: 'mdi:email-outline',
+	rss: 'mdi:rss',
+	notebook: 'mdi:notebook-outline',
+	plus: 'mdi:plus'
 } as const;
 
 export type IconKey = keyof typeof icons;
+
+export interface QuickLinkIconOption {
+	label: string;
+	value: string;
+}
+
+export const QUICK_LINK_ICONS: QuickLinkIconOption[] = [
+	{ label: 'GitHub', value: icons.gitHub },
+	{ label: 'GitLab', value: icons.gitlab },
+	{ label: '代码仓库', value: icons.sourceBranch },
+	{ label: 'Telegram', value: icons.telegram },
+	{ label: '邮箱', value: icons.email },
+	{ label: 'RSS', value: icons.rss },
+	{ label: '网页', value: icons.web },
+	{ label: '博客', value: icons.notebook },
+	{ label: '通用链接', value: icons.link }
+];

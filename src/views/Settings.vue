@@ -1,15 +1,36 @@
 <script lang="ts" setup>
 	import { ref } from 'vue';
 	import { useRouter } from 'vue-router';
-	import { NAlert, NButton, NCard, NInput } from 'naive-ui';
+	import { NAlert, NButton, NCard, NInput, NPopover, NSwitch, NTooltip } from 'naive-ui';
 	import { saveConfig, siteConfig } from '@/data/siteConfig';
 	import { useAuth } from '@/data/auth';
+	import { QUICK_LINK_ICONS, icons } from '@/data/icons';
+	import TkuIcon from '@/components/common/TkuIcon.vue';
+	import type { QuickLink } from '@/types/site';
 
 	const router = useRouter();
 	const { logout } = useAuth();
 
 	const saved = ref(false);
 	const error = ref('');
+	const linkPopoverVisible = ref(false);
+
+	function addQuickLink() {
+		siteConfig.quickLinks.push({ icon: QUICK_LINK_ICONS[0].value, name: '', url: '', newTab: true });
+	}
+
+	function removeQuickLink(index: number) {
+		siteConfig.quickLinks.splice(index, 1);
+	}
+
+	function toggleLinkPopover() {
+		linkPopoverVisible.value = !linkPopoverVisible.value;
+	}
+
+	function selectIcon(link: QuickLink, value: string) {
+		link.icon = value;
+		linkPopoverVisible.value = false;
+	}
 
 	async function handleSave() {
 		error.value = '';
@@ -87,6 +108,62 @@
 						<label class="block text-xs font-semibold text-slate-500 mb-1">底部声明文字</label>
 						<n-input v-model:value="siteConfig.footer.poweredBy" placeholder="站点底部附加声明" />
 					</div>
+				</div>
+			</n-card>
+
+			<!-- 快捷连接 -->
+			<n-card size="small" title="快捷连接">
+				<div class="space-y-3">
+					<div
+						v-for="(link, index) in siteConfig.quickLinks"
+						:key="index"
+						class="flex items-center gap-2 rounded-lg border border-slate-200/80 bg-white px-3 py-2"
+					>
+						<n-popover v-model:show="linkPopoverVisible" placement="bottom-start" trigger="click">
+							<template #trigger>
+								<button
+									type="button"
+									class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition-colors hover:border-blue-300 hover:text-blue-500"
+									@click="toggleLinkPopover"
+								>
+									<TkuIcon :name="link.icon" :size="18" />
+								</button>
+							</template>
+							<div class="grid w-[228px] grid-cols-6 gap-1">
+								<button
+									v-for="opt in QUICK_LINK_ICONS"
+									:key="opt.value"
+									:title="opt.label"
+									type="button"
+									class="flex h-9 w-9 items-center justify-center rounded-md text-slate-600 transition-colors hover:bg-blue-50 hover:text-blue-600"
+									@click="selectIcon(link, opt.value)"
+								>
+									<TkuIcon :name="opt.value" :size="20" />
+								</button>
+							</div>
+						</n-popover>
+						<div class="w-32 shrink-0"><n-input v-model:value="link.name" placeholder="名称（提示）" size="small" /></div>
+						<div class="flex-1 min-w-0"><n-input v-model:value="link.url" placeholder="https://..." size="small" /></div>
+						<n-tooltip>
+							<template #trigger>
+								<n-switch
+									v-model:value="link.newTab"
+									class="shrink-0"
+									size="small"
+								/>
+							</template>
+							新标签页打开
+						</n-tooltip>
+						<button
+							type="button"
+							title="删除"
+							class="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-red-50 hover:text-red-500"
+							@click="removeQuickLink(index)"
+						>
+							<TkuIcon :name="icons.close" :size="16" />
+						</button>
+					</div>
+					<n-button dashed size="small" @click="addQuickLink"> 添加快捷连接 </n-button>
 				</div>
 			</n-card>
 
