@@ -9,14 +9,13 @@ stages:
   - build-docker
 
 variables:
-  TARBALL_NAME: tku-${CI_COMMIT_TAG}.tgz
   NEXUS: v4.nagioa.cn:35483
   IMAGE_NAME: entropycrop/t-knit-utensil
   IMAGE_NAME_WEB: entropycrop/t-knit-utensil-web
 
 workflow:
   rules:
-    - if: $CI_COMMIT_TAG
+    - if: $CI_COMMIT_TAG != null
       when: always
     - when: never
 
@@ -25,27 +24,27 @@ workflow:
 # ============================================================
 build:
   tags:
-    - linux_docker
+    - linux
+    - docker
   stage: build
+
+  before_script:
+    # node:24-alpine 不预装 pnpm，需 corepack 激活（版本与 package.json 一致）
+    - corepack enable && corepack prepare pnpm@10.26.1 --activate
 
   script:
     - pnpm install --frozen-lockfile
     # 将 Git Tag（如 v1.2.3）注入构建，前端显示版本号（保留 v 前缀）
     - export VITE_APP_VERSION="${CI_COMMIT_TAG}"
     - pnpm build
-    - cd dist && tar czf ../${TARBALL_NAME} .
-
-  artifacts:
-    name: ${TARBALL_NAME%.tgz}
-    paths:
-      - ${TARBALL_NAME}
 
 # ============================================================
 # Job 2: Docker 镜像构建 & 推送
 # ============================================================
 docker:
   tags:
-    - linux_docker
+    - linux
+    - docker
   stage: build-docker
   image: docker:stable
   services:

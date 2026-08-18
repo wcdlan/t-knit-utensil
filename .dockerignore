@@ -9,3 +9,7 @@ dist
 .DS_Store
 .vscode
 .idea
+# 运行时数据
+site.db
+site.db-*
+data
