@@ -57,11 +57,14 @@ build:
     # 将 Git Tag（如 v1.2.3）注入构建，前端显示版本号（保留 v 前缀）
     - export VITE_APP_VERSION="${CI_COMMIT_TAG}"
     - pnpm build
+    # 将 dist 打包为 tku-<version>.tgz（版本号去掉 v 前缀，如 tku-1.2.3.tgz）
+    - tar -czf "tku-${CI_COMMIT_TAG#v}.tgz" dist
 
   artifacts:
     paths:
       - dist
-    expire_in: 1 week
+      - tku-*.tgz
+    expire_in: never
 
 # ============================================================
 # Job 2: Docker 镜像构建 & 推送
