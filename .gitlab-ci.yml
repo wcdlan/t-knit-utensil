@@ -151,4 +151,19 @@ deploy:
     - chmod 600 ~/.ssh/id_rsa
     - ssh-keyscan -p "$DEPLOY_PORT" -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts
   script:
-    - echo skip
+    - |
+      ssh  -p "$DEPLOY_PORT" "$DEPLOY_USER"@"$DEPLOY_HOST" << EOF
+        set -e
+        cd "$DEPLOY_PATH"
+      
+        # 直接拉取公开镜像（无需登录）
+        docker pull ${NEXUS}/${IMAGE_NAME}:latest
+        docker pull ${NEXUS}/${IMAGE_NAME_WEB}:latest
+      
+        # 重启服务
+        docker compose down
+        docker compose up -d
+      
+        # 清理旧镜像
+        docker image prune -f
+      EOF
