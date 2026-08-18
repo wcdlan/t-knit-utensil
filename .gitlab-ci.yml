@@ -155,8 +155,8 @@ deploy:
         docker pull ${NEXUS}/${IMAGE_NAME_WEB}:latest
       
         # 重启服务
-        docker-compose down
-        docker-compose up -d
+        docker compose down
+        docker compose up -d
       
         # 清理旧镜像
         docker image prune -f
