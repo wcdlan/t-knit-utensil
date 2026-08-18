@@ -29,7 +29,7 @@ build:
   stage: build
 
   before_script:
-    # node:24-alpine 不预装 pnpm，需 corepack 激活（版本与 package.json 一致）
+    - apk add --no-cache python3 make g++
     - corepack enable && corepack prepare pnpm@10.26.1 --activate
 
   script:
