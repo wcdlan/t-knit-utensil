@@ -23,6 +23,9 @@ RUN pnpm build
 FROM node:24-alpine AS runtime
 
 WORKDIR /app
+
+# ssh-keygen 通过 server/ssh-keygen.ts (ssh-keygen-lite) 调用，alpine 默认不含，需显式安装
+RUN apk add --no-cache openssh-client
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/server ./server

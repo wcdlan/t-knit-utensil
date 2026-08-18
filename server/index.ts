@@ -1,5 +1,6 @@
 import { createServer } from 'node:http';
 import { createStore, resolvePassword } from './config.shared.ts';
+import { generateSshKeyPair, getSshKeygenAvailability } from './ssh-keygen.ts';
 
 const PORT = Number(process.env.PORT) || 8080;
 const root = process.cwd();
@@ -78,6 +79,24 @@ const server = createServer(async (req, res) => {
 			});
 		} catch (e: any) {
 			sendJSON(res, 502, { ok: false, error: e?.message || String(e) });
+		}
+		return;
+	}
+
+	// GET /api/ssh-keygen/check — 检测系统 ssh-keygen 二进制可用性
+	if (url === '/api/ssh-keygen/check' && req.method === 'GET') {
+		sendJSON(res, 200, { ok: true, ...getSshKeygenAvailability() });
+		return;
+	}
+
+	// POST /api/ssh-keygen/generate — 生成密钥对（服务端 spawn 系统 ssh-keygen）
+	if (url === '/api/ssh-keygen/generate' && req.method === 'POST') {
+		try {
+			const { type, comment, passphrase } = JSON.parse(await readBody(req));
+			const out = await generateSshKeyPair({ type, comment, passphrase });
+			sendJSON(res, 200, { ok: true, ...out });
+		} catch (e: any) {
+			sendJSON(res, e?.status ?? 500, { ok: false, error: e?.message ?? String(e) });
 		}
 		return;
 	}
