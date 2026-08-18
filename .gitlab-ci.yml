@@ -167,5 +167,3 @@ deploy:
         # 清理旧镜像
         docker image prune -f
       EOF
-  only:
-    - tags
