@@ -6,7 +6,6 @@ ENV NPM_CONFIG_REGISTRY=https://registry.npmmirror.com
 RUN corepack enable && corepack prepare pnpm@10.26.1 --activate
 
 # 安装原生模块编译依赖和 ssh-keygen
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 RUN apk add --no-cache python3 make g++ openssh-client
 
 WORKDIR /app
