@@ -7,7 +7,6 @@ default:
 stages:
   - build
   - build-docker
-  - deploy
 
 variables:
   NEXUS: v4.nagioa.cn:35483
@@ -15,12 +14,7 @@ variables:
   IMAGE_NAME_WEB: entropycrop/t-knit-utensil-web
   NODEJS_ORG_MIRROR: "https://registry.npmmirror.com/-/binary/node"
   NPM_CONFIG_REGISTRY: "https://registry.npmmirror.com"
-  SSH_PRIVATE_KEY: -----BEGIN OPENSSH PRIVATE KEY-----
-  DEPLOY_USER: root
-  DEPLOY_HOST: 127.0.0.1
-  DEPLOY_PORT: 22
-  DEPLOY_PATH: /home/tku
-
+  
 workflow:
   rules:
     - if: $CI_COMMIT_TAG != null
@@ -130,40 +124,3 @@ docker:
       done
 
       echo ">>> 完成"
-# ============================================================
-# Job 3: 部署到远程服务器
-# ============================================================
-deploy:
-  tags:
-    - linux
-    - docker
-  stage: deploy
-  image: alpine:latest
-  needs:
-    - docker
-  before_script:
-    - sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories
-    - cat /etc/apk/repositories
-    - wget -qO- http://mirrors.tuna.tsinghua.edu.cn || echo "NETWORK UNREACHABLE"
-    - apk add --no-cache openssh-client
-    - mkdir -p ~/.ssh
-    - cp "$SSH_PRIVATE_KEY" ~/.ssh/id_rsa
-    - chmod 600 ~/.ssh/id_rsa
-    - ssh-keyscan -p "$DEPLOY_PORT" -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts
-  script:
-    - |
-      ssh  -p "$DEPLOY_PORT" "$DEPLOY_USER"@"$DEPLOY_HOST" << EOF
-        set -e
-        cd "$DEPLOY_PATH"
-      
-        # 直接拉取公开镜像（无需登录）
-        docker pull ${NEXUS}/${IMAGE_NAME}:latest
-        docker pull ${NEXUS}/${IMAGE_NAME_WEB}:latest
-      
-        # 重启服务
-        docker compose down
-        docker compose up -d
-      
-        # 清理旧镜像
-        docker image prune -f
-      EOF
