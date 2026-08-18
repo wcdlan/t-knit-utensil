@@ -12,7 +12,7 @@ variables:
   NEXUS: v4.nagioa.cn:35483
   IMAGE_NAME: entropycrop/t-knit-utensil
   IMAGE_NAME_WEB: entropycrop/t-knit-utensil-web
-  NODEJS_ORG_MIRROR: "https://registry.npmmirror.com/dist"
+  NODEJS_ORG_MIRROR: "https://registry.npmmirror.com/-/binary/node"
   NPM_CONFIG_REGISTRY: "https://registry.npmmirror.com"
 
 workflow:
