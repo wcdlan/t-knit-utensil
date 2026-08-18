@@ -14,7 +14,8 @@ WORKDIR /app
 
 # 复制依赖定义文件并安装生产依赖
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-RUN pnpm install --frozen-lockfile --prod
+RUN pnpm config set registry https://registry.npmmirror.com \
+    && pnpm install --frozen-lockfile --prod
 
 # 复制源码和配置
 COPY server ./server
