@@ -39,6 +39,8 @@ build:
       - node_modules
 
   before_script:
+    - sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
+    - apk update
     - apk add --no-cache python3 make g++
     - corepack enable && corepack prepare pnpm@10.26.1 --activate
     - pnpm config set store-dir .pnpm-store
