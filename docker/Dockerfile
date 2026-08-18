@@ -1,6 +1,7 @@
 FROM node:24-alpine
 
 ENV NPM_CONFIG_REGISTRY=https://registry.npmmirror.com
+ENV NODEJS_ORG_MIRROR=https://registry.npmmirror.com/-/binary/node
 
 # 启用 corepack 并使用 pnpm
 RUN corepack enable && corepack prepare pnpm@10.26.1 --activate
