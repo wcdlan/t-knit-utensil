@@ -31,7 +31,10 @@ build:
   before_script:
     - apk add --no-cache python3 make g++
     - corepack enable && corepack prepare pnpm@10.26.1 --activate
+    - npm config set registry https://registry.npmmirror.com
+    - npm config set disturl https://registry.npmmirror.com/dist
     - pnpm config set registry https://registry.npmmirror.com
+    - pnpm config set disturl https://registry.npmmirror.com/dist
 
   script:
     - pnpm install --frozen-lockfile
