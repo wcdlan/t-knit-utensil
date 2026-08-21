@@ -1,17 +1,4 @@
-import {
-	randBetweenDate,
-	randBoolean,
-	randCity,
-	randEmail,
-	randFullName,
-	randIp,
-	randNumber,
-	randPhoneNumber,
-	randProductName,
-	randSentence,
-	randText,
-	randUuid
-} from '@ngneat/falso';
+import { faker } from '@faker-js/faker';
 import type { JsonGenMode } from '@/types/json';
 
 // ---- 辅助函数 ----
@@ -23,7 +10,7 @@ function pick<T>(arr: T[]): T {
 
 /** 随机日期字符串 YYYY-MM-DD HH:mm:ss */
 function randomDateString(): string {
-	const d = randBetweenDate({ from: new Date('2018-01-01'), to: new Date('2025-12-31') });
+	const d = faker.date.between({ from: new Date('2018-01-01'), to: new Date('2025-12-31') });
 	const pad = (n: number) => String(n).padStart(2, '0');
 	return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
 }
@@ -32,15 +19,15 @@ function randomDateString(): string {
 
 /** 生成一个用户记录对象 */
 function randomUserRecord(): Record<string, unknown> {
-	const name = randFullName();
+	const name = faker.person.fullName();
 	return {
-		id: randUuid().slice(0, 8),
+		id: faker.string.uuid().slice(0, 8),
 		name,
-		email: randEmail({ firstName: name.split(' ')[0], lastName: name.split(' ')[1] ?? '' }),
-		phone: randPhoneNumber(),
-		age: randNumber({ min: 18, max: 60 }),
-		active: randBoolean(),
-		city: randCity(),
+		email: faker.internet.email({ firstName: name.split(' ')[0], lastName: name.split(' ')[1] ?? '' }),
+		phone: faker.phone.number(),
+		age: faker.number.int({ min: 18, max: 60 }),
+		active: faker.datatype.boolean(),
+		city: faker.location.city(),
 		registeredAt: randomDateString(),
 		roles: ['user', ...(Math.random() > 0.7 ? ['admin'] : [])]
 	};
@@ -49,18 +36,18 @@ function randomUserRecord(): Record<string, unknown> {
 /** 随机标量值（覆盖多种 JSON 类型） */
 function randomScalar(): string | number | boolean | null {
 	const r = Math.random();
-	if (r < 0.25) return randNumber({ min: 0, max: 9999 });
-	if (r < 0.45) return randNumber({ min: 0, max: 999999, fraction: 2 });
-	if (r < 0.6) return randBoolean();
+	if (r < 0.25) return faker.number.int({ min: 0, max: 9999 });
+	if (r < 0.45) return faker.number.float({ min: 0, max: 999999, fractionDigits: 2 });
+	if (r < 0.6) return faker.datatype.boolean();
 	if (r < 0.7) return null;
-	if (r < 0.85) return randProductName();
-	return randSentence().slice(0, 40);
+	if (r < 0.85) return faker.commerce.productName();
+	return faker.lorem.sentence().slice(0, 40);
 }
 
 /** 递归生成嵌套对象节点 */
 function randomObjectNode(depth: number, maxDepth: number): Record<string, unknown> {
 	const obj: Record<string, unknown> = {};
-	const fieldCount = randNumber({ min: 3, max: 6 });
+	const fieldCount = faker.number.int({ min: 3, max: 6 });
 	const keys = [
 		'id',
 		'name',
@@ -90,7 +77,7 @@ function randomObjectNode(depth: number, maxDepth: number): Record<string, unkno
 			obj[key] = randomObjectNode(depth + 1, maxDepth);
 		} else if (depth < maxDepth && r < 0.5) {
 			const arr = [];
-			const len = randNumber({ min: 2, max: 5 });
+			const len = faker.number.int({ min: 2, max: 5 });
 			for (let j = 0; j < len; j++) {
 				arr.push(Math.random() > 0.5 ? randomObjectNode(depth + 1, maxDepth) : randomScalar());
 			}
@@ -107,12 +94,12 @@ function randomObjectNode(depth: number, maxDepth: number): Record<string, unkno
 /** 基础对象：常用字段的简单结构 */
 function generateBasic(): Record<string, unknown> {
 	return {
-		name: randFullName(),
-		age: randNumber({ min: 18, max: 60 }),
-		email: randEmail(),
-		active: randBoolean(),
-		city: randCity(),
-		score: randNumber({ min: 0, max: 100, fraction: 1 }),
+		name: faker.person.fullName(),
+		age: faker.number.int({ min: 18, max: 60 }),
+		email: faker.internet.email(),
+		active: faker.datatype.boolean(),
+		city: faker.location.city(),
+		score: faker.number.float({ min: 0, max: 100, fractionDigits: 1 }),
 		createdAt: randomDateString()
 	};
 }
@@ -120,36 +107,39 @@ function generateBasic(): Record<string, unknown> {
 /** 全格式对象：覆盖 JSON 所有数据类型，多层嵌套 */
 function generateRich(): Record<string, unknown> {
 	return {
-		id: randUuid().slice(0, 8),
-		name: randProductName(),
-		description: randSentence(),
+		id: faker.string.uuid().slice(0, 8),
+		name: faker.commerce.productName(),
+		description: faker.lorem.sentence(),
 		status: pick(['pending', 'processing', 'completed', 'failed']),
 		priority: pick(['low', 'medium', 'high', 'critical']),
-		progress: randNumber({ min: 0, max: 100 }),
-		amount: randNumber({ min: 0, max: 9999, fraction: 2 }),
-		rate: randNumber({ min: 0, max: 2, fraction: 4 }),
-		active: randBoolean(),
-		enabled: randBoolean(),
+		progress: faker.number.int({ min: 0, max: 100 }),
+		amount: faker.number.float({ min: 0, max: 9999, fractionDigits: 2 }),
+		rate: faker.number.float({ min: 0, max: 2, fractionDigits: 4 }),
+		active: faker.datatype.boolean(),
+		enabled: faker.datatype.boolean(),
 		deleted: Math.random() > 0.9,
-		nullable: Math.random() > 0.5 ? randText({ charCount: 20 }) : null,
-		tags: [randProductName(), randProductName(), randProductName()],
+		nullable: Math.random() > 0.5 ? faker.lorem.text() : null,
+		tags: [faker.commerce.productName(), faker.commerce.productName(), faker.commerce.productName()],
 		owner: {
-			id: randUuid().slice(0, 8),
-			name: randFullName(),
-			email: randEmail(),
-			contact: { phone: randPhoneNumber(), address: `${randCity()}, ${randNumber({ min: 1, max: 999 })}` }
+			id: faker.string.uuid().slice(0, 8),
+			name: faker.person.fullName(),
+			email: faker.internet.email(),
+			contact: {
+				phone: faker.phone.number(),
+				address: `${faker.location.city()}, ${faker.number.int({ min: 1, max: 999 })}`
+			}
 		},
 		meta: {
 			createdAt: randomDateString(),
 			updatedAt: randomDateString(),
-			version: `${randNumber({ min: 1, max: 5 })}.${randNumber({ min: 0, max: 9 })}.${randNumber({ min: 0, max: 9 })}`,
-			ip: randIp()
+			version: `${faker.number.int({ min: 1, max: 5 })}.${faker.number.int({ min: 0, max: 9 })}.${faker.number.int({ min: 0, max: 9 })}`,
+			ip: faker.internet.ip()
 		},
 		settings: {
-			notifications: randBoolean(),
+			notifications: faker.datatype.boolean(),
 			theme: pick(['light', 'dark', 'system']),
-			limit: randNumber({ min: 10, max: 1000 }),
-			options: [true, false, randNumber({ min: 1, max: 9 }), 'auto']
+			limit: faker.number.int({ min: 10, max: 1000 }),
+			options: [true, false, faker.number.int({ min: 1, max: 9 }), 'auto']
 		}
 	};
 }
@@ -158,21 +148,21 @@ function generateRich(): Record<string, unknown> {
 function generateCompact(): Record<string, unknown> {
 	if (Math.random() < 0.5) {
 		return {
-			id: randNumber({ min: 1, max: 99999 }),
-			label: randProductName(),
-			value: Math.random() > 0.5 ? randNumber({ min: 0, max: 999 }) : randBoolean()
+			id: faker.number.int({ min: 1, max: 99999 }),
+			label: faker.commerce.productName(),
+			value: Math.random() > 0.5 ? faker.number.int({ min: 0, max: 999 }) : faker.datatype.boolean()
 		};
 	}
 	return {
-		key: randUuid().slice(0, 8),
-		name: randFullName(),
-		count: randNumber({ min: 0, max: 999 })
+		key: faker.string.uuid().slice(0, 8),
+		name: faker.person.fullName(),
+		count: faker.number.int({ min: 0, max: 999 })
 	};
 }
 
 /** 数组集合：用户对象数组 */
 function generateArray(): unknown[] {
-	const len = randNumber({ min: 3, max: 8 });
+	const len = faker.number.int({ min: 3, max: 8 });
 	return Array.from({ length: len }, () => randomUserRecord());
 }
 

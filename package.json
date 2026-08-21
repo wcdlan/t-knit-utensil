@@ -12,8 +12,8 @@
 		"format:check": "prettier --check \"src/**/*.{ts,vue,css,json}\""
 	},
 	"dependencies": {
+		"@faker-js/faker": "^10.6.0",
 		"@iconify/vue": "^5.0.1",
-		"@ngneat/falso": "^8.0.2",
 		"better-sqlite3": "^13.0.3",
 		"buffer": "^6.0.3",
 		"iconv-lite": "^0.7.3",
