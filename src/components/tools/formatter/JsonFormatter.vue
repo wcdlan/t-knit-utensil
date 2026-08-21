@@ -1,7 +1,9 @@
 <script lang="ts" setup>
 	import { ref } from 'vue';
-	import { NAlert, NButton, NInput } from 'naive-ui';
+	import { NAlert, NButton, NInput, NSelect } from 'naive-ui';
 	import { copyToClipboard } from '@/utils/clipboard';
+	import { generateRandomJson } from '@/utils/jsonGenerator';
+	import type { JsonGenMode } from '@/types/json';
 	import { icons } from '@/data/icons';
 	import TkuIcon from '@/components/common/TkuIcon.vue';
 
@@ -11,6 +13,23 @@
 
 	const OK_PREFIX = '[OK]';
 	const ERR_PREFIX = '[ERR]';
+
+	// ---- 随机 JSON 生成 ----
+	const genMode = ref<JsonGenMode>('rich');
+	const genModeOptions = [
+		{ label: '全格式（丰富）', value: 'rich' },
+		{ label: '基础对象', value: 'basic' },
+		{ label: '精简', value: 'compact' },
+		{ label: '数组集合', value: 'array' },
+		{ label: '深层嵌套', value: 'deep' }
+	];
+
+	function generateRandom() {
+		error.value = '';
+		const json = generateRandomJson(genMode.value, true);
+		input.value = json;
+		output.value = '';
+	}
 
 	function format() {
 		try {
@@ -50,6 +69,26 @@
 
 <template>
 	<div class="flex flex-col min-h-0 flex-1 space-y-6">
+		<!-- 生成随机 JSON 工具条（页面上端） -->
+		<div
+			class="p-3 bg-slate-50/70 rounded-xl border border-slate-200/80 flex flex-wrap items-center gap-3 flex-shrink-0"
+		>
+			<span class="flex items-center gap-1.5 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+				<TkuIcon :name="icons.star" :size="14" />
+				生成随机 JSON
+			</span>
+			<n-select v-model:value="genMode" :options="genModeOptions" class="!w-[180px] !max-w-full" size="small" />
+			<n-button size="small" type="primary" @click="generateRandom">
+				<span class="flex items-center gap-1">
+					<TkuIcon :name="icons.lightning" :size="14" />
+					<span>生成</span>
+				</span>
+			</n-button>
+			<span class="text-[11px] text-slate-400 ml-auto hidden sm:inline">
+				生成结果自动填入左侧输入框，可直接进行格式化 / 压缩 / 校验
+			</span>
+		</div>
+
 		<!-- Editor area: left input / buttons center / right output -->
 		<div class="grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr] gap-4 items-stretch flex-1 min-h-0">
 			<!-- Input section -->
@@ -79,23 +118,23 @@
 			</div>
 
 			<!-- Action buttons (vertically centered between input/output) -->
-			<div class="flex lg:flex-col items-center justify-center gap-2 py-2">
-				<n-button type="primary" @click="format">
-					<span class="flex items-center gap-1.5">
-						<TkuIcon :name="icons.star" :size="16" />
-						<span>格式化</span>
+			<div class="flex lg:flex-col items-stretch justify-center gap-2 py-2">
+				<n-button class="w-full" type="primary" @click="format">
+					<span class="flex w-full items-center gap-1.5">
+						<TkuIcon :name="icons.star" :size="16" class="shrink-0" />
+						<span class="flex-1 text-center">格式化</span>
 					</span>
 				</n-button>
-				<n-button type="info" @click="compress">
-					<span class="flex items-center gap-1.5">
-						<TkuIcon :name="icons.package" :size="16" />
-						<span>压缩</span>
+				<n-button class="w-full" type="info" @click="compress">
+					<span class="flex w-full items-center gap-1.5">
+						<TkuIcon :name="icons.package" :size="16" class="shrink-0" />
+						<span class="flex-1 text-center">压缩</span>
 					</span>
 				</n-button>
-				<n-button type="success" @click="validate">
-					<span class="flex items-center gap-1.5">
+				<n-button class="w-full" type="success" @click="validate">
+					<span class="flex w-full items-center gap-1.5">
 						<TkuIcon :name="icons.check" :size="16" />
-						<span>校验</span>
+						<span class="flex-1 text-center">校验</span>
 					</span>
 				</n-button>
 			</div>
