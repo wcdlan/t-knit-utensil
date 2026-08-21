@@ -163,7 +163,12 @@ src/
 - 系统中使用 pnpm 而不是 npm
 - 新增的文件，及时添加到 git 中，add即可，不用commit
 - 使用 naive-ui 中的组件 + tailwindcss 进行样式设计，确保一致性和可维护性
-- 所有 interface / type 定义放到 `src/types/` 下按领域分文件管理，禁止在组件或工具文件中内联定义
+- **所有 `type` / `interface` 声明一律提取到 `src/types/` 下按领域分文件管理，禁止在组件或工具文件（`.vue` / `src/` 下非
+  types 的 `.ts`）中内联定义命名类型**（仅允许 `import type` 引入）
+- 新增工具涉及领域类型时，先在 `src/types/` 下按领域建立文件（如 `uuid.ts`、`regex.ts`），并以 `export type` /
+  `export interface` 导出；组件内只 `import type { ... } from '@/types/...'`
+- 组件内反复出现的匿名对象字面量类型（如 `{ label: string; pattern: string }`）也应命名后提取到 `src/types/`，保持组件只关注
+  UI 与逻辑
 - 原有的导出文件（如 `src/data/tools.ts`）通过 `export type { ... } from '@/types/...'` 重导出以保持向后兼容
 - 重复的静态方法提取到 `src/utils` 中，不要散落在各个组件中
 - 新增的工具组件统一使用 `*Tool.vue` 命名后缀

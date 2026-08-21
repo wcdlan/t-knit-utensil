@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 	import { computed, ref } from 'vue';
 	import { NAlert, NCollapse, NCollapseItem, NInput, NSelect, NTag } from 'naive-ui';
+	import type { CharGroup, CommonPattern, RegexMatch } from '@/types/regex';
 
 	const pattern = ref('');
 	const flags = ref('g');
@@ -12,7 +13,7 @@
 		if (!pattern.value || !testStr.value) return [];
 		try {
 			const re = new RegExp(pattern.value, flags.value);
-			const results: { match: string; index: number; groups: string[] }[] = [];
+			const results: RegexMatch[] = [];
 			let m: RegExpExecArray | null;
 			if (flags.value.includes('g')) {
 				while ((m = re.exec(testStr.value)) !== null) {
@@ -44,7 +45,7 @@
 		{ value: 'gis', label: 'gis' }
 	];
 
-	const commonPatterns = [
+	const commonPatterns: CommonPattern[] = [
 		{ label: '邮箱', pattern: '^[\\w.-]+@[\\w.-]+\\.\\w+$' },
 		{ label: '手机号(中国)', pattern: '^1[3-9]\\d{9}$' },
 		{ label: '固定电话', pattern: '^\\d{3,4}-\\d{7,8}$' },
@@ -62,13 +63,8 @@
 		{ label: 'HTML标签', pattern: '<[^>]+>' }
 	];
 
-	function selectPattern(p: { label: string; pattern: string }) {
+	function selectPattern(p: CommonPattern) {
 		pattern.value = p.pattern;
-	}
-
-	interface CharGroup {
-		title: string;
-		items: { char: string; desc: string }[];
 	}
 
 	const charGroups: CharGroup[] = [

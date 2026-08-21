@@ -5,10 +5,7 @@
 	import { copyToClipboard } from '@/utils/clipboard';
 	import { icons } from '@/data/icons';
 	import TkuIcon from '@/components/common/TkuIcon.vue';
-
-	type UuidVersion = 'v1' | 'v3' | 'v4' | 'v5' | 'v6' | 'v7';
-	type NamespacePreset = 'dns' | 'url' | 'oid' | 'x500';
-	type NamespaceKey = NamespacePreset | 'custom';
+	import type { NamespaceKey, NamespacePreset, UuidVersion } from '@/types/uuid';
 
 	const uuids = ref<string[]>([]);
 	const count = ref(5);
