@@ -72,5 +72,11 @@
 				<div class="text-xs text-slate-500 mt-1">字节数 (UTF-8)</div>
 			</div>
 		</div>
+		<div v-else class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+			<div v-for="n in 8" :key="n" class="p-4 bg-slate-50 rounded-xl text-center border border-slate-100">
+				<div class="text-2xl font-bold text-slate-300 tabular-nums">0</div>
+				<div class="text-xs text-slate-300 mt-1">输入文本后将显示统计</div>
+			</div>
+		</div>
 	</div>
 </template>

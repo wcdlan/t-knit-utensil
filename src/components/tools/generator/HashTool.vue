@@ -66,16 +66,17 @@
 		<n-button type="primary" @click="generateHash">计算哈希</n-button>
 
 		<!-- Output section -->
-		<div v-if="output">
+		<div>
 			<div class="flex items-center justify-between mb-2">
 				<label class="text-xs font-semibold text-slate-500">哈希结果 ({{ algorithm }})</label>
-				<n-button secondary size="tiny" @click="copy">复制</n-button>
+				<n-button :disabled="!output" secondary size="tiny" @click="copy">复制</n-button>
 			</div>
 			<div
 				class="p-4 bg-slate-50 rounded-xl border border-slate-200 cursor-pointer transition hover:bg-slate-100"
 				@click="copy"
 			>
-				<code class="text-sm font-mono text-slate-700 break-all leading-relaxed">{{ output }}</code>
+				<code v-if="output" class="text-sm font-mono text-slate-700 break-all leading-relaxed">{{ output }}</code>
+				<span v-else class="text-sm text-slate-400">输入文本后点击「计算哈希」生成结果</span>
 			</div>
 		</div>
 

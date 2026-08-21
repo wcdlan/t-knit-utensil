@@ -501,13 +501,16 @@
 			<n-button :loading="testStatus === 'loading'" class="mt-4" size="small" type="primary" @click="sendTestMessage">
 				发送消息
 			</n-button>
-			<div v-if="testStatus !== 'idle'" class="mt-4">
-				<n-alert :title="testMessage" :type="alertType(testStatus)" />
-				<div
-					v-if="testResponse"
-					class="mt-3 bg-gray-50 border border-gray-200 rounded-lg p-4 font-mono text-sm whitespace-pre-wrap text-gray-800 max-h-80 overflow-y-auto"
-				>
-					{{ testResponse }}
+			<div class="mt-4">
+				<n-alert v-if="testStatus !== 'idle'" :title="testMessage" :type="alertType(testStatus)" />
+				<div class="mt-3">
+					<label class="block text-xs font-semibold text-slate-500 mb-2">AI 响应</label>
+					<div
+						:class="testResponse ? 'text-gray-800' : 'text-gray-400'"
+						class="bg-gray-50 border border-gray-200 rounded-lg p-4 font-mono text-sm whitespace-pre-wrap max-h-80 overflow-y-auto"
+					>
+						{{ testResponse || '发送消息后将显示 AI 的回复内容' }}
+					</div>
 				</div>
 			</div>
 		</section>

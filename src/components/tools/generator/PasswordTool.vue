@@ -80,7 +80,7 @@
 					<span>生成</span>
 				</span>
 			</n-button>
-			<n-button v-if="passwords.length" secondary @click="copyAll">
+			<n-button :disabled="!passwords.length" secondary @click="copyAll">
 				<span class="flex items-center gap-1.5">
 					<TkuIcon :name="icons.clipboard" :size="16" />
 					<span>复制全部</span>

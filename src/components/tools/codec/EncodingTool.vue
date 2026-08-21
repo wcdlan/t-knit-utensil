@@ -84,12 +84,12 @@
 		</div>
 
 		<!-- Results grid -->
-		<div v-if="results.length > 0" class="space-y-3">
-			<div class="flex items-center gap-2">
+		<div>
+			<div class="flex items-center gap-2 mb-3">
 				<label class="text-xs font-semibold text-slate-500">转换结果</label>
-				<span class="text-[10px] text-slate-400">共 {{ results.length }} 种编码</span>
+				<span v-if="results.length" class="text-[10px] text-slate-400">共 {{ results.length }} 种编码</span>
 			</div>
-			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+			<div v-if="results.length" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
 				<div
 					v-for="result in results"
 					:key="result.encoding"
@@ -117,6 +117,9 @@
 						{{ result.text || '(空)' }}
 					</div>
 				</div>
+			</div>
+			<div v-else class="p-8 bg-slate-50 rounded-xl border border-slate-100 text-center">
+				<span class="text-slate-300 text-sm">输入文本后自动展示所有编码下的转换结果</span>
 			</div>
 		</div>
 

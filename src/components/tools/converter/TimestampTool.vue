@@ -99,22 +99,22 @@
 					<label class="block text-xs font-semibold text-slate-500 mb-2">秒级时间戳 (10 位)</label>
 					<n-input v-model:value="secInput" class="!font-mono" placeholder="输入秒级时间戳" />
 					<div
-						v-if="secResult"
-						class="mt-2 p-3 bg-slate-50 rounded-lg text-sm font-mono text-slate-700 cursor-pointer transition hover:bg-blue-50/60"
+						:class="secResult ? 'text-slate-700 cursor-pointer' : 'text-slate-400'"
+						class="mt-2 p-3 bg-slate-50 rounded-lg text-sm font-mono transition hover:bg-blue-50/60"
 						@click="copySec"
 					>
-						{{ secResult }}
+						{{ secResult || '输入时间戳后将显示转换结果' }}
 					</div>
 				</div>
 				<div>
 					<label class="block text-xs font-semibold text-slate-500 mb-2">毫秒级时间戳 (13 位)</label>
 					<n-input v-model:value="msInput" class="!font-mono" placeholder="输入毫秒级时间戳" />
 					<div
-						v-if="msResult"
-						class="mt-2 p-3 bg-slate-50 rounded-lg text-sm font-mono text-slate-700 cursor-pointer transition hover:bg-blue-50/60"
+						:class="msResult ? 'text-slate-700 cursor-pointer' : 'text-slate-400'"
+						class="mt-2 p-3 bg-slate-50 rounded-lg text-sm font-mono transition hover:bg-blue-50/60"
 						@click="copyMs"
 					>
-						{{ msResult }}
+						{{ msResult || '输入时间戳后将显示转换结果' }}
 					</div>
 				</div>
 			</div>
@@ -127,11 +127,11 @@
 				<n-date-picker v-model:value="dateInput" class="flex-1" type="datetime" />
 			</div>
 			<div
-				v-if="dateResult"
-				class="mt-2 p-3 bg-slate-50 rounded-lg text-sm font-mono text-slate-700 whitespace-pre cursor-pointer transition hover:bg-blue-50/60"
-				@click="copyToClipboard(dateResult)"
+				:class="dateResult ? 'text-slate-700 cursor-pointer' : 'text-slate-400'"
+				class="mt-2 p-3 bg-slate-50 rounded-lg text-sm font-mono whitespace-pre transition hover:bg-blue-50/60"
+				@click="copyToClipboard(dateResult || '')"
 			>
-				{{ dateResult }}
+				{{ dateResult || '选择日期后将显示时间戳转换结果' }}
 			</div>
 		</div>
 

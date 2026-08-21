@@ -104,22 +104,27 @@
 		</n-alert>
 
 		<!-- Output section -->
-		<div v-if="output && !error.startsWith(OK_PREFIX)">
+		<div>
 			<div class="flex items-center justify-between mb-2">
 				<label class="text-xs font-semibold text-slate-500">输出结果</label>
 				<div class="flex items-center gap-2">
 					<span class="text-[10px] text-slate-400">{{ output.length }} 字符</span>
-					<n-button secondary size="tiny" @click="copyOutput">复制</n-button>
+					<n-button :disabled="!output" secondary size="tiny" @click="copyOutput">复制</n-button>
 				</div>
 			</div>
-			<n-input
-				:autosize="{ minRows: 10, maxRows: 24 }"
-				:value="output"
-				class="cursor-pointer"
-				readonly
-				type="textarea"
-				@click="copyOutput"
-			/>
+			<div class="relative">
+				<n-input
+					:autosize="{ minRows: 10, maxRows: 24 }"
+					:value="output"
+					class="cursor-pointer"
+					readonly
+					type="textarea"
+					@click="copyOutput"
+				/>
+				<div v-if="!output" class="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
+					<span class="text-slate-300 text-xs">粘贴 JSON 数据后点击操作按钮</span>
+				</div>
+			</div>
 		</div>
 
 		<!-- About JSON -->

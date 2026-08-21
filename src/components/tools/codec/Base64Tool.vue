@@ -85,7 +85,7 @@
 					<span class="text-xs opacity-60">&rarr;</span>
 				</span>
 			</n-button>
-			<n-button v-if="output" secondary @click="swap">
+			<n-button :disabled="!output" secondary @click="swap">
 				<span class="flex items-center gap-1.5">
 					<span>&#8596;</span>
 					<span>交换</span>

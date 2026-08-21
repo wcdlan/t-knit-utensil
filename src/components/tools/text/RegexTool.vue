@@ -179,11 +179,14 @@
 		<n-alert v-if="error" class="text-sm" type="error"> {{ error }} </n-alert>
 
 		<!-- Results -->
-		<div v-if="matches.length" class="space-y-2">
-			<div class="text-sm text-slate-600">
-				共匹配 <span class="font-semibold text-blue-600">{{ matches.length }}</span> 处
+		<div>
+			<div class="flex items-center gap-2 mb-2">
+				<label class="text-xs font-semibold text-slate-500">匹配结果</label>
+				<span v-if="matches.length" class="text-[10px] text-slate-400">
+					共匹配 <span class="font-semibold text-blue-600">{{ matches.length }}</span> 处
+				</span>
 			</div>
-			<div class="space-y-1">
+			<div v-if="matches.length" class="space-y-1">
 				<div
 					v-for="(m, i) in matches"
 					:key="i"
@@ -195,8 +198,16 @@
 					<span v-if="m.groups.length" class="text-slate-500"> groups: {{ m.groups.join(', ') }} </span>
 				</div>
 			</div>
+			<div
+				v-else-if="pattern && testStr && !error"
+				class="p-3 bg-slate-50 rounded-lg text-sm text-slate-400 text-center"
+			>
+				无匹配结果
+			</div>
+			<div v-else class="p-3 bg-slate-50 rounded-lg text-sm text-slate-400 text-center">
+				输入正则表达式和测试文本后将显示匹配结果
+			</div>
 		</div>
-		<n-alert v-else-if="pattern && testStr && !error" class="text-sm" type="warning"> 无匹配结果 </n-alert>
 
 		<!-- 特殊字符速查表 - 分组多列布局 -->
 		<n-collapse :defaultExpandedNames="['ref']" class="mt-6">
