@@ -12,16 +12,16 @@
 	const results = ref<{ encoding: string; label: string; text: string }[]>([]);
 
 	function process() {
-		if (!input.value.trim()) {
-			results.value = [];
-			return;
-		}
+		const text = input.value.trim();
 		results.value = SUPPORTED_ENCODINGS.map((enc) => {
+			if (!text) {
+				return { encoding: enc.value, label: enc.label, text: '' };
+			}
 			try {
 				return {
 					encoding: enc.value,
 					label: enc.label,
-					text: convertEncoding(input.value, sourceEncoding.value, enc.value)
+					text: convertEncoding(text, sourceEncoding.value, enc.value)
 				};
 			} catch {
 				return {
@@ -36,7 +36,11 @@
 	const debouncedProcess = useDebounceFn(process, 500);
 	watch([input, sourceEncoding], debouncedProcess);
 
+	// 初始即生成全部编码卡片，结果网格默认展示
+	process();
+
 	function copyResult(text: string) {
+		if (!text) return;
 		copyToClipboard(text);
 	}
 </script>
@@ -87,9 +91,9 @@
 		<div>
 			<div class="flex items-center gap-2 mb-3">
 				<label class="text-xs font-semibold text-slate-500">转换结果</label>
-				<span v-if="results.length" class="text-[10px] text-slate-400">共 {{ results.length }} 种编码</span>
+				<span class="text-[10px] text-slate-400">共 {{ results.length }} 种编码</span>
 			</div>
-			<div v-if="results.length" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
 				<div
 					v-for="result in results"
 					:key="result.encoding"
@@ -117,9 +121,6 @@
 						{{ result.text || '(空)' }}
 					</div>
 				</div>
-			</div>
-			<div v-else class="p-8 bg-slate-50 rounded-xl border border-slate-100 text-center">
-				<span class="text-slate-300 text-sm">输入文本后自动展示所有编码下的转换结果</span>
 			</div>
 		</div>
 
