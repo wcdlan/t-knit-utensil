@@ -49,20 +49,19 @@
 </script>
 
 <template>
-	<div class="space-y-6">
+	<div class="flex flex-col min-h-0 flex-1 space-y-6">
 		<!-- Editor area: left input / buttons center / right output -->
-		<div class="grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr] gap-4 items-stretch">
+		<div class="grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr] gap-4 items-stretch flex-1 min-h-0">
 			<!-- Input section -->
-			<div class="flex flex-col">
-				<div class="flex items-center justify-between mb-2">
+			<div class="flex flex-col min-h-0">
+				<div class="flex items-center justify-between mb-2 flex-shrink-0">
 					<label class="text-xs font-semibold text-slate-500">JSON 输入</label>
 					<span class="text-[10px] text-slate-400">{{ input.length }} 字符</span>
 				</div>
-				<div class="relative flex-1">
+				<div class="relative flex-1 min-h-0 json-pane">
 					<n-input
 						v-model:value="input"
-						:autosize="{ minRows: 18, maxRows: 30 }"
-						class="h-full"
+						class="h-full min-h-0"
 						placeholder='粘贴 JSON 数据，例如: {"name": "test"}'
 						type="textarea"
 					/>
@@ -102,23 +101,16 @@
 			</div>
 
 			<!-- Output section -->
-			<div class="flex flex-col">
-				<div class="flex items-center justify-between mb-2">
+			<div class="flex flex-col min-h-0">
+				<div class="flex items-center justify-between mb-2 flex-shrink-0">
 					<label class="text-xs font-semibold text-slate-500">输出结果</label>
 					<div class="flex items-center gap-2">
 						<span class="text-[10px] text-slate-400">{{ output.length }} 字符</span>
 						<n-button :disabled="!output" secondary size="tiny" @click="copyOutput">复制</n-button>
 					</div>
 				</div>
-				<div class="relative flex-1">
-					<n-input
-						:autosize="{ minRows: 18, maxRows: 30 }"
-						:value="output"
-						class="h-full cursor-pointer"
-						readonly
-						type="textarea"
-						@click="copyOutput"
-					/>
+				<div class="relative flex-1 min-h-0 json-pane">
+					<n-input :value="output" class="h-full min-h-0 cursor-pointer" readonly type="textarea" @click="copyOutput" />
 					<div v-if="!output" class="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
 						<span class="text-slate-300 text-xs">粘贴 JSON 数据后点击操作按钮</span>
 					</div>
@@ -127,12 +119,12 @@
 		</div>
 
 		<!-- Feedback alert -->
-		<n-alert v-if="error" :type="error.startsWith(OK_PREFIX) ? 'success' : 'error'" class="text-sm">
+		<n-alert v-if="error" :type="error.startsWith(OK_PREFIX) ? 'success' : 'error'" class="text-sm flex-shrink-0">
 			{{ error.replace(OK_PREFIX + ' ', '').replace(ERR_PREFIX + ' ', '') }}
 		</n-alert>
 
 		<!-- About JSON -->
-		<div class="p-5 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-100">
+		<div class="p-5 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-100 flex-shrink-0">
 			<h3 class="text-sm font-semibold text-blue-800 mb-3">什么是 JSON？</h3>
 			<p class="text-sm text-slate-600 leading-relaxed mb-2">
 				JSON（JavaScript Object
@@ -156,3 +148,24 @@
 		</div>
 	</div>
 </template>
+
+<style scoped>
+	/* 让左侧输入 / 右侧输出的 textarea 撑满各自容器，内部滚动，随页面自适应拉伸不溢出 */
+	.json-pane :deep(.n-input),
+	.json-pane :deep(.n-input-wrapper),
+	.json-pane :deep(.n-input__textarea),
+	.json-pane :deep(.n-input__textarea .n-scrollbar),
+	.json-pane :deep(.n-input__textarea .n-scrollbar-container),
+	.json-pane :deep(.n-input__textarea .n-scrollbar-content) {
+		height: 100%;
+	}
+
+	.json-pane :deep(.n-input) {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.json-pane :deep(.n-input-wrapper) {
+		flex: 1;
+	}
+</style>

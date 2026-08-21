@@ -11,9 +11,11 @@
 </script>
 
 <template>
-	<div v-if="tool">
+	<div v-if="tool" class="flex flex-col min-h-full">
+		<!-- 根容器占满滚动容器高度，内容不足时无页底空白；超出时自然增高滚动 -->
+
 		<!-- Breadcrumb -->
-		<div class="mb-6">
+		<div class="mb-6 flex-shrink-0">
 			<router-link
 				class="inline-flex items-center gap-1.5 text-sm text-slate-400 hover:text-blue-500 transition-colors duration-200"
 				to="/"
@@ -24,7 +26,7 @@
 		</div>
 
 		<!-- Tool Header with gradient icon container -->
-		<div class="mb-8">
+		<div class="mb-8 flex-shrink-0">
 			<div class="flex items-center gap-4">
 				<div
 					class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 flex items-center justify-center shadow-sm"
@@ -39,11 +41,13 @@
 		</div>
 
 		<!-- Dynamic Tool Component via nested route -->
-		<div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 sm:p-6 lg:p-8">
+		<div
+			class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 sm:p-6 lg:p-8 flex flex-col flex-1 min-h-0"
+		>
 			<router-view v-slot="{ Component }">
 				<transition mode="out-in" name="tool">
 					<keep-alive>
-						<component :is="Component" />
+						<component :is="Component" class="flex-1 min-h-0" />
 					</keep-alive>
 				</transition>
 			</router-view>
