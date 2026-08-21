@@ -34,9 +34,9 @@
 
 	function validate() {
 		try {
-			JSON.parse(input.value);
-			error.value = OK_PREFIX + ' JSON 格式正确';
-			output.value = '';
+			// 校验通过后自动格式化为输出结果
+			output.value = JSON.stringify(JSON.parse(input.value), null, 2);
+			error.value = OK_PREFIX + ' JSON 格式正确，已自动格式化';
 		} catch (e) {
 			error.value = ERR_PREFIX + ' JSON 格式错误: ' + (e as Error).message;
 			output.value = '';
@@ -50,82 +50,86 @@
 
 <template>
 	<div class="space-y-6">
-		<!-- Input section -->
-		<div>
-			<div class="flex items-center justify-between mb-2">
-				<label class="text-xs font-semibold text-slate-500">JSON 输入</label>
-				<span class="text-[10px] text-slate-400">{{ input.length }} 字符</span>
-			</div>
-			<div class="relative">
-				<n-input
-					v-model:value="input"
-					:autosize="{ minRows: 8, maxRows: 20 }"
-					placeholder='粘贴 JSON 数据，例如: {"name": "test"}'
-					type="textarea"
-				/>
-				<!-- 空态覆盖层：输入为空时叠加在输入框上，点击穿透聚焦输入框 -->
-				<div
-					v-if="!input"
-					class="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center text-center"
-				>
-					<div class="mb-2 text-slate-300">
-						<TkuIcon :name="icons.clipboard" :size="28" />
+		<!-- Editor area: left input / buttons center / right output -->
+		<div class="grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr] gap-4 items-stretch">
+			<!-- Input section -->
+			<div class="flex flex-col">
+				<div class="flex items-center justify-between mb-2">
+					<label class="text-xs font-semibold text-slate-500">JSON 输入</label>
+					<span class="text-[10px] text-slate-400">{{ input.length }} 字符</span>
+				</div>
+				<div class="relative flex-1">
+					<n-input
+						v-model:value="input"
+						:autosize="{ minRows: 18, maxRows: 30 }"
+						class="h-full"
+						placeholder='粘贴 JSON 数据，例如: {"name": "test"}'
+						type="textarea"
+					/>
+					<!-- 空态覆盖层：输入为空时叠加在输入框上，点击穿透聚焦输入框 -->
+					<div
+						v-if="!input"
+						class="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center text-center"
+					>
+						<div class="mb-2 text-slate-300">
+							<TkuIcon :name="icons.clipboard" :size="28" />
+						</div>
+						<p class="text-slate-400 text-xs">粘贴 JSON 数据后选择操作</p>
 					</div>
-					<p class="text-slate-400 text-xs">粘贴 JSON 数据后选择操作</p>
 				</div>
 			</div>
-		</div>
 
-		<!-- Action buttons -->
-		<div class="flex flex-wrap items-center gap-2">
-			<n-button type="primary" @click="format">
-				<span class="flex items-center gap-1.5">
-					<TkuIcon :name="icons.star" :size="16" />
-					<span>格式化</span>
-				</span>
-			</n-button>
-			<n-button type="info" @click="compress">
-				<span class="flex items-center gap-1.5">
-					<TkuIcon :name="icons.package" :size="16" />
-					<span>压缩</span>
-				</span>
-			</n-button>
-			<n-button type="success" @click="validate">
-				<span class="flex items-center gap-1.5">
-					<TkuIcon :name="icons.check" :size="16" />
-					<span>校验</span>
-				</span>
-			</n-button>
+			<!-- Action buttons (vertically centered between input/output) -->
+			<div class="flex lg:flex-col items-center justify-center gap-2 py-2">
+				<n-button type="primary" @click="format">
+					<span class="flex items-center gap-1.5">
+						<TkuIcon :name="icons.star" :size="16" />
+						<span>格式化</span>
+					</span>
+				</n-button>
+				<n-button type="info" @click="compress">
+					<span class="flex items-center gap-1.5">
+						<TkuIcon :name="icons.package" :size="16" />
+						<span>压缩</span>
+					</span>
+				</n-button>
+				<n-button type="success" @click="validate">
+					<span class="flex items-center gap-1.5">
+						<TkuIcon :name="icons.check" :size="16" />
+						<span>校验</span>
+					</span>
+				</n-button>
+			</div>
+
+			<!-- Output section -->
+			<div class="flex flex-col">
+				<div class="flex items-center justify-between mb-2">
+					<label class="text-xs font-semibold text-slate-500">输出结果</label>
+					<div class="flex items-center gap-2">
+						<span class="text-[10px] text-slate-400">{{ output.length }} 字符</span>
+						<n-button :disabled="!output" secondary size="tiny" @click="copyOutput">复制</n-button>
+					</div>
+				</div>
+				<div class="relative flex-1">
+					<n-input
+						:autosize="{ minRows: 18, maxRows: 30 }"
+						:value="output"
+						class="h-full cursor-pointer"
+						readonly
+						type="textarea"
+						@click="copyOutput"
+					/>
+					<div v-if="!output" class="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
+						<span class="text-slate-300 text-xs">粘贴 JSON 数据后点击操作按钮</span>
+					</div>
+				</div>
+			</div>
 		</div>
 
 		<!-- Feedback alert -->
 		<n-alert v-if="error" :type="error.startsWith(OK_PREFIX) ? 'success' : 'error'" class="text-sm">
 			{{ error.replace(OK_PREFIX + ' ', '').replace(ERR_PREFIX + ' ', '') }}
 		</n-alert>
-
-		<!-- Output section -->
-		<div>
-			<div class="flex items-center justify-between mb-2">
-				<label class="text-xs font-semibold text-slate-500">输出结果</label>
-				<div class="flex items-center gap-2">
-					<span class="text-[10px] text-slate-400">{{ output.length }} 字符</span>
-					<n-button :disabled="!output" secondary size="tiny" @click="copyOutput">复制</n-button>
-				</div>
-			</div>
-			<div class="relative">
-				<n-input
-					:autosize="{ minRows: 10, maxRows: 24 }"
-					:value="output"
-					class="cursor-pointer"
-					readonly
-					type="textarea"
-					@click="copyOutput"
-				/>
-				<div v-if="!output" class="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
-					<span class="text-slate-300 text-xs">粘贴 JSON 数据后点击操作按钮</span>
-				</div>
-			</div>
-		</div>
 
 		<!-- About JSON -->
 		<div class="p-5 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-100">
