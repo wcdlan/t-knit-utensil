@@ -119,22 +119,22 @@
 
 			<!-- Action buttons (vertically centered between input/output) -->
 			<div class="flex lg:flex-col items-stretch justify-center gap-2 py-2">
-				<n-button class="w-full" type="primary" @click="format">
+				<n-button class="w-full action-btn" type="primary" @click="format">
 					<span class="flex w-full items-center gap-1.5">
 						<TkuIcon :name="icons.star" :size="16" class="shrink-0" />
 						<span class="flex-1 text-center">格式化</span>
 					</span>
 				</n-button>
-				<n-button class="w-full" type="info" @click="compress">
+				<n-button class="w-full action-btn" type="info" @click="compress">
 					<span class="flex w-full items-center gap-1.5">
 						<TkuIcon :name="icons.package" :size="16" class="shrink-0" />
-						<span class="flex-1 text-center">压缩</span>
+						<span class="flex-1 text-justify text-last-justify">压缩</span>
 					</span>
 				</n-button>
-				<n-button class="w-full" type="success" @click="validate">
+				<n-button class="w-full action-btn" type="success" @click="validate">
 					<span class="flex w-full items-center gap-1.5">
-						<TkuIcon :name="icons.check" :size="16" />
-						<span class="flex-1 text-center">校验</span>
+						<TkuIcon :name="icons.check" :size="16" class="shrink-0" />
+						<span class="flex-1 text-justify text-last-justify">校验</span>
 					</span>
 				</n-button>
 			</div>
@@ -206,5 +206,19 @@
 
 	.json-pane :deep(.n-input-wrapper) {
 		flex: 1;
+	}
+
+	/* 中间三个操作按钮：内容撑满全宽，图标左对齐，文本居中自动间距 */
+	.action-btn {
+		width: 100%;
+
+		.text-last-justify {
+			text-align-last: justify;
+		}
+	}
+
+	.action-btn :deep(.n-button__content) {
+		width: 100%;
+		justify-content: flex-start;
 	}
 </style>
