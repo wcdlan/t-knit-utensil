@@ -54,7 +54,21 @@ export const icons = {
 	email: 'mdi:email-outline',
 	rss: 'mdi:rss',
 	notebook: 'mdi:notebook-outline',
-	plus: 'mdi:plus'
+	plus: 'mdi:plus',
+	// Faker 数据生成
+	account: 'mdi:account-badge-outline',
+	mapMarker: 'mdi:map-marker',
+	officeBuilding: 'mdi:office-building-outline',
+	serverNetwork: 'mdi:server-network',
+	formatText: 'mdi:format-text',
+	bank: 'mdi:bank-outline',
+	leaf: 'mdi:leaf',
+	car: 'mdi:car',
+	translate: 'mdi:translate',
+	refresh: 'mdi:refresh',
+	download: 'mdi:download-outline',
+	file: 'mdi:file-outline',
+	flag: 'mdi:flag-outline'
 } as const;
 
 export type IconKey = keyof typeof icons;

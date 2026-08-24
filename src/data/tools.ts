@@ -51,7 +51,55 @@ export const toolGroups: ToolGroup[] = [
 			{ id: 'uuid', name: 'UUID 生成器', description: '生成自定义版本 UUID（v1-v7）', icon: icons.identifier },
 			{ id: 'hash', name: '哈希计算', description: 'MD5 / SHA 系列哈希计算', icon: icons.shieldLock },
 			{ id: 'qrcode', name: '二维码生成', description: '在线生成二维码', icon: icons.qrcode },
-			{ id: 'password', name: '密码生成', description: '随机安全密码生成', icon: icons.key }
+			{ id: 'password', name: '密码生成', description: '随机安全密码生成', icon: icons.key },
+			{
+				id: 'faker-identity',
+				name: '身份信息生成',
+				description: '生成姓名/邮箱/电话等个人资料，支持多语言',
+				icon: icons.account
+			},
+			{
+				id: 'faker-address',
+				name: '地址信息生成',
+				description: '生成国家/城市/街道/经纬度等地址数据，支持多语言',
+				icon: icons.mapMarker
+			},
+			{
+				id: 'faker-company',
+				name: '企业信息生成',
+				description: '生成公司/职位/产品等企业数据，支持多语言',
+				icon: icons.officeBuilding
+			},
+			{
+				id: 'faker-network',
+				name: '网络与设备生成',
+				description: '生成域名/IP/MAC/UA 等网络数据',
+				icon: icons.serverNetwork
+			},
+			{
+				id: 'faker-text',
+				name: '文本内容生成',
+				description: '生成单词/句子/段落占位文本，支持多语言',
+				icon: icons.formatText
+			},
+			{
+				id: 'faker-finance',
+				name: '金融信息生成',
+				description: '生成账号/卡号/IBAN 等金融数据',
+				icon: icons.bank
+			},
+			{
+				id: 'faker-nature',
+				name: '自然万物生成',
+				description: '生成动物/美食/颜色/词汇词条，支持多语言',
+				icon: icons.leaf
+			},
+			{
+				id: 'faker-vehicle',
+				name: '车辆信息生成',
+				description: '生成车辆/VIN/车牌等车辆数据，支持多语言',
+				icon: icons.car
+			}
 		]
 	},
 	{
