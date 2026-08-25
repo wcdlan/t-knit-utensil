@@ -23,65 +23,89 @@ v4、Vue Router 5（history 模式）、Naive UI 2.44+、JSZip、Iconify（`@ico
 
 ### 路由
 
-| 路径            | 组件           | 说明                                  |
-|-----------------|----------------|---------------------------------------|
-| `/`             | `Home.vue`     | 直接加载，工具分组卡片 + 搜索         |
-| `/tool`         | `ToolPage.vue` | 懒加载，外层框架（面包屑 + 工具标题） |
-| `/tool/:toolId` | 各工具组件     | ToolPage 的**嵌套子路由**，懒加载     |
-| `/settings`     | `Settings.vue` | 懒加载，路由守卫保护                  |
-| `/login`        | `Login.vue`    | 懒加载                                |
+| 路径            | 组件                  | 说明                                                       |
+|-----------------|-----------------------|------------------------------------------------------------|
+| `/`             | `Home.vue`            | 直接加载，工具分组卡片 + 搜索                              |
+| `/tool`         | `ToolPage.vue`        | 懒加载，外层框架（面包屑 + 工具标题）                      |
+| `/tool/:toolId` | `view/tool/*View.vue` | ToolPage 的**嵌套子路由**，懒加载，薄包装组合对应 fragment |
+| `/admin/config` | `Settings.vue`        | 懒加载，路由守卫保护                                       |
+| `/login`        | `Login.vue`           | 懒加载                                                     |
 
 `router/index.ts` 中 `/tool` 路由含 `children` 数组，每个工具一条子路由（`path: 'base64'` →
-`@/components/tools/codec/Base64Tool.vue`），`ToolPage.vue` 用内嵌 `<router-view>` + `<keep-alive>` 渲染子路由组件。所有工具子路由都在
+`@/view/tool/codec/Base64View.vue`），`ToolPage.vue` 用内嵌 `<router-view>` + `<keep-alive>` 渲染子路由组件。所有工具子路由都在
 `src/router/index.ts` 内定义。
 
-路由守卫（`router.beforeEach`）：访问 `/settings` 时如无 auth token（`localStorage.tku-auth-token`），重定向到 `/login`。
+路由守卫（`router.beforeEach`）：访问 `/admin/config` 时如无 auth token（`localStorage.tku-auth-token`），重定向到 `/login`。
 
 ### 目录结构
 
 ```
 src/
-├── types/
+├── types/               # 领域类型声明（按领域分文件）
 │   ├── tools.ts         # Tool, ToolGroup — 工具条目与分组
 │   ├── site.ts          # FooterConfig, AuthConfig, SiteConfig — 站点配置
 │   ├── ssh.ts           # KeyType, KeyPairResult, KeyTypeMeta — SSH 密钥
 │   ├── ai.ts            # ApiPreset, HistoryItem, TestStatus, ApiResponse — AI API 测试
 │   ├── license.ts       # LicenseProfile, QuestionOption, Question, ScoredLicense — 许可证
 │   ├── image.ts         # FaviconSize — Favicon 尺寸选项
-│   └── encoding.ts      # 编码定义相关类型 — 编码探测工具
-├── data/
+│   ├── encoding.ts      # 编码定义相关类型 — 编码探测工具
+│   ├── faker.ts         # FakerLocaleKey, FakerLocaleOption — Faker 多语言
+│   ├── uuid.ts          # UuidVersion, NamespaceKey — UUID 生成器
+│   ├── regex.ts         # 正则测试相关类型
+│   └── virtio.ts        # VirtioVersion, VirtioFile — VirtIO 下载
+├── data/                # 纯静态数据（常量注册表）
 │   ├── tools.ts         # 工具定义（ToolGroup[]，getToolById），从 types 重导出类型
-│   ├── siteConfig.ts    # 响应式配置 store + loadConfig/saveConfig，从 types 重导出类型
-│   ├── auth.ts          # useAuth() — 登录/登出，token 存 localStorage
 │   └── icons.ts         # 图标名注册表（Iconify mdi: 前缀），导出 icons 对象 + IconKey 类型
-├── router/index.ts      # Vue Router 配置（含 /tool 嵌套子路由）+ beforeEach 守卫
-├── utils/
+├── composable/          # 组合式函数（可复用的响应式逻辑）
+│   ├── auth.ts          # useAuth() — 登录/登出，token 存 localStorage
+│   ├── siteConfig.ts    # 响应式配置 store + loadConfig/saveConfig，从 types 重导出类型
+│   └── useFaker.ts      # useFaker() — 多语言 faker 实例管理
+├── utils/               # 普通静态函数
 │   ├── clipboard.ts     # copyToClipboard(text, successText?) — 复制 + 成功提示
 │   ├── download.ts      # downloadBlob(), downloadTextFile()
 │   ├── ssh.ts           # SSH 密钥生成（RSA/ECDSA，Web Crypto API），从 types 重导出类型
-│   └── encoding.ts      # convertEncoding(), SUPPORTED_ENCODINGS — 编码转换（iconv-lite）
-├── views/
-│   ├── Home.vue         # 工具分组展示，顶部搜索 + 快捷导航
-│   ├── ToolPage.vue     # 工具外层框架（面包屑 + 标题 + 嵌套 <router-view>）
-│   ├── Settings.vue     # 站点配置编辑（需登录）
-│   └── Login.vue        # 登录表单
-├── components/
-│   ├── common/TkuIcon.vue # Iconify 图标封装（:name 传 icons 里的图标名）
-│   └── tools/
+│   ├── encoding.ts      # convertEncoding(), SUPPORTED_ENCODINGS — 编码转换（iconv-lite）
+│   ├── jsonGenerator.ts # generateRandomJson(mode, pretty) — 随机 JSON 生成
+│   ├── debounce.ts      # 防抖工具函数
+│   └── fakerLocales.ts  # Faker 语言区域注册表 + getFaker() 异步加载
+├── component/           # 通用 UI 组件（多个 view 可能用到）
+│   └── common/TkuIcon.vue # Iconify 图标封装（:name 传 icons 里的图标名）
+├── fragment/            # 页面片段组件（只有一个 view 会用到）
+│   └── tool/            # 各工具页面片段（按工具分组）
 │       ├── codec/       # Base64Tool, UrlEncode, UnicodeTool, EncodingTool
 │       ├── formatter/   # JsonFormatter, SqlFormatter
 │       ├── converter/   # TimestampTool, ColorConverter
-│       ├── generator/   # UuidGenerator, HashTool, QrcodeTool, PasswordTool
+│       ├── generator/   # UuidGenerator, HashTool, QrcodeTool, PasswordTool, Faker*Tool
 │       ├── ssh/         # SshKeyGen
 │       ├── image/       # FaviconTool
 │       ├── text/        # RegexTool, DiffTool, WordCount
 │       ├── ai/          # AiApiTester
-│       └── common/      # LicenseSelector
+│       ├── common/      # LicenseSelector
+│       └── virtualization/ # VirtioDownloadTool
+├── layout/              # 布局框架
+│   └── AppLayout.vue    # 侧边栏 + 内容区 + 页脚（n-layout 结构）
+├── view/                # 最终访问的页面（所有路由只指向这里）
+│   ├── Home.vue         # 工具分组展示，顶部搜索 + 快捷导航
+│   ├── ToolPage.vue     # 工具外层框架（面包屑 + 标题 + 嵌套 <router-view>）
+│   ├── Settings.vue     # 站点配置编辑（需登录）
+│   ├── Login.vue        # 登录表单
+│   └── tool/            # 工具页薄包装（每个 *View.vue 组合对应 fragment，子目录分类与 fragment/tool 一致）
+│       ├── codec/       # Base64View, UrlEncodeView, UnicodeView, EncodingView
+│       ├── formatter/   # JsonFormatterView, SqlFormatterView
+│       ├── converter/   # TimestampView, ColorView
+│       ├── generator/   # UuidView, HashView, QrcodeView, PasswordView, Faker*View
+│       ├── ssh/         # SshKeyGenView
+│       ├── image/       # FaviconView
+│       ├── text/        # RegexView, DiffView, WordCountView
+│       ├── ai/          # AiApiTesterView
+│       ├── common/      # LicenseSelectorView
+│       └── virtualization/ # VirtioDownloadView
+├── router/index.ts      # Vue Router 配置（含 /tool 嵌套子路由）+ beforeEach 守卫
 ├── assets/
 │   ├── theme/index.ts   # Naive UI 蓝色主题覆盖（含 Message 等组件主题）
 │   ├── license/         # 开源许可证全文 .txt（LicenseSelector 用 import.meta.glob 加载）
 │   ├── TKU.png / TKU-U.png  # 站点 Logo（完整 / 折叠图标）
-└── App.vue              # 外层框架：侧边栏、顶栏、<router-view>、页脚
+└── App.vue              # 入口：Provider 包装 + <AppLayout />（AppLayout 含路由出口）
 ```
 
 ### 添加新工具
@@ -96,20 +120,33 @@ src/
 
    `icon` 字段使用 `src/data/icons.ts` 中的 Iconify 图标名（`mdi:` 前缀），而不是 emoji。
 
-2. **在 `src/components/tools/<分组>/` 下创建工具组件：**
+2. **在 `src/fragment/tool/<分组>/` 下创建工具片段组件：**
    - 使用 `<script lang="ts" setup>` 编写组件逻辑
    - 表单控件使用 Naive UI（NButton, NInput, NSelect 等）
    - 布局/间距使用 Tailwind 工具类
    - 图标显示用 `<TkuIcon :name="icons.xxx" :size="16" />`
    - 命名约定：使用 `*Tool.vue` 后缀
 
-3. **在 `src/router/index.ts` 的 `/tool` 路由 `children` 数组中添加子路由：**
+3. **在 `src/view/tool/<分组>/` 下创建薄包装 view（如 `MyToolView.vue`，子目录与 fragment/tool 分组一致）：**
 
-   ```ts
-   { path: 'my-tool', component: () => import('@/components/tools/<分组>/MyTool.vue') }
+   ```vue
+   <script lang="ts" setup>
+   	import MyToolView from '@/fragment/tool/<分组>/MyTool.vue';
+   </script>
+
+   <template>
+   	<MyToolView />
+   </template>
    ```
 
-   路由 path 与 `tools.ts` 中的工具 `id` 一致（`/tool/my-tool`）。子路由懒加载，工具组件无需在 `ToolPage.vue` 中注册。
+4. **在 `src/router/index.ts` 的 `/tool` 路由 `children` 数组中添加子路由：**
+
+   ```ts
+   { path: 'my-tool', component: () => import('@/view/tool/<分组>/MyToolView.vue') }
+   ```
+
+   路由 path 与 `tools.ts` 中的工具 `id` 一致（`/tool/my-tool`）。子路由懒加载，工具片段无需在 `ToolPage.vue` 中注册。
+   所有路由只能指向 `src/view/` 目录下的内容。
 
 ### 样式：Tailwind CSS v4 + Naive UI
 
@@ -128,9 +165,10 @@ src/
 ### 状态管理
 
 - **无 Pinia / Vuex** — 项目保持简单
-- `reactive()` 用于全局共享状态：`siteConfig`（`src/data/siteConfig.ts`）
+- `reactive()` 用于全局共享状态：`siteConfig`（`src/composable/siteConfig.ts`）
 - `ref()` 用于所有组件本地状态
-- **Composable 模式**（`use*` 前缀）用于共享逻辑：`useAuth()`（`src/data/auth.ts`）
+- **Composable 模式**（`use*` 前缀）用于共享逻辑：`useAuth()`（`src/composable/auth.ts`）、`useFaker()`（
+  `src/composable/useFaker.ts`）
 - `localStorage` 用于客户端持久化：auth token（`tku-auth-token`）、AI 测试器历史（`ai-api-tester-history`）
 
 ### 复制交互
@@ -183,7 +221,7 @@ src/
 - 原有的导出文件（如 `src/data/tools.ts`）通过 `export type { ... } from '@/types/...'` 重导出以保持向后兼容
 - 重复的静态方法提取到 `src/utils` 中，不要散落在各个组件中
 - 新增的工具组件统一使用 `*Tool.vue` 命名后缀
-- 共享状态/逻辑使用 `src/data/` 下的 composable 导出（`use*` 前缀）
+- 共享状态/逻辑使用 `src/composable/` 下的 composable 导出（`use*` 前缀）
 
 ### TypeScript 配置说明
 
