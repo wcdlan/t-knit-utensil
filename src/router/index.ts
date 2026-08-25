@@ -37,7 +37,11 @@ const router = createRouter({
 				{ path: 'ssh-keygen', component: () => import('@/components/tools/ssh/SshKeyGen.vue') },
 				{ path: 'favicon', component: () => import('@/components/tools/image/FaviconTool.vue') },
 				{ path: 'ai-tester', component: () => import('@/components/tools/ai/AiApiTester.vue') },
-				{ path: 'license-selector', component: () => import('@/components/tools/common/LicenseSelector.vue') }
+				{ path: 'license-selector', component: () => import('@/components/tools/common/LicenseSelector.vue') },
+				{
+					path: 'virtio-download',
+					component: () => import('@/components/tools/virtio/VirtioDownloadTool.vue')
+				}
 			]
 		},
 		{

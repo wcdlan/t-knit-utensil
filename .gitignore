@@ -25,3 +25,4 @@ site.db
 *.njsproj
 *.sln
 *.sw?
+pnpm-store

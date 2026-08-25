@@ -142,6 +142,61 @@ export function configPlugin(): Plugin {
 					}
 				});
 			});
+
+			// Virtio 下载 API — 代理抓取 Fedora People 目录列表
+			server.middlewares.use('/api/virtio', async (req, res) => {
+				res.setHeader('Content-Type', 'application/json');
+
+				const reqUrl = new URL(req.url || '', `http://${req.headers.host || 'localhost'}`);
+				const action = reqUrl.searchParams.get('action') || 'versions';
+				const version = reqUrl.searchParams.get('version') || '';
+
+				const BASE = 'https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio';
+
+				try {
+					if (action === 'versions') {
+						// 抓取 archive 根目录，提取版本文件夹列表
+						const resp = await fetch(BASE + '/');
+						const html = await resp.text();
+						const versions: { name: string; date: string }[] = [];
+
+						// 匹配 <a href="virtio-win-.../"> 并提取日期
+						const folderRe =
+							/<a href="(virtio-win-[^/]+)\/">([^<]*)<\/a>\s*([0-9]{4}-[0-9]{2}-[0-9]{2}\s+[0-9]{2}:[0-9]{2})/g;
+						let match;
+						while ((match = folderRe.exec(html)) !== null) {
+							versions.push({ name: match[1], date: match[3] });
+						}
+						// 按时间倒序排列（最新在前）
+						versions.sort((a, b) => b.date.localeCompare(a.date));
+						res.end(JSON.stringify({ ok: true, versions }));
+					} else if (action === 'files' && version) {
+						// 抓取指定版本目录，提取文件列表
+						const resp = await fetch(BASE + '/' + version + '/');
+						const html = await resp.text();
+						const files: { name: string; size: string; date: string }[] = [];
+
+						// 匹配文件条目（排除目录、父目录、CHECKSUM、链接等）
+						const fileRe =
+							/<a href="([^"]+)">([^<]*)<\/a>\s*([0-9]{4}-[0-9]{2}-[0-9]{2}\s+[0-9]{2}:[0-9]{2})\s+([0-9.]+[KMGTPE]?)/g;
+						let match2;
+						while ((match2 = fileRe.exec(html)) !== null) {
+							const name = match2[1];
+							// 跳过目录、父目录、CHECKSUM
+							if (name.endsWith('/') || name === 'CHECKSUM' || name === 'Parent Directory') continue;
+							if (name.startsWith('?') || name.startsWith('/')) continue;
+							files.push({ name, size: match2[4], date: match2[3] });
+						}
+						res.end(JSON.stringify({ ok: true, version, files }));
+					} else {
+						res.statusCode = 400;
+						res.end(JSON.stringify({ ok: false, error: 'Invalid parameters' }));
+					}
+				} catch (e: any) {
+					res.statusCode = 502;
+					res.end(JSON.stringify({ ok: false, error: e.message || String(e) }));
+				}
+			});
 		}
 	};
 }

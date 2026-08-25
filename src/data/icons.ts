@@ -38,6 +38,7 @@ export const icons = {
 	cog: 'mdi:cog-outline',
 	tools: 'mdi:tools',
 	chevronRight: 'mdi:chevron-right',
+	chevronDown: 'mdi:chevron-down',
 	// 编码
 	encoding: 'mdi:code-string',
 	// 操作

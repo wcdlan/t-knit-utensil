@@ -164,6 +164,19 @@ export const toolGroups: ToolGroup[] = [
 				icon: icons.script
 			}
 		]
+	},
+	{
+		id: 'virtualization',
+		name: '虚拟化工具',
+		icon: icons.flag,
+		tools: [
+			{
+				id: 'virtio-download',
+				name: 'VirtIO 驱动下载',
+				description: '浏览并下载 Fedora VirtIO 驱动（ISO/RPM/MSI/EXE），支持多版本归档',
+				icon: icons.download
+			}
+		]
 	}
 ];
 
