@@ -6,7 +6,7 @@
 	import { QUICK_LINK_ICONS } from '@/data/icons';
 	import type { QuickLink, SettingsTabKey } from '@/types/site';
 	import type { SshKeygenStatus, SystemInfo } from '@/types/system';
-	import { fetchSshKeygenStatus, fetchSystemInfo } from '@/utils/system';
+	import { fetchSshKeygenStatus, fetchSystemInfo, installSshKeygen } from '@/utils/system';
 	import SettingsHeader from '@/fragment/page/settings/SettingsHeader.vue';
 	import SettingsNav from '@/fragment/page/settings/SettingsNav.vue';
 	import SiteInfoCard from '@/fragment/page/settings/SiteInfoCard.vue';
@@ -28,11 +28,19 @@
 	const systemInfo = ref<SystemInfo | null>(null);
 	const sshStatus = ref<SshKeygenStatus | null>(null);
 	const sysLoading = ref(true);
+	const sshInstalling = ref(false);
 
 	async function loadSystemInfo() {
 		sysLoading.value = true;
 		[systemInfo.value, sshStatus.value] = await Promise.all([fetchSystemInfo(), fetchSshKeygenStatus()]);
 		sysLoading.value = false;
+	}
+
+	// 一键修复：请求后端自动安装 OpenSSH，完成后刷新状态
+	async function fixSshKeygen() {
+		sshInstalling.value = true;
+		sshStatus.value = await installSshKeygen();
+		sshInstalling.value = false;
 	}
 
 	onMounted(loadSystemInfo);
@@ -114,8 +122,10 @@
 						<SystemInfoCard
 							v-else-if="activeTab === 'system'"
 							:info="systemInfo"
+							:installing="sshInstalling"
 							:loading="sysLoading"
 							:ssh="sshStatus"
+							@fix="fixSshKeygen"
 							@refresh="loadSystemInfo"
 						/>
 					</div>

@@ -219,14 +219,15 @@ src/
 - `server/config.shared.ts` — 存储层（`createStore`/`resolvePassword`），被 `server/index.ts`（生产 API）与 `vite-plugin-config.ts`（dev 中间件）共享
 - `vite-plugin-config.ts` — Vite 插件，提供以下 API 端点：
 
-| 端点                    | 方法 | 说明                                                                                                         |
-|-------------------------|------|--------------------------------------------------------------------------------------------------------------|
-| `/api/config`           | GET  | 从 site.db 读取完整配置                                                                                      |
-| `/api/config`           | POST | 覆写配置，保存到 site.db                                                                                     |
-| `/api/auth`             | POST | 校验密码，返回 token                                                                                         |
-| `/api/proxy`            | POST | 服务端转发外部 HTTP 请求以绕过 CORS。Body: `{url, method, headers, body}`。由 AiApiTester 使用               |
-| `/api/system/info`      | GET  | 部署机器信息（os 模块读取：主机名 / 系统 / CPU / 内存 / Node 版本 / 运行时长等），系统配置页「系统信息」展示 |
-| `/api/ssh-keygen/check` | GET  | 检测系统 ssh-keygen / OpenSSH 可用性（available + OpenSSH 版本）                                             |
+| 端点                      | 方法 | 说明                                                                                                         |
+|---------------------------|------|--------------------------------------------------------------------------------------------------------------|
+| `/api/config`             | GET  | 从 site.db 读取完整配置                                                                                      |
+| `/api/config`             | POST | 覆写配置，保存到 site.db                                                                                     |
+| `/api/auth`               | POST | 校验密码，返回 token                                                                                         |
+| `/api/proxy`              | POST | 服务端转发外部 HTTP 请求以绕过 CORS。Body: `{url, method, headers, body}`。由 AiApiTester 使用               |
+| `/api/system/info`        | GET  | 部署机器信息（os 模块读取：主机名 / 系统 / CPU / 内存 / Node 版本 / 运行时长等），系统配置页「系统信息」展示 |
+| `/api/ssh-keygen/check`   | GET  | 检测系统 ssh-keygen / OpenSSH 可用性（available + OpenSSH 版本）                                             |
+| `/api/ssh-keygen/install` | POST | 一键安装 OpenSSH（按平台 apt/dnf/yum/apk/zypper/brew + 免密 sudo 检测），完成后重新检测；已可用则直接返回    |
 
 密码读取优先级：运行时 `site.db` → 默认 `site.config.json` → `"admin"`。
 

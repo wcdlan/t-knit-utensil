@@ -10,10 +10,12 @@
 		info: SystemInfo | null;
 		ssh: SshKeygenStatus | null;
 		loading: boolean;
+		installing: boolean;
 	}>();
 
 	const emit = defineEmits<{
 		refresh: [];
+		fix: [];
 	}>();
 
 	// 系统平台展示名（node os.platform() → 中文）
@@ -96,7 +98,7 @@
 				<!-- ssh-keygen / OpenSSH 状态 -->
 				<div>
 					<div class="mb-2 text-xs font-semibold text-slate-500">ssh-keygen / OpenSSH 状态</div>
-					<div v-if="ssh" class="flex items-center gap-2">
+					<div v-if="ssh" class="flex flex-wrap items-center gap-2">
 						<n-tag :type="ssh.available ? 'success' : 'error'" round size="small">
 							{{ ssh.available ? '可用' : '不可用' }}
 						</n-tag>
@@ -104,6 +106,12 @@
 							OpenSSH {{ ssh.version || '（版本未知）' }}
 						</span>
 						<span v-else class="text-xs text-slate-500">{{ ssh.error || '未检测到 ssh-keygen' }}</span>
+
+						<!-- 一键修复：不可用时自动安装 OpenSSH -->
+						<n-button v-if="!ssh.available" :loading="installing" size="small" type="warning" @click="emit('fix')">
+							<TkuIcon :name="icons.tools" :size="13" />
+							{{ installing ? '正在安装...' : '一键修复' }}
+						</n-button>
 					</div>
 					<p v-else-if="!loading" class="text-xs text-slate-400">状态检测失败，请点击刷新重试。</p>
 				</div>

@@ -1,6 +1,6 @@
 import { createServer } from 'node:http';
 import { createStore, resolvePassword } from './config.shared.ts';
-import { generateSshKeyPair, getSshKeygenAvailability } from './ssh-keygen.ts';
+import { generateSshKeyPair, getSshKeygenAvailability, installSshKeygen } from './ssh-keygen.ts';
 import { getSystemInfo } from './system-info.ts';
 
 const PORT = Number(process.env.PORT) || 8080;
@@ -87,6 +87,17 @@ const server = createServer(async (req, res) => {
 	// GET /api/ssh-keygen/check — 检测系统 ssh-keygen 二进制可用性
 	if (url === '/api/ssh-keygen/check' && req.method === 'GET') {
 		sendJSON(res, 200, { ok: true, ...getSshKeygenAvailability() });
+		return;
+	}
+
+	// POST /api/ssh-keygen/install — 一键安装 OpenSSH（apt/dnf/yum/apk/zypper/brew），完成后重新检测
+	if (url === '/api/ssh-keygen/install' && req.method === 'POST') {
+		try {
+			const status = await installSshKeygen();
+			sendJSON(res, 200, { ok: true, ...status });
+		} catch (e: any) {
+			sendJSON(res, e?.status ?? 500, { ok: false, error: e?.message ?? String(e) });
+		}
 		return;
 	}
 

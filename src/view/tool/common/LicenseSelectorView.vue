@@ -197,27 +197,30 @@
 </script>
 
 <template>
-	<div class="flex flex-col lg:flex-row gap-6">
-		<!-- QuestionnairePanel：许可证选择问卷面板（按项目类型 / Copyleft 强度等问答） -->
-		<QuestionnairePanel
-			:answers="answers"
-			:questions="QUESTIONS"
-			@update:answer="(questionId: string, value: string) => (answers[questionId] = value)"
-		/>
-		<!-- ResultList：推荐许可证结果列表（评分排序 + 展开全文 / 复制 / 下载） -->
-		<ResultList
-			:copied-id="copiedId"
-			:expanded-id="expandedLicense"
-			:expanded-text="expandedText"
-			:items="scoredLicenses"
-			:selected-lang="selectedLang"
-			:total="LICENSES.length"
-			@copy="copyLicense"
-			@download="downloadLicense"
-			@toggle-expand="toggleExpand"
-			@update:selected-lang="(v: string) => (selectedLang = v)"
-		/>
-		<!-- AboutPanel：工具简介与使用说明 -->
+	<div class="space-y-6">
+		<!-- 左右分栏：左侧问卷，右侧推荐结果 -->
+		<div class="flex flex-col gap-6 lg:flex-row lg:items-start">
+			<!-- QuestionnairePanel：许可证选择问卷面板（按项目类型 / Copyleft 强度等问答） -->
+			<QuestionnairePanel
+				:answers="answers"
+				:questions="QUESTIONS"
+				@update:answer="(questionId: string, value: string) => (answers[questionId] = value)"
+			/>
+			<!-- ResultList：推荐许可证结果列表（评分排序 + 展开全文 / 复制 / 下载） -->
+			<ResultList
+				:copied-id="copiedId"
+				:expanded-id="expandedLicense"
+				:expanded-text="expandedText"
+				:items="scoredLicenses"
+				:selected-lang="selectedLang"
+				:total="LICENSES.length"
+				@copy="copyLicense"
+				@download="downloadLicense"
+				@toggle-expand="toggleExpand"
+				@update:selected-lang="(v: string) => (selectedLang = v)"
+			/>
+		</div>
+		<!-- AboutPanel：工具简介与使用说明（全宽横条，不参与左右分栏） -->
 		<AboutPanel />
 	</div>
 </template>

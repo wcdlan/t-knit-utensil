@@ -2,7 +2,7 @@ import crypto from 'node:crypto';
 import type { Plugin } from 'vite';
 import type { Store } from './server/config.shared.ts';
 import { createStore, resolvePassword } from './server/config.shared.ts';
-import { generateSshKeyPair, getSshKeygenAvailability } from './server/ssh-keygen.ts';
+import { generateSshKeyPair, getSshKeygenAvailability, installSshKeygen } from './server/ssh-keygen.ts';
 import { getSystemInfo } from './server/system-info.ts';
 
 const validTokens = new Set<string>();
@@ -88,6 +88,18 @@ export function configPlugin(): Plugin {
 			server.middlewares.use('/api/ssh-keygen/check', async (_req, res) => {
 				res.setHeader('Content-Type', 'application/json');
 				res.end(JSON.stringify({ ok: true, ...getSshKeygenAvailability() }));
+			});
+
+			// SSH keygen 修复 API — 一键安装 OpenSSH（apt/dnf/yum/apk/zypper/brew），完成后重新检测
+			server.middlewares.use('/api/ssh-keygen/install', async (_req, res) => {
+				res.setHeader('Content-Type', 'application/json');
+				try {
+					const status = await installSshKeygen();
+					res.end(JSON.stringify({ ok: true, ...status }));
+				} catch (e: any) {
+					res.statusCode = 500;
+					res.end(JSON.stringify({ ok: false, error: e?.message ?? String(e) }));
+				}
 			});
 
 			// 系统信息 API — 部署机器信息（系统配置页「系统信息」展示）

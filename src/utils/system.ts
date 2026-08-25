@@ -32,6 +32,20 @@ export async function fetchSshKeygenStatus(): Promise<SshKeygenStatus> {
 	}
 }
 
+/**
+ * 一键修复：请求后端自动安装 OpenSSH（ssh-keygen）。
+ * 完成后后端已重新检测，返回最新状态。
+ */
+export async function installSshKeygen(): Promise<SshKeygenStatus> {
+	try {
+		const res = await fetch('/api/ssh-keygen/install', { method: 'POST' });
+		const data = (await res.json()) as { ok: boolean; available: boolean; version?: string; error?: string };
+		return { available: !!data.available, version: data.version, error: data.error };
+	} catch {
+		return { available: false, error: '修复请求失败' };
+	}
+}
+
 /** 将秒数格式化为「X 天 X 小时 X 分钟」 */
 export function formatUptime(sec: number): string {
 	if (sec < 60) return `${sec} 秒`;

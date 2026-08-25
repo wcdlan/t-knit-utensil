@@ -153,10 +153,10 @@
 		<!-- 内容区（淡渐变背景） -->
 		<div class="flex-1 flex flex-col min-w-0" style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)">
 			<n-layout-content class="flex-1 px-4 sm:px-6 py-2">
+				<!-- 注：不使用 transition mode="out-in" 包裹路由出口——Vue 3 中该模式在组件切换时
+				     可能导致新组件不挂载（内容区空白），直接渲染组件保证 SPA 导航稳定 -->
 				<router-view v-slot="{ Component }">
-					<transition mode="out-in" name="page">
-						<component :is="Component" />
-					</transition>
+					<component :is="Component" />
 				</router-view>
 			</n-layout-content>
 
