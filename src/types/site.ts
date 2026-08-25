@@ -23,3 +23,6 @@ export interface SiteConfig {
 	auth: AuthConfig;
 	quickLinks: QuickLink[];
 }
+
+/** 系统配置页的子导航分组标识 */
+export type SettingsTabKey = 'site' | 'footer' | 'quickLinks' | 'security' | 'system';

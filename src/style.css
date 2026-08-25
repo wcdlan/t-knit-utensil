@@ -118,6 +118,27 @@ body {
 	transform: translateY(-8px);
 }
 
+/* ---- Settings tab switch transitions ---- */
+.tab-enter-active {
+    transition: opacity 0.18s ease,
+    transform 0.18s ease;
+}
+
+.tab-leave-active {
+    transition: opacity 0.1s ease,
+    transform 0.1s ease;
+}
+
+.tab-enter-from {
+    opacity: 0;
+    transform: translateY(8px);
+}
+
+.tab-leave-to {
+    opacity: 0;
+    transform: translateY(-6px);
+}
+
 /* ---- Keyframes ---- */
 @keyframes fadeIn {
 	from {

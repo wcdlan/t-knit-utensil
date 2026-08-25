@@ -98,7 +98,7 @@ src/
 ├── view/                # 最终访问的页面（所有路由只指向这里）
 │   ├── Home.vue         # 工具分组展示，顶部搜索 + 快捷导航
 │   ├── ToolPage.vue     # 工具外层框架（面包屑 + 标题 + 嵌套 <router-view>）
-│   ├── Settings.vue     # 站点配置编辑（需登录）
+│   ├── Settings.vue     # 站点配置编辑（需登录，左侧子导航按配置组切换）
 │   ├── Login.vue        # 登录表单
 │   └── tool/            # 工具页薄包装（每个 *View.vue 组合对应 fragment，子目录分类与 fragment/tool 一致）
 │       ├── codec/       # Base64View, UrlEncodeView, UnicodeView, EncodingView
