@@ -8,3 +8,15 @@ export type NamespacePreset = 'dns' | 'url' | 'oid' | 'x500';
 
 /** 命名空间选择：预定义项或自定义 UUID */
 export type NamespaceKey = NamespacePreset | 'custom';
+
+/** UUID 版本下拉选项 */
+export interface UuidVersionOption {
+	label: string;
+	value: UuidVersion;
+}
+
+/** 命名空间下拉选项 */
+export interface NamespaceOption {
+	label: string;
+	value: NamespaceKey;
+}

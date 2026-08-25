@@ -18,3 +18,9 @@ export interface CharGroup {
 	title: string;
 	items: { char: string; desc: string }[];
 }
+
+/** 正则标志位下拉选项 */
+export interface FlagOption {
+	value: string;
+	label: string;
+}

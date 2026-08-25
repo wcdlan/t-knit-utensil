@@ -18,6 +18,9 @@ export interface SshKeygenCheckResult {
 	error?: string;
 }
 
+/** ssh-keygen 可用性检测状态 */
+export type SshCheckState = 'checking' | 'available' | 'unavailable';
+
 export interface SshKeygenGenerateRequest {
 	type: KeyType;
 	comment?: string;

@@ -71,17 +71,22 @@ src/
 ├── component/           # 通用 UI 组件（多个 view 可能用到）
 │   └── common/TkuIcon.vue # Iconify 图标封装（:name 传 icons 里的图标名）
 ├── fragment/            # 页面片段组件（只有一个 view 会用到）
-│   └── tool/            # 各工具页面片段（按工具分组）
-│       ├── codec/       # Base64Tool, UrlEncode, UnicodeTool, EncodingTool
-│       ├── formatter/   # JsonFormatter, SqlFormatter
-│       ├── converter/   # TimestampTool, ColorConverter
-│       ├── generator/   # UuidGenerator, HashTool, QrcodeTool, PasswordTool, Faker*Tool
-│       ├── ssh/         # SshKeyGen
-│       ├── image/       # FaviconTool
-│       ├── text/        # RegexTool, DiffTool, WordCount
-│       ├── ai/          # AiApiTester
-│       ├── common/      # LicenseSelector
-│       └── virtualization/ # VirtioDownloadTool
+│   └── tool/            # 各工具页面片段（按工具分组 + 按工具名子目录拆分）
+│       ├── codec/       # base64/ url-encode/ unicode/ encoding/
+│       ├── formatter/   # json-formatter/ sql-formatter/
+│       ├── converter/   # timestamp/ color/
+│       ├── generator/   # uuid/ hash/ qrcode/ password/ faker-*/ + common/(共享 LocaleSelect/ResultRow)
+│       ├── ssh/         # ssh-keygen/
+│       ├── image/       # favicon/
+│       ├── text/        # regex/ diff/ word-count/
+│       ├── ai/          # ai-api-tester/
+│       ├── common/      # license-selector/
+│       └── virtualization/ # virtio-download/
+│
+│   每个工具子目录（如 fragment/tool/codec/base64/）内拆分为多个「哑组件」：
+│   接收 props、发 emit 事件，不持有业务状态；典型如 ModeSelect/InputPanel/
+│   ActionBar/OutputPanel/ResultList/AboutPanel 等（按工具实际结构增减）。
+│   业务状态与逻辑集中在对应的 view 中，由 view 组装这些小组件。
 ├── layout/              # 布局框架
 │   └── AppLayout.vue    # 侧边栏 + 内容区 + 页脚（n-layout 结构）
 ├── view/                # 最终访问的页面（所有路由只指向这里）
@@ -120,22 +125,29 @@ src/
 
    `icon` 字段使用 `src/data/icons.ts` 中的 Iconify 图标名（`mdi:` 前缀），而不是 emoji。
 
-2. **在 `src/fragment/tool/<分组>/` 下创建工具片段组件：**
-   - 使用 `<script lang="ts" setup>` 编写组件逻辑
+2. **在 `src/fragment/tool/<分组>/<工具id>/` 下创建工具片段小组件：**
+    - 每个工具一个子目录（以工具 id 命名，如 `fragment/tool/codec/base64/`），内部拆分为多个「哑组件」
+    - 哑组件只接收 props、发 emit 事件，不持有业务状态；典型如 `ModeSelect.vue` / `InputPanel.vue` /
+      `ActionBar.vue` / `OutputPanel.vue` / `ResultList.vue` / `AboutPanel.vue`（按工具实际结构增减）
    - 表单控件使用 Naive UI（NButton, NInput, NSelect 等）
    - 布局/间距使用 Tailwind 工具类
    - 图标显示用 `<TkuIcon :name="icons.xxx" :size="16" />`
-   - 命名约定：使用 `*Tool.vue` 后缀
+    - 小组件命名使用 PascalCase 描述性名称（非 `*Tool.vue` 后缀）
 
-3. **在 `src/view/tool/<分组>/` 下创建薄包装 view（如 `MyToolView.vue`，子目录与 fragment/tool 分组一致）：**
+3. **在 `src/view/tool/<分组>/` 下创建组装 view（如 `MyToolView.vue`，子目录与 fragment/tool 分组一致）：**
+    - view 持有全部业务状态（ref）与逻辑函数（process/generate/copy 等）
+    - 组装对应 fragment 子目录下的小组件，通过 props / v-model / @事件 交互
 
    ```vue
    <script lang="ts" setup>
-   	import MyToolView from '@/fragment/tool/<分组>/MyTool.vue';
+   	import { ref } from 'vue';
+   	import ModeSelect from '@/fragment/tool/<分组>/<工具id>/ModeSelect.vue';
+   	// ... 其他小组件
    </script>
 
    <template>
-   	<MyToolView />
+   	<ModeSelect :mode="mode" @update:mode="(v) => (mode = v)" />
+   	<!-- ... 组装其余小组件 -->
    </template>
    ```
 

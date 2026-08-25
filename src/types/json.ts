@@ -9,3 +9,9 @@ export interface JsonGenModeOption {
 	label: string;
 	description: string;
 }
+
+/** 随机 JSON 生成模式选择器选项（下拉框用） */
+export interface JsonGenModeSelectOption {
+	value: JsonGenMode;
+	label: string;
+}
