@@ -1,10 +1,12 @@
 <script lang="ts" setup>
 	import { computed, nextTick, onBeforeUnmount, ref } from 'vue';
 	import { NAlert } from 'naive-ui';
-	import type { VirtioFile, VirtioVersion } from '@/types/virtio';
+	import type { VirtioFile, VirtioRecommendationRow, VirtioVersion } from '@/types/virtio';
+	import { VIRTIO_OS_RECOMMENDATIONS } from '@/data/virtio';
 	import Toolbar from '@/fragment/tool/virtualization/virtio-download/Toolbar.vue';
 	import VersionList from '@/fragment/tool/virtualization/virtio-download/VersionList.vue';
 	import FileList from '@/fragment/tool/virtualization/virtio-download/FileList.vue';
+	import RecommendationPanel from '@/fragment/tool/virtualization/virtio-download/RecommendationPanel.vue';
 	import AboutPanel from '@/fragment/tool/virtualization/virtio-download/AboutPanel.vue';
 
 	// ---- 状态 ----
@@ -57,6 +59,53 @@
 	});
 
 	// ---- 辅助函数 ----
+
+	/**
+	 * 从版本目录名提取核心版本号（如 virtio-win-0.1.190-1 → 0.1.190）。
+	 * 归档目录名可能带 -N 构建后缀，推荐关系只关心核心版本号。
+	 */
+	function coreVersion(name: string): string {
+		const m = /^virtio-win-(.+?)(?:-\d+)?$/.exec(name);
+		return m ? m[1] : name;
+	}
+
+	/** 各 Windows 系统的推荐版本行（基于静态推荐关系 + 当前归档版本列表解析） */
+	const recommendationRows = computed<VirtioRecommendationRow[]>(() => {
+		if (allVersions.value.length === 0) return [];
+		// API 按日期倒序返回，第一个即最新版本
+		const latest = allVersions.value[0];
+		return VIRTIO_OS_RECOMMENDATIONS.map((rec) => {
+			if (rec.useLatest) {
+				return {
+					osName: rec.osName,
+					isLatest: true,
+					versionName: latest.name,
+					versionLabel: '最新版',
+					available: true
+				};
+			}
+			// 按候选顺序找到归档中仍存在的版本，第一个即最推荐版本
+			const matched = rec.recommended
+				.map((ver) => allVersions.value.find((v) => coreVersion(v.name) === ver))
+				.find((v): v is VirtioVersion => !!v);
+			if (matched) {
+				return {
+					osName: rec.osName,
+					isLatest: false,
+					versionName: matched.name,
+					versionLabel: coreVersion(matched.name),
+					available: true
+				};
+			}
+			return {
+				osName: rec.osName,
+				isLatest: false,
+				versionName: '',
+				versionLabel: rec.recommended[0] ?? '',
+				available: false
+			};
+		});
+	});
 
 	/** 构建文件的直接下载 URL */
 	function buildDownloadUrl(version: string, filename: string): string {
@@ -269,6 +318,15 @@
 		}
 	}
 
+	/** 点击推荐版本：选中该版本，并确保其出现在左侧可见列表中（必要时一次性补齐渲染） */
+	function selectRecommended(version: string) {
+		const idx = allVersions.value.findIndex((v) => v.name === version);
+		if (idx >= 0) {
+			visibleCount.value = Math.max(visibleCount.value, idx + 1);
+		}
+		selectVersion(version);
+	}
+
 	fetchVersions();
 </script>
 
@@ -282,6 +340,15 @@
 		<!-- 工具栏 -->
 		<!-- Toolbar：工具栏（版本总数统计 + 刷新按钮） -->
 		<Toolbar :loading="loadingVersions" :total-count="allVersions.length" @refresh="fetchVersions" />
+
+		<!-- 推荐版本面板 -->
+		<!-- RecommendationPanel：各 Windows 系统推荐 VirtIO 驱动版本，点击快速选中 -->
+		<RecommendationPanel
+			:loading="loadingVersions"
+			:rows="recommendationRows"
+			:selected="selectedVersion"
+			@select="selectRecommended"
+		/>
 
 		<!-- 左右分栏：左 1/3 版本列表，右 2/3 文件列表 -->
 		<div class="grid grid-cols-1 gap-4 lg:grid-cols-3">

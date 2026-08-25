@@ -26,3 +26,4 @@ site.db
 *.sln
 *.sw?
 pnpm-store
+.pnpm-store
