@@ -63,6 +63,7 @@ src/
 ├── utils/               # 普通静态函数
 │   ├── clipboard.ts     # copyToClipboard(text, successText?) — 复制 + 成功提示
 │   ├── download.ts      # downloadBlob(), downloadTextFile()
+│   ├── base64.ts        # encodeBase64(), decodeBase64() — UTF-8 安全 Base64（TextEncoder/TextDecoder）
 │   ├── ssh.ts           # SSH 密钥生成（RSA/ECDSA，Web Crypto API），从 types 重导出类型
 │   ├── encoding.ts      # convertEncoding(), SUPPORTED_ENCODINGS — 编码转换（iconv-lite）
 │   ├── jsonGenerator.ts # generateRandomJson(mode, pretty) — 随机 JSON 生成
@@ -234,6 +235,12 @@ src/
 - 重复的静态方法提取到 `src/utils` 中，不要散落在各个组件中
 - 新增的工具组件统一使用 `*Tool.vue` 命名后缀
 - 共享状态/逻辑使用 `src/composable/` 下的 composable 导出（`use*` 前缀）
+- **禁止使用已弃用的 JavaScript API**（如 `escape` / `unescape`、`String.prototype.substr`、`document.write`、
+  `new Buffer()`、`fs.exists()`、`Function.caller` 等），一律改用现代等价 API：
+    - 字符串编码/解码（UTF-8 ↔ Base64）使用 `TextEncoder` / `TextDecoder`，封装统一走 `src/utils/base64.ts` 的
+      `encodeBase64` / `decodeBase64`（禁止 `btoa(unescape(encodeURIComponent(...)))` 旧写法）
+    - 字符串截取使用 `slice` / `substring` 代替 `substr`
+    - Node 端 Buffer 使用 `Buffer.from` / `Buffer.alloc`；文件存在性检查使用 `fs.access` / `fs.stat`
 
 ### TypeScript 配置说明
 

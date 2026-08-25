@@ -2,6 +2,7 @@
 	import { ref, watch } from 'vue';
 	import { useDebounceFn } from '@/utils/debounce';
 	import { copyToClipboard } from '@/utils/clipboard';
+	import { decodeBase64, encodeBase64 } from '@/utils/base64';
 	import ModeSelect from '@/fragment/tool/codec/base64/ModeSelect.vue';
 	import InputPanel from '@/fragment/tool/codec/base64/InputPanel.vue';
 	import OutputPanel from '@/fragment/tool/codec/base64/OutputPanel.vue';
@@ -19,9 +20,9 @@
 		}
 		try {
 			if (mode.value === 'encode') {
-				output.value = btoa(unescape(encodeURIComponent(input.value)));
+				output.value = encodeBase64(input.value);
 			} else {
-				output.value = decodeURIComponent(escape(atob(input.value)));
+				output.value = decodeBase64(input.value);
 			}
 		} catch {
 			output.value = '转换失败，请检查输入内容';
