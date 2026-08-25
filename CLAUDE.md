@@ -52,7 +52,8 @@ src/
 │   ├── faker.ts         # FakerLocaleKey, FakerLocaleOption — Faker 多语言
 │   ├── uuid.ts          # UuidVersion, NamespaceKey — UUID 生成器
 │   ├── regex.ts         # 正则测试相关类型
-│   └── virtio.ts        # VirtioVersion, VirtioFile — VirtIO 下载
+│   ├── virtio.ts        # VirtioVersion, VirtioFile — VirtIO 下载
+│   └── system.ts        # SystemInfo, SshKeygenStatus — 部署机器信息 / ssh 状态
 ├── data/                # 纯静态数据（常量注册表）
 │   ├── tools.ts         # 工具定义（ToolGroup[]，getToolById），从 types 重导出类型
 │   ├── licenses.ts      # 开源许可证资料库（LICENSES，许可证选择器数据源）
@@ -218,12 +219,14 @@ src/
 - `server/config.shared.ts` — 存储层（`createStore`/`resolvePassword`），被 `server/index.ts`（生产 API）与 `vite-plugin-config.ts`（dev 中间件）共享
 - `vite-plugin-config.ts` — Vite 插件，提供以下 API 端点：
 
-| 端点          | 方法 | 说明                                                                                           |
-|---------------|------|------------------------------------------------------------------------------------------------|
-| `/api/config` | GET  | 从 site.db 读取完整配置                                                                       |
-| `/api/config` | POST | 覆写配置，保存到 site.db                                                                      |
-| `/api/auth`   | POST | 校验密码，返回 token                                                                           |
-| `/api/proxy`  | POST | 服务端转发外部 HTTP 请求以绕过 CORS。Body: `{url, method, headers, body}`。由 AiApiTester 使用 |
+| 端点                    | 方法 | 说明                                                                                                         |
+|-------------------------|------|--------------------------------------------------------------------------------------------------------------|
+| `/api/config`           | GET  | 从 site.db 读取完整配置                                                                                      |
+| `/api/config`           | POST | 覆写配置，保存到 site.db                                                                                     |
+| `/api/auth`             | POST | 校验密码，返回 token                                                                                         |
+| `/api/proxy`            | POST | 服务端转发外部 HTTP 请求以绕过 CORS。Body: `{url, method, headers, body}`。由 AiApiTester 使用               |
+| `/api/system/info`      | GET  | 部署机器信息（os 模块读取：主机名 / 系统 / CPU / 内存 / Node 版本 / 运行时长等），系统配置页「系统信息」展示 |
+| `/api/ssh-keygen/check` | GET  | 检测系统 ssh-keygen / OpenSSH 可用性（available + OpenSSH 版本）                                             |
 
 密码读取优先级：运行时 `site.db` → 默认 `site.config.json` → `"admin"`。
 

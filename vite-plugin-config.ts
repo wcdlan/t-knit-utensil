@@ -3,6 +3,7 @@ import type { Plugin } from 'vite';
 import type { Store } from './server/config.shared.ts';
 import { createStore, resolvePassword } from './server/config.shared.ts';
 import { generateSshKeyPair, getSshKeygenAvailability } from './server/ssh-keygen.ts';
+import { getSystemInfo } from './server/system-info.ts';
 
 const validTokens = new Set<string>();
 
@@ -87,6 +88,12 @@ export function configPlugin(): Plugin {
 			server.middlewares.use('/api/ssh-keygen/check', async (_req, res) => {
 				res.setHeader('Content-Type', 'application/json');
 				res.end(JSON.stringify({ ok: true, ...getSshKeygenAvailability() }));
+			});
+
+			// 系统信息 API — 部署机器信息（系统配置页「系统信息」展示）
+			server.middlewares.use('/api/system/info', async (_req, res) => {
+				res.setHeader('Content-Type', 'application/json');
+				res.end(JSON.stringify({ ok: true, info: getSystemInfo() }));
 			});
 
 			server.middlewares.use('/api/ssh-keygen/generate', async (req, res) => {

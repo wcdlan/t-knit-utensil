@@ -1,10 +1,12 @@
 <script lang="ts" setup>
-	import { ref } from 'vue';
+	import { onMounted, ref } from 'vue';
 	import { useRouter } from 'vue-router';
 	import { saveConfig, siteConfig } from '@/composable/siteConfig';
 	import { useAuth } from '@/composable/auth';
 	import { QUICK_LINK_ICONS } from '@/data/icons';
 	import type { QuickLink, SettingsTabKey } from '@/types/site';
+	import type { SshKeygenStatus, SystemInfo } from '@/types/system';
+	import { fetchSshKeygenStatus, fetchSystemInfo } from '@/utils/system';
 	import SettingsHeader from '@/fragment/page/settings/SettingsHeader.vue';
 	import SettingsNav from '@/fragment/page/settings/SettingsNav.vue';
 	import SiteInfoCard from '@/fragment/page/settings/SiteInfoCard.vue';
@@ -21,6 +23,19 @@
 	const activeTab = ref<SettingsTabKey>('site');
 	const saved = ref(false);
 	const error = ref('');
+
+	// 系统信息组：部署机器信息 + ssh-keygen 状态
+	const systemInfo = ref<SystemInfo | null>(null);
+	const sshStatus = ref<SshKeygenStatus | null>(null);
+	const sysLoading = ref(true);
+
+	async function loadSystemInfo() {
+		sysLoading.value = true;
+		[systemInfo.value, sshStatus.value] = await Promise.all([fetchSystemInfo(), fetchSshKeygenStatus()]);
+		sysLoading.value = false;
+	}
+
+	onMounted(loadSystemInfo);
 
 	function addQuickLink() {
 		siteConfig.quickLinks.push({ icon: QUICK_LINK_ICONS[0].value, name: '', url: '', newTab: true });
@@ -95,8 +110,14 @@
 						<!-- 安全设置组 -->
 						<SecurityCard v-else-if="activeTab === 'security'" v-model:password="siteConfig.auth.password" />
 
-						<!-- 系统信息组 -->
-						<SystemInfoCard v-else />
+						<!-- 系统信息组：部署机器信息 + ssh-keygen/OpenSSH 状态检测 -->
+						<SystemInfoCard
+							v-else-if="activeTab === 'system'"
+							:info="systemInfo"
+							:loading="sysLoading"
+							:ssh="sshStatus"
+							@refresh="loadSystemInfo"
+						/>
 					</div>
 				</transition>
 

@@ -1,6 +1,7 @@
 import { createServer } from 'node:http';
 import { createStore, resolvePassword } from './config.shared.ts';
 import { generateSshKeyPair, getSshKeygenAvailability } from './ssh-keygen.ts';
+import { getSystemInfo } from './system-info.ts';
 
 const PORT = Number(process.env.PORT) || 8080;
 const root = process.cwd();
@@ -86,6 +87,12 @@ const server = createServer(async (req, res) => {
 	// GET /api/ssh-keygen/check — 检测系统 ssh-keygen 二进制可用性
 	if (url === '/api/ssh-keygen/check' && req.method === 'GET') {
 		sendJSON(res, 200, { ok: true, ...getSshKeygenAvailability() });
+		return;
+	}
+
+	// GET /api/system/info — 部署机器信息（系统配置页「系统信息」展示）
+	if (url === '/api/system/info' && req.method === 'GET') {
+		sendJSON(res, 200, { ok: true, info: getSystemInfo() });
 		return;
 	}
 
