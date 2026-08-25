@@ -13,7 +13,7 @@
 	import UsageTips from '@/fragment/tool/image/favicon/UsageTips.vue';
 	import AboutPanel from '@/fragment/tool/image/favicon/AboutPanel.vue';
 
-	// --- State ---
+	// --- 状态 ---
 	const faviconSizes = ref<FaviconSize[]>([
 		{ size: 16, label: '16×16', selected: false },
 		{ size: 32, label: '32×32', selected: true },
@@ -38,19 +38,19 @@
 	const uploading = ref(false);
 	const generating = ref(false);
 	let wheelDebounceTimer: ReturnType<typeof setTimeout> | null = null;
-	// Generated results: map of size -> data URL
+	// 生成结果：尺寸 -> data URL 映射
 	const generatedFavicons = ref<Map<number, string>>(new Map());
 
-	// Crop state (values in image-pixel coordinates)
+	// 裁剪状态（图像像素坐标）
 	const crop = ref({ x: 0, y: 0, size: 256 });
 	const imageNatural = ref({ w: 0, h: 0 });
 
-	// Computed
+	// 计算属性
 	const displaySize = ref(320);
 
 	const selectedSizes = computed(() => faviconSizes.value.filter((s) => s.selected).map((s) => s.size));
 
-	// --- Image loading ---
+	// --- 图片加载 ---
 	function loadImageFile(file: File) {
 		if (!file.type.startsWith('image/')) return;
 		uploading.value = true;
@@ -85,7 +85,7 @@
 		if (file) loadImageFile(file);
 	}
 
-	// --- Favicon generation ---
+	// --- Favicon 生成 ---
 	function debouncedGenerate() {
 		if (wheelDebounceTimer) clearTimeout(wheelDebounceTimer);
 		wheelDebounceTimer = setTimeout(() => {
@@ -120,7 +120,7 @@
 		});
 	}
 
-	// --- Download helpers ---
+	// --- 下载辅助 ---
 	function downloadSingle(size: number, format: 'png' | 'ico') {
 		const dataUrl = generatedFavicons.value.get(size);
 		if (!dataUrl) return;
@@ -165,7 +165,7 @@
 		downloadBlob(blob, 'favicon.zip');
 	}
 
-	// --- Lifecycle ---
+	// --- 生命周期 ---
 	function clearImage() {
 		sourceImage.value = null;
 		sourceDataUrl.value = '';
@@ -198,13 +198,13 @@
 
 <template>
 	<div class="space-y-6" @dragover="onDragOver" @drop="handleDrop">
-		<!-- Upload area -->
+		<!-- 上传区域 -->
 		<!-- UploadArea：图片上传区域（点击或拖拽选择源图，未上传前展示） -->
 		<UploadArea v-if="!sourceImage" @file-selected="loadImageFile" />
 
-		<!-- Main editor -->
+		<!-- 主编辑区 -->
 		<div v-else class="flex flex-col gap-6 lg:flex-row">
-			<!-- Left: Crop area -->
+			<!-- 左侧：裁剪区域 -->
 			<div class="shrink-0">
 				<p class="mb-2 text-sm font-medium text-gray-500">裁剪区域（拖动调整位置，滚轮调整大小）</p>
 				<!-- CropCanvas：裁剪画布（拖动调整裁剪区域位置，滚轮调整大小） -->
@@ -230,7 +230,7 @@
 				/>
 			</div>
 
-			<!-- Right: Settings & previews -->
+			<!-- 右侧：设置与预览 -->
 			<div class="min-w-0 flex-1 space-y-5">
 				<!-- SizeSelector：favicon 目标尺寸勾选列表（16~512 px） -->
 				<SizeSelector :sizes="faviconSizes" @toggle-size="toggleSize" />

@@ -26,7 +26,7 @@ export async function loadConfig() {
 			}));
 		}
 	} catch {
-		// use default config
+		// 加载失败时使用默认配置
 	}
 }
 

@@ -17,7 +17,7 @@ export function configPlugin(): Plugin {
 			store = createStore(root);
 		},
 		configureServer(server) {
-			// Config API
+			// 配置 API
 			server.middlewares.use('/api/config', async (req, res) => {
 				res.setHeader('Content-Type', 'application/json');
 
@@ -42,7 +42,7 @@ export function configPlugin(): Plugin {
 				}
 			});
 
-			// Proxy API — forwards AI API requests server-side to bypass CORS + mixed-content
+			// 代理 API — 服务端转发 AI API 请求，绕过 CORS 与混合内容限制
 			server.middlewares.use('/api/proxy', async (req, res) => {
 				if (req.method !== 'POST') {
 					res.statusCode = 405;
@@ -110,7 +110,7 @@ export function configPlugin(): Plugin {
 				});
 			});
 
-			// Auth API
+			// 认证 API
 			server.middlewares.use('/api/auth', async (req, res) => {
 				res.setHeader('Content-Type', 'application/json');
 

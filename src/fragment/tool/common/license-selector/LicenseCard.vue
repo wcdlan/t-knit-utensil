@@ -17,7 +17,7 @@
 		'update:selectedLang': [lang: string];
 	}>();
 
-	// ── Presentation helpers ─────────────────────────────────────────────────────
+	// ── 展示辅助函数 ─────────────────────────────────────────────────────
 	const copyleftLabels: Record<number, string> = {
 		0: '完全自由',
 		1: '保留署名',
@@ -129,7 +129,7 @@
 			</div>
 		</div>
 
-		<!-- Expanded: Full License Text -->
+		<!-- 展开：许可证全文 -->
 		<div v-if="props.expandedId === props.item.license.id" class="border-t border-gray-100 p-4 bg-gray-50 rounded-b-xl">
 			<div class="flex items-center justify-between mb-3 flex-wrap gap-2">
 				<span class="text-xs font-medium text-gray-500">{{ props.item.license.name }} — 完整协议文本</span>

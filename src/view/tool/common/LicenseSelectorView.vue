@@ -8,7 +8,7 @@
 	import ResultList from '@/fragment/tool/common/license-selector/ResultList.vue';
 	import AboutPanel from '@/fragment/tool/common/license-selector/AboutPanel.vue';
 
-	// ── License full texts (loaded at build time) ──────────────────────────────────
+	// ── 许可证全文（构建时加载） ──────────────────────────────────
 	const LICENSE_TEXTS: Record<string, string> = import.meta.glob('@/assets/license/*.txt', {
 		query: '?raw',
 		import: 'default',

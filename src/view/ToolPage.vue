@@ -14,7 +14,7 @@
 	<div v-if="tool" class="flex flex-col min-h-full">
 		<!-- 根容器占满滚动容器高度，内容不足时无页底空白；超出时自然增高滚动 -->
 
-		<!-- Breadcrumb -->
+		<!-- 面包屑 -->
 		<div class="mb-6 flex-shrink-0">
 			<router-link
 				class="inline-flex items-center gap-1.5 text-sm text-slate-400 hover:text-blue-500 transition-colors duration-200"
@@ -25,7 +25,7 @@
 			</router-link>
 		</div>
 
-		<!-- Tool Header with gradient icon container -->
+		<!-- 工具标题（渐变图标容器） -->
 		<div class="mb-8 flex-shrink-0">
 			<div class="flex items-center gap-4">
 				<div
@@ -41,7 +41,7 @@
 			</div>
 		</div>
 
-		<!-- Dynamic Tool Component via nested route -->
+		<!-- 嵌套路由渲染的动态工具组件 -->
 		<div
 			class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 sm:p-6 lg:p-8 flex flex-col flex-1 min-h-0"
 		>
@@ -55,7 +55,7 @@
 		</div>
 	</div>
 
-	<!-- Not found state -->
+	<!-- 未找到状态 -->
 	<div v-else class="flex flex-col items-center justify-center py-24 text-center">
 		<div class="mb-4 text-slate-300">
 			<TkuIcon :name="icons.magnify" :size="48" />

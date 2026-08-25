@@ -11,7 +11,7 @@
 </script>
 
 <template>
-	<!-- Output section -->
+	<!-- 输出区 -->
 	<div class="flex flex-col min-h-0">
 		<div class="flex items-center justify-between mb-2 flex-shrink-0">
 			<label class="text-xs font-semibold text-slate-500">输出结果</label>

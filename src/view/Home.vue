@@ -32,15 +32,15 @@
 
 <template>
 	<div>
-		<!-- Hero section -->
+		<!-- 英雄区（顶部横幅） -->
 		<div class="mb-8 relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white px-6 py-12 shadow-sm">
-			<!-- Decorative gradient orbs -->
+			<!-- 装饰性渐变光斑 -->
 			<div class="pointer-events-none absolute inset-0">
 				<div class="absolute -top-24 -right-20 h-72 w-72 rounded-full bg-blue-400/15 blur-3xl"></div>
 				<div class="absolute -bottom-28 -left-24 h-80 w-80 rounded-full bg-blue-500/10 blur-3xl"></div>
 			</div>
 
-			<!-- Quick links -->
+			<!-- 快捷链接 -->
 			<div v-if="siteConfig.quickLinks.length" class="absolute right-4 top-4 z-10 flex items-center gap-1.5">
 				<n-tooltip v-for="link in siteConfig.quickLinks" :key="link.url">
 					<template #trigger>
@@ -59,7 +59,7 @@
 			</div>
 
 			<div class="relative flex flex-col items-center text-center">
-				<!-- Icon badge -->
+				<!-- 图标徽标 -->
 				<div class="relative mb-5">
 					<div class="absolute inset-0 -m-3 rounded-3xl bg-blue-400/25 blur-2xl"></div>
 					<div
@@ -69,16 +69,16 @@
 					</div>
 				</div>
 
-				<!-- Eyebrow + version row -->
+				<!-- 眉题与版本行 -->
 				<div class="mb-4 flex items-center justify-center gap-2">
-					<!-- Eyebrow badge -->
+					<!-- 眉题徽标 -->
 					<span
 						class="inline-flex items-center gap-1.5 rounded-full border border-blue-200/70 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-600"
 					>
 						<TkuIcon :name="icons.lightning" :size="14" />
 						开发者工具箱
 					</span>
-					<!-- Version badge: injected by CI build via git tag, dev-build in local dev -->
+					<!-- 版本徽标：CI 构建时经 Git Tag 注入，本地开发为 dev-build -->
 					<span
 						class="inline-flex items-center rounded-full border border-green-200/70 bg-green-50 px-3 py-1 text-xs font-semibold text-green-600"
 						title="当前版本"
@@ -87,19 +87,19 @@
 					</span>
 				</div>
 
-				<!-- Title -->
+				<!-- 标题 -->
 				<h1
 					class="mb-3 bg-gradient-to-r from-brand-start to-brand-end bg-clip-text text-3xl sm:text-4xl font-bold tracking-tight text-transparent"
 				>
 					T Knit Utensil
 				</h1>
 
-				<!-- Description -->
+				<!-- 描述 -->
 				<p class="max-w-md leading-relaxed text-slate-500">
 					面向开发者的在线工具集，{{ toolCount }} 个实用工具，覆盖编解码、格式化、生成、转换等常用场景
 				</p>
 
-				<!-- Search -->
+				<!-- 搜索框 -->
 				<div class="mt-6 w-full max-w-lg">
 					<n-input
 						v-model:value="query"
@@ -110,7 +110,7 @@
 					/>
 				</div>
 
-				<!-- Stats -->
+				<!-- 统计 -->
 				<div class="mt-7 flex flex-wrap items-center justify-center gap-3">
 					<div
 						class="flex items-center gap-2 rounded-xl border border-slate-200 bg-white/80 px-4 py-2 shadow-sm backdrop-blur"
@@ -162,7 +162,7 @@
 		</div>
 
 		<div v-for="group in filteredGroups" :key="group.id" class="mb-6">
-			<!-- Group header -->
+			<!-- 分组标题 -->
 			<div class="group mb-4 flex cursor-pointer select-none items-center gap-2.5" @click="toggle(group.id)">
 				<span
 					class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-500 ring-1 ring-inset ring-blue-100 transition-colors group-hover:bg-blue-100 group-hover:text-blue-600"
@@ -186,7 +186,7 @@
 				</span>
 			</div>
 
-			<!-- Tool cards grid -->
+			<!-- 工具卡片网格 -->
 			<div
 				v-show="!collapsed[group.id]"
 				class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-3"

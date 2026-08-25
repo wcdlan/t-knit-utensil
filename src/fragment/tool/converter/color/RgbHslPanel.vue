@@ -20,7 +20,7 @@
 
 <template>
 	<div class="space-y-4">
-		<!-- RGB -->
+		<!-- RGB 分量 -->
 		<div>
 			<label class="block text-xs font-semibold text-slate-500 mb-2">RGB</label>
 			<div class="flex flex-wrap items-center gap-2">
@@ -57,7 +57,7 @@
 			</div>
 		</div>
 
-		<!-- HSL -->
+		<!-- HSL 分量 -->
 		<div>
 			<label class="block text-xs font-semibold text-slate-500 mb-2">HSL</label>
 			<div class="flex flex-wrap items-center gap-2">

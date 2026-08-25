@@ -1,5 +1,5 @@
 <template>
-	<!-- About JSON -->
+	<!-- 关于 JSON 格式化 -->
 	<div class="p-5 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-100 flex-shrink-0">
 		<h3 class="text-sm font-semibold text-blue-800 mb-3">什么是 JSON？</h3>
 		<p class="text-sm text-slate-600 leading-relaxed mb-2">

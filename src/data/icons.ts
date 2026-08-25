@@ -17,7 +17,7 @@ export const icons = {
 	shieldLock: 'mdi:shield-lock',
 	qrcode: 'mdi:qrcode',
 	key: 'mdi:key',
-	// OpenSSH
+	// OpenSSH（SSH 密钥）
 	shieldKey: 'mdi:shield-key',
 	// 图片工具
 	image: 'mdi:image-outline',

@@ -181,11 +181,11 @@
 		const ratio = newSize / props.crop.size;
 		let cx: number, cy: number;
 		if (imgPt) {
-			// new top-left that keeps cursor at same proportional position
+			// 新的左上角：保持光标位于同一比例位置
 			cx = imgPt.x - (imgPt.x - props.crop.x) * ratio;
 			cy = imgPt.y - (imgPt.y - props.crop.y) * ratio;
 		} else {
-			// center-zoom: new top-left
+			// 中心缩放：新的左上角
 			cx = props.crop.x + (props.crop.size - newSize) / 2;
 			cy = props.crop.y + (props.crop.size - newSize) / 2;
 		}

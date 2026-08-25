@@ -61,7 +61,7 @@
 
 <template>
 	<n-layout class="h-screen" has-sider>
-		<!-- Sidebar with gradient background -->
+		<!-- 侧边栏（渐变背景） -->
 		<n-layout-sider
 			:collapsed="collapsed"
 			:collapsed-width="64"
@@ -98,7 +98,7 @@
 			</div>
 		</n-layout-sider>
 
-		<!-- Content area with subtle gradient background -->
+		<!-- 内容区（淡渐变背景） -->
 		<div class="flex-1 flex flex-col min-w-0" style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)">
 			<n-layout-content class="flex-1 px-4 sm:px-6 py-2">
 				<router-view v-slot="{ Component }">
@@ -108,7 +108,7 @@
 				</router-view>
 			</n-layout-content>
 
-			<!-- Footer with glass effect -->
+			<!-- 页脚（毛玻璃效果） -->
 			<footer
 				class="text-center text-xs py-3 border-t border-slate-200/80"
 				style="background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(8px)"

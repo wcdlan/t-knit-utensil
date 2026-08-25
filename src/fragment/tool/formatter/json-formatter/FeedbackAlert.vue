@@ -8,7 +8,7 @@
 </script>
 
 <template>
-	<!-- Feedback alert -->
+	<!-- 反馈提示条 -->
 	<n-alert v-if="message" :type="type" class="text-sm flex-shrink-0">
 		{{ message }}
 	</n-alert>

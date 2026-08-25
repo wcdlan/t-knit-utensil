@@ -11,7 +11,7 @@
 </script>
 
 <template>
-	<!-- Action buttons (vertically centered between input/output) -->
+	<!-- 操作按钮区（在输入与输出之间垂直居中） -->
 	<div class="flex lg:flex-col items-stretch justify-center gap-2 py-2">
 		<n-button class="w-full action-btn" type="primary" @click="emit('format')">
 			<span class="flex w-full items-center gap-1.5">

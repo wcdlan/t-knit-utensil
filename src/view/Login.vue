@@ -30,7 +30,7 @@
 <template>
 	<div class="min-h-[70vh] flex items-center justify-center">
 		<div class="w-full max-w-sm">
-			<!-- Branding -->
+			<!-- 品牌区 -->
 			<div class="text-center mb-8">
 				<div
 					class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/20"
@@ -44,7 +44,7 @@
 				<p class="text-sm text-slate-500">请输入密码以访问站点设置</p>
 			</div>
 
-			<!-- Card -->
+			<!-- 登录卡片 -->
 			<div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-8">
 				<div class="space-y-5">
 					<div>

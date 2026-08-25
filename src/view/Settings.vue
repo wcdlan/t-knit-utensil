@@ -52,7 +52,7 @@
 
 <template>
 	<div class="max-w-2xl mx-auto">
-		<!-- Breadcrumb & logout -->
+		<!-- 面包屑与退出 -->
 		<div class="mb-6 flex items-center justify-between">
 			<router-link
 				class="inline-flex items-center gap-1.5 text-sm text-slate-400 hover:text-blue-500 transition-colors duration-200"
@@ -68,7 +68,7 @@
 			</button>
 		</div>
 
-		<!-- Header -->
+		<!-- 标题区 -->
 		<div class="mb-8">
 			<h1 class="text-2xl font-bold text-slate-800 tracking-tight">系统配置</h1>
 			<p class="text-slate-500 text-sm mt-1">按分组配置站点信息、页脚内容与登录密码，保存后立即生效</p>
@@ -192,7 +192,7 @@
 				</div>
 			</n-card>
 
-			<!-- Save -->
+			<!-- 保存按钮 -->
 			<div class="flex items-center gap-3">
 				<n-button type="primary" @click="handleSave"> 保存配置 </n-button>
 				<n-alert v-if="saved" class="text-sm" type="success"> 配置已保存 </n-alert>

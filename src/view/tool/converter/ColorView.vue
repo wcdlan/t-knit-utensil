@@ -91,12 +91,12 @@
 
 <template>
 	<div class="space-y-8">
-		<!-- Color Preview Card -->
+		<!-- 颜色预览卡片 -->
 		<div class="flex flex-col sm:flex-row gap-6 items-start">
 			<!-- ColorPreview：颜色大色块预览（点击可弹出取色器） -->
 			<ColorPreview :hex="hex" :preview-color="previewColor" @update:hex="(v) => (hex = v)" />
 
-			<!-- Value rows -->
+			<!-- 数值编辑区 -->
 			<div class="flex-1 space-y-4 w-full">
 				<!-- HexInput：HEX 十六进制颜色值输入框（校验 + 复制） -->
 				<HexInput
@@ -140,7 +140,7 @@
 			</div>
 		</div>
 
-		<!-- About color models -->
+		<!-- 颜色模型说明 -->
 		<!-- AboutPanel：工具简介与使用说明 -->
 		<AboutPanel />
 	</div>
