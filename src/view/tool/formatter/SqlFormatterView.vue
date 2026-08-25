@@ -130,9 +130,13 @@
 
 <template>
 	<div class="space-y-6">
+		<!-- InputPanel：SQL 输入编辑器 -->
 		<InputPanel v-model:model-value="input" />
+		<!-- ActionBar：格式化 / 压缩 操作按钮 -->
 		<ActionBar @compress="compress" @format="format" />
+		<!-- OutputPanel：格式化结果输出区（只读 + 复制按钮） -->
 		<OutputPanel :output="output" @copy="copy" />
+		<!-- AboutPanel：工具简介与使用说明 -->
 		<AboutPanel />
 	</div>
 </template>

@@ -31,6 +31,7 @@
 				<div
 					class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 flex items-center justify-center shadow-sm"
 				>
+					<!-- TkuIcon：Iconify 图标封装组件（统一图标渲染入口） -->
 					<TkuIcon :name="tool.icon" :size="28" />
 				</div>
 				<div>

@@ -138,6 +138,8 @@ src/
 3. **在 `src/view/tool/<分组>/` 下创建组装 view（如 `MyToolView.vue`，子目录与 fragment/tool 分组一致）：**
     - view 持有全部业务状态（ref）与逻辑函数（process/generate/copy 等）
     - 组装对应 fragment 子目录下的小组件，通过 props / v-model / @事件 交互
+   - **子组件的作用/功能注释写在 `<template>` 中组件标签上方**（`<!-- 组件名：说明 -->` 形式），而不是写在
+     `<script>` 的 import 处
 
    ```vue
    <script lang="ts" setup>
@@ -147,8 +149,9 @@ src/
    </script>
 
    <template>
+   	<!-- ModeSelect：编码 / 解码 操作模式切换 -->
    	<ModeSelect :mode="mode" @update:mode="(v) => (mode = v)" />
-   	<!-- ... 组装其余小组件 -->
+   	<!-- ... 组装其余小组件，每个组件标签上方带 `<!-- 组件名：说明 -->` 注释 -->
    </template>
    ```
 
@@ -235,6 +238,8 @@ src/
 - 重复的静态方法提取到 `src/utils` 中，不要散落在各个组件中
 - 新增的工具组件统一使用 `*Tool.vue` 命名后缀
 - 共享状态/逻辑使用 `src/composable/` 下的 composable 导出（`use*` 前缀）
+- **view 中描述子组件作用/功能的注释写在 `<template>` 中组件标签上方**（`<!-- 组件名：说明 -->`），不要写在
+  `<script>` 的 import 处；同一组件多次使用时只在第一次出现处注释
 - **禁止使用已弃用的 JavaScript API**（如 `escape` / `unescape`、`String.prototype.substr`、`document.write`、
   `new Buffer()`、`fs.exists()`、`Function.caller` 等），一律改用现代等价 API：
     - 字符串编码/解码（UTF-8 ↔ Base64）使用 `TextEncoder` / `TextDecoder`，封装统一走 `src/utils/base64.ts` 的

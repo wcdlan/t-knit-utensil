@@ -46,11 +46,17 @@
 
 <template>
 	<div class="space-y-5">
+		<!-- PatternInput：正则表达式模式 + flags 输入框 -->
 		<PatternInput v-model:flags="flags" v-model:pattern="pattern" />
+		<!-- CommonPatterns：常用正则快捷选择列表（点击填充到模式输入框） -->
 		<CommonPatterns :pattern="pattern" @select="selectPattern" />
+		<!-- TestInput：待匹配的测试文本输入框 -->
 		<TestInput v-model:model-value="testStr" />
+		<!-- ResultPanel：匹配结果展示面板（命中内容 / 位置 / 捕获组） -->
 		<ResultPanel :error="error" :matches="matches" :pattern="pattern" :test-str="testStr" />
+		<!-- CharRefTable：正则字符转义参考表 -->
 		<CharRefTable />
+		<!-- AboutPanel：工具简介与使用说明 -->
 		<AboutPanel />
 	</div>
 </template>

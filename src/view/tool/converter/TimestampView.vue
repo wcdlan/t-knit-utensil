@@ -72,7 +72,9 @@
 
 <template>
 	<div class="space-y-6">
+		<!-- CurrentTimePanel：实时当前时间展示（秒级 / 毫秒级时间戳 + 格式化日期，点击复制） -->
 		<CurrentTimePanel :now="now" :now-ms="nowMs" :now-str="nowStr" @copy="copy" />
+		<!-- TsToDatePanel：时间戳转日期面板（秒级 / 毫秒级输入并实时转换） -->
 		<TsToDatePanel
 			v-model:ms-value="msInput"
 			v-model:sec-value="secInput"
@@ -81,11 +83,13 @@
 			@copy-sec="copySec"
 			@copy-ms="copyMs"
 		/>
+		<!-- DateToTsPanel：日期转时间戳面板（日期时间选择器 + 秒级 / 毫秒级结果） -->
 		<DateToTsPanel
 			v-model:date-value="dateInput"
 			:date-result="dateResult"
 			@copy="() => copyToClipboard(dateResult || '')"
 		/>
+		<!-- AboutPanel：工具简介与使用说明 -->
 		<AboutPanel :now="now" :now-ms="nowMs" />
 	</div>
 </template>

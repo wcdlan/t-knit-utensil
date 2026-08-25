@@ -50,6 +50,7 @@
 							:rel="link.newTab ? 'noopener noreferrer' : undefined"
 							:target="link.newTab ? '_blank' : '_self'"
 						>
+							<!-- TkuIcon：Iconify 图标封装组件（统一图标渲染入口） -->
 							<TkuIcon :name="link.icon" :size="18" />
 						</a>
 					</template>

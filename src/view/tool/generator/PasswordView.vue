@@ -51,6 +51,7 @@
 
 <template>
 	<div class="space-y-6">
+		<!-- ConfigPanel：密码生成配置面板（长度 / 数量 / 字符类型勾选） -->
 		<ConfigPanel
 			v-model:count="count"
 			v-model:length="length"
@@ -59,8 +60,11 @@
 			v-model:symbols="symbols"
 			v-model:upper="upper"
 		/>
+		<!-- ActionBar：生成 / 复制全部 操作按钮 -->
 		<ActionBar :passwords="passwords" @generate="generate" @copy-all="copyAll" />
+		<!-- ResultList：生成的密码列表（点击单条复制） -->
 		<ResultList :passwords="passwords" @copy-one="copyOne" />
+		<!-- AboutPanel：工具简介与使用说明 -->
 		<AboutPanel />
 	</div>
 </template>

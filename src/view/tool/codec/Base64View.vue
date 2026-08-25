@@ -46,10 +46,15 @@
 
 <template>
 	<div class="space-y-6">
+		<!-- ModeSelect：编码 / 解码 操作模式切换（单选按钮组） -->
 		<ModeSelect :mode="mode" @update:mode="(v) => (mode = v)" />
+		<!-- InputPanel：待转换文本输入框 -->
 		<InputPanel v-model:model-value="input" :mode="mode" />
+		<!-- ActionBar：转换 / 输入输出互换 / 复制 操作按钮 -->
 		<ActionBar :output="output" @process="process" @swap="swap" />
+		<!-- OutputPanel：转换结果输出区（只读 + 复制按钮） -->
 		<OutputPanel :output="output" @copy="copy" />
+		<!-- AboutPanel：工具简介与使用说明 -->
 		<AboutPanel />
 	</div>
 </template>

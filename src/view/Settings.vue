@@ -126,6 +126,7 @@
 									class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition-colors hover:border-blue-300 hover:text-blue-500"
 									@click="toggleLinkPopover"
 								>
+									<!-- TkuIcon：Iconify 图标封装组件（统一图标渲染入口） -->
 									<TkuIcon :name="link.icon" :size="18" />
 								</button>
 							</template>

@@ -61,9 +61,13 @@
 
 <template>
 	<div class="space-y-6">
+		<!-- ConfigPanel：生成配置面板（数量 + 性别 + 语言区域选择，默认中文） -->
 		<ConfigPanel v-model:count="count" v-model:sex="sex" :locale="locale" @update:locale="setLocale" />
+		<!-- ActionBar：生成 / 复制全部 操作按钮 -->
 		<ActionBar :disabled="!records.length" @generate="generate" @copy-all="copyAll" />
+		<!-- ResultList：生成的随机人物信息记录列表（点击单条复制） -->
 		<ResultList :records="records" @copy-record="copyRecord" />
+		<!-- AboutPanel：工具简介与使用说明 -->
 		<AboutPanel />
 	</div>
 </template>

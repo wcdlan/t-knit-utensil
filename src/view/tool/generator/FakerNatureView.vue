@@ -87,6 +87,7 @@
 
 <template>
 	<div class="space-y-6">
+		<!-- ConfigPanel：生成配置面板（类别 / 数量 + 语言区域选择） -->
 		<ConfigPanel
 			:category="category"
 			:category-options="categoryOptions"
@@ -96,8 +97,11 @@
 			@update:count="(v) => (count = v)"
 			@update:locale="setLocale"
 		/>
+		<!-- ActionBar：生成 / 复制全部 操作按钮 -->
 		<ActionBar :can-copy="items.length > 0" @generate="generate" @copy-all="copyAll" />
+		<!-- ResultList：生成的随机自然词汇列表（动物 / 美食 / 颜色 / 词汇，点击复制） -->
 		<ResultList :items="items" @copy="copyItem" />
+		<!-- AboutPanel：工具简介与使用说明 -->
 		<AboutPanel />
 	</div>
 </template>

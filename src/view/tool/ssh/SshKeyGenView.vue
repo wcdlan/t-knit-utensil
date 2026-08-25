@@ -92,18 +92,23 @@
 
 <template>
 	<div class="space-y-6">
+		<!-- AvailabilityBanner：服务端密钥生成可用性提示条（检测中 / 可用 / 不可用，可重试） -->
 		<AvailabilityBanner :check-state="checkState" :server-version="serverVersion" @retry="checkAvailability" />
 
+		<!-- KeyTypeSelect：密钥类型选择下拉框（RSA-2048 / RSA-4096 / ECDSA 等） -->
 		<KeyTypeSelect :key-type="keyType" @update:key-type="(v: KeyType) => (keyType = v)" />
 
+		<!-- CommentInput：密钥注释输入框（用于识别密钥用途） -->
 		<CommentInput v-model:model-value="comment" />
 
+		<!-- PassphraseInput：密钥密码短语输入（含二次确认与一致性校验） -->
 		<PassphraseInput
 			v-model:passphrase="passphrase"
 			v-model:passphrase-confirm="passphraseConfirm"
 			:mismatch="passphraseMismatch"
 		/>
 
+		<!-- ActionBar：生成密钥 / 打包下载 zip 操作按钮 -->
 		<ActionBar
 			:check-state="checkState"
 			:generating="generating"
@@ -114,10 +119,13 @@
 
 		<n-alert v-if="error" class="text-sm" type="error"> {{ error }} </n-alert>
 
+		<!-- PrivateKeyOutput：私钥输出区（只读展示 + 复制 + 单独下载） -->
 		<PrivateKeyOutput :generating="generating" :value="privateKey" @copy="copyPrivate" @download="downloadPrivate" />
 
+		<!-- PublicKeyOutput：公钥输出区（只读展示 + 复制 + 单独下载） -->
 		<PublicKeyOutput :generating="generating" :value="publicKey" @copy="copyPublic" @download="downloadPublic" />
 
+		<!-- AboutPanel：工具简介与使用说明 -->
 		<AboutPanel />
 	</div>
 </template>

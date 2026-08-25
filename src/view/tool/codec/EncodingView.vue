@@ -49,9 +49,13 @@
 
 <template>
 	<div class="space-y-6">
+		<!-- EncodingSelect：源编码格式选择下拉框（如 utf8 / gbk / big5） -->
 		<EncodingSelect v-model:model-value="sourceEncoding" />
+		<!-- InputPanel：待转换文本输入框 -->
 		<InputPanel v-model:model-value="input" />
+		<!-- ResultGrid：按目标编码逐一转换的结果卡片网格（点击复制） -->
 		<ResultGrid :results="results" :source-encoding="sourceEncoding" @copy="copyResult" />
+		<!-- AboutPanel：工具简介与使用说明 -->
 		<AboutPanel />
 	</div>
 </template>

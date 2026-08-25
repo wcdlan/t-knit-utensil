@@ -280,11 +280,13 @@
 		</n-alert>
 
 		<!-- 工具栏 -->
+		<!-- Toolbar：工具栏（版本总数统计 + 刷新按钮） -->
 		<Toolbar :loading="loadingVersions" :total-count="allVersions.length" @refresh="fetchVersions" />
 
 		<!-- 左右分栏：左 1/3 版本列表，右 2/3 文件列表 -->
 		<div class="grid grid-cols-1 gap-4 lg:grid-cols-3">
 			<!-- 左侧：版本列表（1/3，独立滚动 + 滚动加载） -->
+			<!-- VersionList：左侧版本列表（1/3 宽，滚动加载 + 哨兵上报，点击选中版本） -->
 			<VersionList
 				:has-more="hasMore"
 				:loading="loadingVersions"
@@ -296,6 +298,7 @@
 			/>
 
 			<!-- 右侧：文件列表（2/3） -->
+			<!-- FileList：右侧文件列表（2/3 宽，展示选中版本的文件与下载按钮） -->
 			<FileList
 				:files="selectedFiles"
 				:loading="selectedLoading"
@@ -308,6 +311,7 @@
 		<p v-if="downloadProgress" class="text-xs text-blue-600">正在下载 {{ downloadProgress }}... 文件较大请耐心等待。</p>
 
 		<!-- 介绍 -->
+		<!-- AboutPanel：工具简介与使用说明 -->
 		<AboutPanel />
 	</div>
 </template>

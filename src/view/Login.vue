@@ -36,6 +36,7 @@
 					class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/20"
 				>
 					<span class="text-white">
+						<!-- TkuIcon：Iconify 图标封装组件（统一图标渲染入口） -->
 						<TkuIcon :name="icons.lock" :size="28" />
 					</span>
 				</div>

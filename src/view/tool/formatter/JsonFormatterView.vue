@@ -75,17 +75,23 @@
 
 <template>
 	<div class="flex min-h-0 flex-1 flex-col space-y-6">
+		<!-- GenToolbar：随机 JSON 生成工具栏（生成模式选择 + 一键生成） -->
 		<GenToolbar v-model:gen-mode="genMode" :gen-mode-options="genModeOptions" @generate="generateRandom" />
 
 		<!-- Editor area: left input / buttons center / right output -->
 		<div class="grid min-h-0 flex-1 grid-cols-1 items-stretch gap-4 lg:grid-cols-[1fr_auto_1fr]">
+			<!-- InputPanel：JSON 输入编辑器 -->
 			<InputPanel v-model:model-value="input" />
+			<!-- ActionBar：格式化 / 压缩 / 校验 操作按钮 -->
 			<ActionBar @compress="compress" @format="format" @validate="validate" />
+			<!-- OutputPanel：格式化 / 压缩结果输出区（只读 + 复制按钮） -->
 			<OutputPanel :output="output" @copy="copyOutput" />
 		</div>
 
+		<!-- FeedbackAlert：校验 / 格式化结果的反馈提示条（成功或错误信息） -->
 		<FeedbackAlert v-if="error" :message="alertMessage()" :type="alertType()" />
 
+		<!-- AboutPanel：工具简介与使用说明 -->
 		<AboutPanel />
 	</div>
 </template>

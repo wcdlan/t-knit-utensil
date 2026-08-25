@@ -54,9 +54,13 @@
 
 <template>
 	<div class="space-y-6">
+		<!-- ConfigPanel：生成配置面板（文本模式 / 数量 + 语言区域选择，默认中文） -->
 		<ConfigPanel v-model:count="count" v-model:locale="locale" v-model:mode="mode" />
+		<!-- ActionBar：生成 / 复制全部 操作按钮 -->
 		<ActionBar :has-items="!!items.length" @generate="generate" @copy-all="copyAll" />
+		<!-- ResultList：生成的随机文本列表（单词 / 句子 / 段落 / slug，点击复制） -->
 		<ResultList :items="items" @copy-text="copyItem" />
+		<!-- AboutPanel：工具简介与使用说明 -->
 		<AboutPanel />
 	</div>
 </template>

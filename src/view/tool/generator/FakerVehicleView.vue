@@ -52,9 +52,13 @@
 
 <template>
 	<div class="space-y-6">
+		<!-- ConfigPanel：生成配置面板（数量 + 语言区域选择，默认中文） -->
 		<ConfigPanel :count="count" :locale="locale" @update:count="(v) => (count = v)" @update:locale="setLocale" />
+		<!-- ActionBar：生成 / 复制全部 操作按钮 -->
 		<ActionBar :records="records" @generate="generate" @copy-all="copyAll" />
+		<!-- ResultList：生成的随机车辆信息记录列表（品牌 / 型号 / VIN 等，点击单条复制） -->
 		<ResultList :records="records" @copy-record="copyRecord" />
+		<!-- AboutPanel：工具简介与使用说明 -->
 		<AboutPanel />
 	</div>
 </template>

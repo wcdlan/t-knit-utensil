@@ -260,6 +260,7 @@
 
 <template>
 	<div class="space-y-6">
+		<!-- HistoryPanel：历史配置记录面板（保存 / 应用 / 删除 / 清空） -->
 		<HistoryPanel
 			:has-api-key="!!apiKey.trim()"
 			:history-list="historyList"
@@ -269,6 +270,7 @@
 			@clear-all="clearAllHistory"
 		/>
 
+		<!-- ApiConfigPanel：API 连接配置面板（预设 / Base URL / 认证方式 / API Key / 代理开关） -->
 		<ApiConfigPanel
 			:api-key="apiKey"
 			:auth-type="authType"
@@ -289,6 +291,7 @@
 			@fetch-models="fetchModels"
 		/>
 
+		<!-- ModelListPanel：模型列表面板（获取并展示可用模型，点击选择测试模型） -->
 		<ModelListPanel
 			:models="models"
 			:models-message="modelsMessage"
@@ -297,6 +300,7 @@
 			@select-model="(m: string) => (testModel = m)"
 		/>
 
+		<!-- TestChatPanel：测试对话面板（输入提示词发送请求并展示响应） -->
 		<TestChatPanel
 			v-model:test-model="testModel"
 			v-model:test-prompt="testPrompt"
@@ -306,6 +310,7 @@
 			@send="sendTestMessage"
 		/>
 
+		<!-- AboutPanel：工具简介与使用说明 -->
 		<AboutPanel />
 	</div>
 </template>

@@ -31,8 +31,11 @@
 
 <template>
 	<div class="space-y-6">
+		<!-- InputPanel：待统计的文本输入区 -->
 		<InputPanel v-model:model-value="text" />
+		<!-- StatsPanel：统计指标展示面板（字符 / 单词 / 行数 / 段落 / 字节 / 中文字符等） -->
 		<StatsPanel :empty="!text" :stats="stats" />
+		<!-- AboutPanel：工具简介与使用说明 -->
 		<AboutPanel />
 	</div>
 </template>

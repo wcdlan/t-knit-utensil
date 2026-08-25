@@ -199,6 +199,7 @@
 <template>
 	<div class="space-y-6" @dragover="onDragOver" @drop="handleDrop">
 		<!-- Upload area -->
+		<!-- UploadArea：图片上传区域（点击或拖拽选择源图，未上传前展示） -->
 		<UploadArea v-if="!sourceImage" @file-selected="loadImageFile" />
 
 		<!-- Main editor -->
@@ -206,6 +207,7 @@
 			<!-- Left: Crop area -->
 			<div class="shrink-0">
 				<p class="mb-2 text-sm font-medium text-gray-500">裁剪区域（拖动调整位置，滚轮调整大小）</p>
+				<!-- CropCanvas：裁剪画布（拖动调整裁剪区域位置，滚轮调整大小） -->
 				<CropCanvas
 					v-if="sourceImage"
 					:crop="crop"
@@ -219,6 +221,7 @@
 					@update:crop="(v) => (crop = v)"
 					@update:is-dragging="(v: boolean) => (isDragging = v)"
 				/>
+				<!-- CropControls：裁剪控制按钮（恢复默认裁剪 / 重新选择图片） -->
 				<CropControls
 					:natural-h="imageNatural.h"
 					:natural-w="imageNatural.w"
@@ -229,8 +232,10 @@
 
 			<!-- Right: Settings & previews -->
 			<div class="min-w-0 flex-1 space-y-5">
+				<!-- SizeSelector：favicon 目标尺寸勾选列表（16~512 px） -->
 				<SizeSelector :sizes="faviconSizes" @toggle-size="toggleSize" />
 
+				<!-- FormatSelector：输出格式选择（PNG / ICO 开关） -->
 				<FormatSelector
 					:ico="outputFormats.ico"
 					:png="outputFormats.png"
@@ -238,6 +243,7 @@
 					@update:ico="(v: boolean) => (outputFormats.ico = v)"
 				/>
 
+				<!-- PreviewGrid：生成结果预览网格（各尺寸预览图 + 单个下载 + 打包下载 zip） -->
 				<PreviewGrid
 					:can-download-zip="selectedSizes.length > 0 && selectedFormats.length > 0"
 					:favicons="generatedFavicons"
@@ -248,7 +254,9 @@
 					@download-single="downloadSingle"
 				/>
 
+				<!-- UsageTips：使用技巧提示（如何接入网站 head 等） -->
 				<UsageTips />
+				<!-- AboutPanel：工具简介与使用说明 -->
 				<AboutPanel />
 			</div>
 		</div>
