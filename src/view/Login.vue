@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 	import { ref } from 'vue';
 	import { useRouter } from 'vue-router';
-	import { NAlert, NButton, NInput } from 'naive-ui';
 	import { useAuth } from '@/composable/auth';
-	import { icons } from '@/data/icons';
-	import TkuIcon from '@/component/common/TkuIcon.vue';
+	import BrandPanel from '@/fragment/page/login/BrandPanel.vue';
+	import LoginForm from '@/fragment/page/login/LoginForm.vue';
+	import BackHomeLink from '@/fragment/page/login/BackHomeLink.vue';
 
 	const router = useRouter();
 	const { login } = useAuth();
@@ -30,57 +30,12 @@
 <template>
 	<div class="min-h-[70vh] flex items-center justify-center">
 		<div class="w-full max-w-sm">
-			<!-- 品牌区 -->
-			<div class="text-center mb-8">
-				<div
-					class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/20"
-				>
-					<span class="text-white">
-						<!-- TkuIcon：Iconify 图标封装组件（统一图标渲染入口） -->
-						<TkuIcon :name="icons.lock" :size="28" />
-					</span>
-				</div>
-				<h1 class="text-2xl font-bold text-slate-800 mb-1 tracking-tight">TKU 设置</h1>
-				<p class="text-sm text-slate-500">请输入密码以访问站点设置</p>
-			</div>
-
-			<!-- 登录卡片 -->
-			<div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-8">
-				<div class="space-y-5">
-					<div>
-						<label class="block text-xs font-semibold text-slate-500 mb-2">密码</label>
-						<n-input
-							v-model:value="password"
-							placeholder="请输入密码"
-							show-password-toggle
-							size="large"
-							type="password"
-							@keyup.enter="handleLogin"
-						/>
-					</div>
-
-					<n-alert v-if="error" class="text-sm" type="error">
-						{{ error }}
-					</n-alert>
-
-					<n-button
-						:loading="loading"
-						block
-						class="!rounded-lg !font-medium"
-						size="large"
-						type="primary"
-						@click="handleLogin"
-					>
-						{{ loading ? '验证中...' : '登录' }}
-					</n-button>
-				</div>
-			</div>
-
-			<div class="mt-6 text-center">
-				<router-link class="text-sm text-slate-400 hover:text-slate-600 transition-colors duration-200" to="/">
-					返回首页
-				</router-link>
-			</div>
+			<!-- BrandPanel：品牌区（Logo 徽标 + 标题 + 副标题） -->
+			<BrandPanel />
+			<!-- LoginForm：登录卡片（密码输入 + 错误提示 + 登录按钮） -->
+			<LoginForm v-model:password="password" :error="error" :loading="loading" @login="handleLogin" />
+			<!-- BackHomeLink：返回首页链接 -->
+			<BackHomeLink />
 		</div>
 	</div>
 </template>

@@ -2,8 +2,10 @@
 	import { computed } from 'vue';
 	import { useRoute } from 'vue-router';
 	import { getToolById } from '@/data/tools';
-	import { icons } from '@/data/icons';
-	import TkuIcon from '@/component/common/TkuIcon.vue';
+	import BreadcrumbBar from '@/fragment/page/tool-page/BreadcrumbBar.vue';
+	import ToolHeader from '@/fragment/page/tool-page/ToolHeader.vue';
+	import ToolOutlet from '@/fragment/page/tool-page/ToolOutlet.vue';
+	import NotFoundState from '@/fragment/page/tool-page/NotFoundState.vue';
 
 	const route = useRoute();
 	const toolId = computed(() => route.path.split('/').pop() || '');
@@ -14,59 +16,21 @@
 	<div v-if="tool" class="flex flex-col min-h-full">
 		<!-- 根容器占满滚动容器高度，内容不足时无页底空白；超出时自然增高滚动 -->
 
-		<!-- 面包屑 -->
-		<div class="mb-6 flex-shrink-0">
-			<router-link
-				class="inline-flex items-center gap-1.5 text-sm text-slate-400 hover:text-blue-500 transition-colors duration-200"
-				to="/"
-			>
-				<span class="text-base">&larr;</span>
-				<span>返回首页</span>
-			</router-link>
-		</div>
+		<!-- BreadcrumbBar：返回首页面包屑 -->
+		<BreadcrumbBar />
 
-		<!-- 工具标题（渐变图标容器） -->
-		<div class="mb-8 flex-shrink-0">
-			<div class="flex items-center gap-4">
-				<div
-					class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 flex items-center justify-center shadow-sm"
-				>
-					<!-- TkuIcon：Iconify 图标封装组件（统一图标渲染入口） -->
-					<TkuIcon :name="tool.icon" :size="28" />
-				</div>
-				<div>
-					<h1 class="text-2xl font-bold text-slate-800 tracking-tight">{{ tool.name }}</h1>
-					<p class="text-slate-500 text-sm mt-0.5">{{ tool.description }}</p>
-				</div>
-			</div>
-		</div>
+		<!-- ToolHeader：工具标题（渐变图标 + 名称 + 描述） -->
+		<ToolHeader :tool="tool" />
 
-		<!-- 嵌套路由渲染的动态工具组件 -->
+		<!-- 工具内容容器 -->
 		<div
 			class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 sm:p-6 lg:p-8 flex flex-col flex-1 min-h-0"
 		>
-			<router-view v-slot="{ Component }">
-				<transition mode="out-in" name="tool">
-					<keep-alive>
-						<component :is="Component" class="flex-1 min-h-0" />
-					</keep-alive>
-				</transition>
-			</router-view>
+			<!-- ToolOutlet：嵌套路由渲染的工具页面出口（带过渡与缓存） -->
+			<ToolOutlet />
 		</div>
 	</div>
 
-	<!-- 未找到状态 -->
-	<div v-else class="flex flex-col items-center justify-center py-24 text-center">
-		<div class="mb-4 text-slate-300">
-			<TkuIcon :name="icons.magnify" :size="48" />
-		</div>
-		<p class="text-slate-500 text-lg font-medium mb-2">工具未找到</p>
-		<p class="text-slate-400 text-sm mb-6">请检查工具地址是否正确</p>
-		<router-link
-			class="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm font-medium no-underline"
-			to="/"
-		>
-			<span>&larr;</span> 返回首页
-		</router-link>
-	</div>
+	<!-- NotFoundState：工具未找到状态 -->
+	<NotFoundState v-else />
 </template>

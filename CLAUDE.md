@@ -73,6 +73,7 @@ src/
 ├── component/           # 通用 UI 组件（多个 view 可能用到）
 │   └── common/TkuIcon.vue # Iconify 图标封装（:name 传 icons 里的图标名）
 ├── fragment/            # 页面片段组件（只有一个 view 会用到）
+│   ├── page/            # 顶层页面片段（home/ login/ settings/ tool-page/，按页面区块拆分哑组件）
 │   └── tool/            # 各工具页面片段（按工具分组 + 按工具名子目录拆分）
 │       ├── codec/       # base64/ url-encode/ unicode/ encoding/
 │       ├── formatter/   # json-formatter/ sql-formatter/
@@ -89,6 +90,9 @@ src/
 │   接收 props、发 emit 事件，不持有业务状态；典型如 ModeSelect/InputPanel/
 │   ActionBar/OutputPanel/ResultList/AboutPanel 等（按工具实际结构增减）。
 │   业务状态与逻辑集中在对应的 view 中，由 view 组装这些小组件。
+│   fragment/page/ 下同理：Home/Login/Settings/ToolPage 按页面区块拆分（如
+│   home/HeroSection、settings/QuickLinksCard、tool-page/ToolOutlet），
+│   由对应 view 组装，view 只保留状态与逻辑。
 ├── layout/              # 布局框架
 │   └── AppLayout.vue    # 侧边栏 + 内容区 + 页脚（n-layout 结构）
 ├── view/                # 最终访问的页面（所有路由只指向这里）
