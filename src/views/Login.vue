@@ -4,7 +4,7 @@
 	import { NAlert, NButton, NInput } from 'naive-ui';
 	import { useAuth } from '@/data/auth';
 	import { icons } from '@/data/icons';
-	import TkuIcon from '@/components/common/TkuIcon.vue';
+	import TkuIcon from '@/component/common/TkuIcon.vue';
 
 	const router = useRouter();
 	const { login } = useAuth();

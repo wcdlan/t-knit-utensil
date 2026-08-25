@@ -4,8 +4,8 @@
 	import { NAlert, NButton, NCard, NInput, NPopover, NSwitch, NTooltip } from 'naive-ui';
 	import { saveConfig, siteConfig } from '@/data/siteConfig';
 	import { useAuth } from '@/data/auth';
-	import { QUICK_LINK_ICONS, icons } from '@/data/icons';
-	import TkuIcon from '@/components/common/TkuIcon.vue';
+	import { icons, QUICK_LINK_ICONS } from '@/data/icons';
+	import TkuIcon from '@/component/common/TkuIcon.vue';
 	import type { QuickLink } from '@/types/site';
 
 	const router = useRouter();
@@ -142,15 +142,15 @@
 								</button>
 							</div>
 						</n-popover>
-						<div class="w-32 shrink-0"><n-input v-model:value="link.name" placeholder="名称（提示）" size="small" /></div>
-						<div class="flex-1 min-w-0"><n-input v-model:value="link.url" placeholder="https://..." size="small" /></div>
+						<div class="w-32 shrink-0">
+							<n-input v-model:value="link.name" placeholder="名称（提示）" size="small" />
+						</div>
+						<div class="flex-1 min-w-0">
+							<n-input v-model:value="link.url" placeholder="https://..." size="small" />
+						</div>
 						<n-tooltip>
 							<template #trigger>
-								<n-switch
-									v-model:value="link.newTab"
-									class="shrink-0"
-									size="small"
-								/>
+								<n-switch v-model:value="link.newTab" class="shrink-0" size="small" />
 							</template>
 							新标签页打开
 						</n-tooltip>

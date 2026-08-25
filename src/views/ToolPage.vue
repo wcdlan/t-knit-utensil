@@ -3,7 +3,7 @@
 	import { useRoute } from 'vue-router';
 	import { getToolById } from '@/data/tools';
 	import { icons } from '@/data/icons';
-	import TkuIcon from '@/components/common/TkuIcon.vue';
+	import TkuIcon from '@/component/common/TkuIcon.vue';
 
 	const route = useRoute();
 	const toolId = computed(() => route.path.split('/').pop() || '');

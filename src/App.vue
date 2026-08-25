@@ -16,7 +16,7 @@
 	import { loadConfig, siteConfig } from './data/siteConfig';
 	import { toolGroups } from './data/tools';
 	import { icons } from './data/icons';
-	import TkuIcon from './components/common/TkuIcon.vue';
+	import TkuIcon from './component/common/TkuIcon.vue';
 	import logoImg from './assets/TKU.png';
 	import logoIconImg from './assets/TKU-U.png';
 

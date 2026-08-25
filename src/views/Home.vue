@@ -4,7 +4,7 @@
 	import { toolGroups } from '@/data/tools';
 	import { icons } from '@/data/icons';
 	import { siteConfig } from '@/data/siteConfig';
-	import TkuIcon from '@/components/common/TkuIcon.vue';
+	import TkuIcon from '@/component/common/TkuIcon.vue';
 
 	const query = ref('');
 	const collapsed = ref<Record<string, boolean>>({});
