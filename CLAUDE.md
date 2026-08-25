@@ -55,6 +55,7 @@ src/
 │   └── virtio.ts        # VirtioVersion, VirtioFile — VirtIO 下载
 ├── data/                # 纯静态数据（常量注册表）
 │   ├── tools.ts         # 工具定义（ToolGroup[]，getToolById），从 types 重导出类型
+│   ├── licenses.ts      # 开源许可证资料库（LICENSES，许可证选择器数据源）
 │   └── icons.ts         # 图标名注册表（Iconify mdi: 前缀），导出 icons 对象 + IconKey 类型
 ├── composable/          # 组合式函数（可复用的响应式逻辑）
 │   ├── auth.ts          # useAuth() — 登录/登出，token 存 localStorage
