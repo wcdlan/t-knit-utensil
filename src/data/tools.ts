@@ -158,6 +158,12 @@ export const toolGroups: ToolGroup[] = [
 		icon: icons.toolbox,
 		tools: [
 			{
+				id: 'js-obfuscator',
+				name: 'JS 混淆',
+				description: 'JavaScript 代码混淆加密，支持低/中/高三档预设与全部选项微调',
+				icon: icons.shuffle
+			},
+			{
 				id: 'license-selector',
 				name: '开源许可证选择',
 				description: '通过问答匹配最适合的开源许可证，支持协议细览、复制与下载',

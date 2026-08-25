@@ -33,6 +33,7 @@ export const icons = {
 	// 常用工具
 	toolbox: 'mdi:toolbox-outline',
 	script: 'mdi:script-text-outline',
+	shuffle: 'mdi:shuffle-variant',
 	// 导航
 	home: 'mdi:home-outline',
 	cog: 'mdi:cog-outline',
@@ -44,6 +45,7 @@ export const icons = {
 	// 操作
 	check: 'mdi:check',
 	close: 'mdi:close',
+	info: 'mdi:information-outline',
 	package: 'mdi:package-variant-closed',
 	lightbulb: 'mdi:lightbulb-on-outline',
 	textFormat: 'mdi:format-text',

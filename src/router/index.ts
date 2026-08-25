@@ -38,6 +38,7 @@ const router = createRouter({
 				{ path: 'favicon', component: () => import('@/view/tool/image/FaviconView.vue') },
 				{ path: 'ai-tester', component: () => import('@/view/tool/ai/AiApiTesterView.vue') },
 				{ path: 'license-selector', component: () => import('@/view/tool/common/LicenseSelectorView.vue') },
+				{ path: 'js-obfuscator', component: () => import('@/view/tool/common/JsObfuscatorView.vue') },
 				{ path: 'virtio-download', component: () => import('@/view/tool/virtualization/VirtioDownloadView.vue') }
 			]
 		},
