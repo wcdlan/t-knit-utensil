@@ -17,5 +17,10 @@
       "url": "https://github.com/wcdlan/t-knit-utensil",
       "newTab": true
     }
-  ]
+  ],
+  "shortcut": {
+    "enabled": true,
+    "key": "/",
+    "useCommandOnMac": true
+  }
 }

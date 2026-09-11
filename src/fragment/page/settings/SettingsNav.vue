@@ -24,6 +24,7 @@
 		{ key: 'site', label: '站点信息', icon: renderIcon(icons.web) },
 		{ key: 'footer', label: '页脚设置', icon: renderIcon(icons.textFormat) },
 		{ key: 'quickLinks', label: '快捷连接', icon: renderIcon(icons.link) },
+		{ key: 'shortcut', label: '快捷键', icon: renderIcon(icons.keyboard) },
 		{ key: 'security', label: '安全设置', icon: renderIcon(icons.shieldKey) },
 		{ key: 'system', label: '系统信息', icon: renderIcon(icons.lightbulb) }
 	];

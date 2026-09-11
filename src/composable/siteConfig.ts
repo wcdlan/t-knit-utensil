@@ -2,7 +2,7 @@ import { reactive } from 'vue';
 import defaultConfig from '../../site.config.json';
 import type { QuickLink, SiteConfig } from '@/types/site';
 
-export type { FooterConfig, AuthConfig, QuickLink, SiteConfig } from '@/types/site';
+export type { FooterConfig, AuthConfig, QuickLink, SiteConfig, ShortcutConfig } from '@/types/site';
 
 export const siteConfig = reactive<SiteConfig>({ ...defaultConfig });
 
@@ -24,6 +24,14 @@ export async function loadConfig() {
 				url: q.url ?? '',
 				newTab: q.newTab ?? true
 			}));
+		}
+		// 快捷键配置整体合并：缺字段时沿用默认值
+		if (data.shortcut) {
+			siteConfig.shortcut = {
+				enabled: data.shortcut.enabled ?? siteConfig.shortcut.enabled,
+				key: data.shortcut.key ?? siteConfig.shortcut.key,
+				useCommandOnMac: data.shortcut.useCommandOnMac ?? siteConfig.shortcut.useCommandOnMac
+			};
 		}
 	} catch {
 		// 加载失败时使用默认配置

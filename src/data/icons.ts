@@ -42,6 +42,7 @@ export const icons = {
 	home: 'mdi:home-outline',
 	cog: 'mdi:cog-outline',
 	tools: 'mdi:tools',
+	keyboard: 'mdi:keyboard-outline',
 	chevronRight: 'mdi:chevron-right',
 	chevronDown: 'mdi:chevron-down',
 	// 编码

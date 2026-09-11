@@ -13,6 +13,7 @@
 	import FooterCard from '@/fragment/page/settings/FooterCard.vue';
 	import QuickLinksCard from '@/fragment/page/settings/QuickLinksCard.vue';
 	import SecurityCard from '@/fragment/page/settings/SecurityCard.vue';
+	import ShortcutCard from '@/fragment/page/settings/ShortcutCard.vue';
 	import SystemInfoCard from '@/fragment/page/settings/SystemInfoCard.vue';
 	import SaveBar from '@/fragment/page/settings/SaveBar.vue';
 
@@ -117,6 +118,9 @@
 
 						<!-- 安全设置组 -->
 						<SecurityCard v-else-if="activeTab === 'security'" v-model:password="siteConfig.auth.password" />
+
+						<!-- 快捷键设置组 -->
+						<ShortcutCard v-else-if="activeTab === 'shortcut'" v-model:shortcut="siteConfig.shortcut" />
 
 						<!-- 系统信息组：部署机器信息 + ssh-keygen/OpenSSH 状态检测 -->
 						<SystemInfoCard

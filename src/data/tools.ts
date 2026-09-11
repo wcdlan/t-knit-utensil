@@ -9,7 +9,7 @@ export const toolGroups: ToolGroup[] = [
 		name: '编解码',
 		icon: icons.lock,
 		tools: [
-			{ id: 'base64', name: 'Base64', description: 'Base64 编码与解码', icon: icons.pencil },
+			{ id: 'base64', name: 'Base64', description: '文本 Base64 编码与解码', icon: icons.pencil },
 			{ id: 'url-encode', name: 'URL 编解码', description: 'URL 编码与解码转换', icon: icons.link },
 			{ id: 'unicode', name: 'Unicode', description: 'Unicode 与中文互转', icon: icons.web },
 			{

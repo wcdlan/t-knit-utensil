@@ -5,12 +5,15 @@
 	import { siteConfig } from '@/composable/siteConfig';
 	import { toolGroups } from '@/data/tools';
 	import { icons } from '@/data/icons';
+	import { formatShortcut, matchesShortcut } from '@/utils/shortcut';
 	import TkuIcon from '@/component/common/TkuIcon.vue';
+	import ToolSearchModal from '@/component/common/ToolSearchModal.vue';
 	import logoImg from '@/assets/TKU.png';
 	import logoIconImg from '@/assets/TKU-U.png';
 
 	const router = useRouter();
 	const route = useRoute();
+
 	// 初始即按当前路由展开所属分组（等效 default-expanded-keys，刷新后立即可用）
 	const expandedKeys = ref<string[]>([]);
 	const collapsed = ref(false);
@@ -20,16 +23,34 @@
 		if (mediaQuery) collapsed.value = mediaQuery.matches;
 	}
 
+	// ---- 全局快捷键：呼出工具搜索弹窗 ----
+	const searchVisible = ref(false);
+	/** 当前快捷键展示文本（随配置响应式更新） */
+	const shortcutText = computed(() => formatShortcut(siteConfig.shortcut));
+
+	function handleGlobalKeydown(e: KeyboardEvent) {
+		if (!matchesShortcut(e, siteConfig.shortcut)) return;
+		e.preventDefault();
+		searchVisible.value = !searchVisible.value;
+	}
+
 	onMounted(() => {
-		// 小屏（≤768px）自动收缩侧边栏
+		window.addEventListener('keydown', handleGlobalKeydown);
+		// 初始即按当前路由展开所属分组（等效 default-expanded-keys，刷新后立即可用）
 		mediaQuery = window.matchMedia('(max-width: 768px)');
 		syncCollapsed();
 		mediaQuery.addEventListener('change', syncCollapsed);
 	});
 
 	onBeforeUnmount(() => {
+		window.removeEventListener('keydown', handleGlobalKeydown);
 		mediaQuery?.removeEventListener('change', syncCollapsed);
 	});
+
+	/** 搜索弹窗选中工具后跳转 */
+	function handleNavigate(toolId: string) {
+		router.push('/tool/' + toolId);
+	}
 
 	function renderMenuIcon(icon: string) {
 		return () => h(TkuIcon, { name: icon, size: 18 });
@@ -180,5 +201,8 @@
 				<span v-if="siteConfig.footer.poweredBy" class="ml-4 text-slate-300">{{ siteConfig.footer.poweredBy }}</span>
 			</footer>
 		</div>
+
+		<!-- ToolSearchModal：全局快捷键呼出的工具搜索弹窗（任意页面可用） -->
+		<ToolSearchModal v-model:show="searchVisible" :shortcut-text="shortcutText" @navigate="handleNavigate" />
 	</n-layout>
 </template>
