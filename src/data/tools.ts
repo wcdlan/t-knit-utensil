@@ -219,6 +219,12 @@ export const toolGroups: ToolGroup[] = [
 				name: '开源许可证选择',
 				description: '通过问答匹配最适合的开源许可证，支持协议细览、复制与下载',
 				icon: icons.script
+			},
+			{
+				id: 'keyboard-tester',
+				name: '键盘测试',
+				description: '完整键盘模型按键测试，展示 KeyCode / APM / 输入历史，支持组合键与 Win / Mac 布局切换',
+				icon: icons.keyboard
 			}
 		]
 	},
