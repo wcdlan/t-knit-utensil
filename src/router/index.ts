@@ -21,6 +21,7 @@ const router = createRouter({
 				{ path: 'case-converter', component: () => import('@/view/tool/formatter/CaseConverterView.vue') },
 				{ path: 'timestamp', component: () => import('@/view/tool/converter/TimestampView.vue') },
 				{ path: 'color', component: () => import('@/view/tool/converter/ColorView.vue') },
+				{ path: 'base64-converter', component: () => import('@/view/tool/converter/Base64ConverterView.vue') },
 				{ path: 'uuid', component: () => import('@/view/tool/generator/UuidView.vue') },
 				{ path: 'hash', component: () => import('@/view/tool/generator/HashView.vue') },
 				{ path: 'qrcode', component: () => import('@/view/tool/generator/QrcodeView.vue') },

@@ -13,6 +13,7 @@ export const icons = {
 	swap: 'mdi:swap-horizontal',
 	clock: 'mdi:clock-outline',
 	palette: 'mdi:palette',
+	b64Converter: 'mdi:file-code-outline',
 	// 数据生成
 	lightning: 'mdi:lightning-bolt',
 	identifier: 'mdi:card-account-details-outline',

@@ -64,3 +64,31 @@ export function decodeBase64Url(input: string): string {
 	const padded = normalized + '='.repeat((4 - (normalized.length % 4)) % 4);
 	return new TextDecoder().decode(binaryToBytes(atob(padded)));
 }
+
+/** 从 Data URI 中解析出 MIME 类型（如 image/png），无头信息时返回空字符串 */
+export function extractMimeType(dataUri: string): string {
+	const match = /^data:([^;,]+)[;,]/.exec(dataUri);
+	return match ? match[1] : '';
+}
+
+/** 从带头的完整 Base64 中剥离 Data URI 头，仅返回纯数据部分 */
+export function stripBase64Prefix(base64: string): string {
+	const idx = base64.indexOf(',');
+	return idx === -1 ? base64 : base64.slice(idx + 1);
+}
+
+/** 由纯 Base64 数据 + MIME 类型拼出带 Data URI 头的字符串 */
+export function buildDataUri(base64: string, mime: string): string {
+	return `data:${mime || 'application/octet-stream'};base64,${stripBase64Prefix(base64)}`;
+}
+
+/** 判断内容是否是合法的 Base64（剔除空白与 Data URI 头后尝试解码） */
+export function isValidBase64Content(base64: string): boolean {
+	const content = stripBase64Prefix(base64).replace(/\s+/g, '');
+	if (!content) return false;
+	try {
+		return atob(content).length > 0;
+	} catch {
+		return false;
+	}
+}

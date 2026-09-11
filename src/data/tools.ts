@@ -52,7 +52,13 @@ export const toolGroups: ToolGroup[] = [
 		icon: icons.swap,
 		tools: [
 			{ id: 'timestamp', name: '时间戳转换', description: 'Unix 时间戳与日期互转', icon: icons.clock },
-			{ id: 'color', name: '颜色转换', description: 'HEX/RGB/HSL 颜色格式互转', icon: icons.palette }
+			{ id: 'color', name: '颜色转换', description: 'HEX/RGB/HSL 颜色格式互转', icon: icons.palette },
+			{
+				id: 'base64-converter',
+				name: 'Base64 转换',
+				description: '文本与任意文件（图片/文档/压缩包等）的 Base64 互转，支持还原下载',
+				icon: icons.b64Converter
+			}
 		]
 	},
 	{
