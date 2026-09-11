@@ -12,8 +12,15 @@
 	<router-link
 		:title="tool.description"
 		:to="`/tool/${tool.id}`"
-		class="flex flex-col items-center gap-2 p-4 rounded-xl border border-slate-200 bg-white hover:border-blue-300 hover:shadow-md hover:shadow-blue-100/50 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer group/card"
+		class="relative flex flex-col items-center gap-2 p-4 rounded-xl border border-slate-200 bg-white hover:border-blue-300 hover:shadow-md hover:shadow-blue-100/50 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer group/card"
 	>
+		<!-- 最全徽标：功能最完整的工具（如 Base64 全能转换）右上角提示 -->
+		<span
+			v-if="tool.featured"
+			class="absolute top-2 right-2 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 px-2 py-0.5 text-[10px] font-semibold text-white shadow-sm"
+		>
+			最全
+		</span>
 		<span class="text-slate-500 transition-transform duration-200 group-hover/card:scale-110">
 			<TkuIcon :name="tool.icon" :size="24" />
 		</span>

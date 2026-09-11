@@ -24,6 +24,7 @@
 				name: tool.name,
 				description: tool.description,
 				icon: tool.icon,
+				featured: tool.featured,
 				groupName: group.name
 			}))
 		)
@@ -151,7 +152,16 @@
 					</div>
 					<!-- 名称与描述 -->
 					<div class="min-w-0 flex-1">
-						<div class="truncate text-sm font-medium text-slate-700">{{ tool.name }}</div>
+						<div class="flex items-center gap-1.5">
+							<span class="truncate text-sm font-medium text-slate-700">{{ tool.name }}</span>
+							<!-- 最全徽标：功能最完整的工具在搜索结果中醒目提示 -->
+							<span
+								v-if="tool.featured"
+								class="shrink-0 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 px-1.5 py-0.5 text-[9px] font-semibold text-white"
+							>
+								最全
+							</span>
+						</div>
 						<div class="truncate text-xs text-slate-400">{{ tool.description }}</div>
 					</div>
 					<!-- 所属分组 -->

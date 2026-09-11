@@ -9,7 +9,7 @@ export const toolGroups: ToolGroup[] = [
 		name: '编解码',
 		icon: icons.lock,
 		tools: [
-			{ id: 'base64', name: 'Base64', description: '文本 Base64 编码与解码', icon: icons.pencil },
+			{ id: 'base64', name: 'Base64 编解码', description: '文本 Base64 编码与解码（轻量版）', icon: icons.pencil },
 			{ id: 'url-encode', name: 'URL 编解码', description: 'URL 编码与解码转换', icon: icons.link },
 			{ id: 'unicode', name: 'Unicode', description: 'Unicode 与中文互转', icon: icons.web },
 			{
@@ -55,9 +55,11 @@ export const toolGroups: ToolGroup[] = [
 			{ id: 'color', name: '颜色转换', description: 'HEX/RGB/HSL 颜色格式互转', icon: icons.palette },
 			{
 				id: 'base64-converter',
-				name: 'Base64 转换',
-				description: '文本与任意文件（图片/文档/压缩包等）的 Base64 互转，支持还原下载',
-				icon: icons.b64Converter
+				name: 'Base64 全能转换',
+				description:
+					'最完整的 Base64 工具：文本与任意文件（图片/文档/压缩包等）互转，支持 txt 上传拖拽、还原下载与预览',
+				icon: icons.b64Converter,
+				featured: true
 			}
 		]
 	},
@@ -172,7 +174,7 @@ export const toolGroups: ToolGroup[] = [
 			{
 				id: 'image-base64',
 				name: '图片 Base64 互转',
-				description: '图片与 Base64 互相转换，支持复制时携带 Data URI 文件头',
+				description: '图片专用：与 Base64 互转，支持 Data URI 头与还原下载',
 				icon: icons.imageRefresh
 			}
 		]
