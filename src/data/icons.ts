@@ -3,6 +3,7 @@ export const icons = {
 	lock: 'mdi:lock',
 	link: 'mdi:link',
 	web: 'mdi:web',
+	jwt: 'mdi:shield-key-outline',
 	// 格式化
 	star: 'mdi:star-four-points',
 	clipboard: 'mdi:clipboard-text-outline',

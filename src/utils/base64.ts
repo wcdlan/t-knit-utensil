@@ -30,3 +30,37 @@ export function decodeBase64(base64: string): string {
 	}
 	return new TextDecoder().decode(bytes);
 }
+
+/** 将字节数组转换为二进制字符串（供 btoa 使用） */
+function bytesToBinary(bytes: Uint8Array): string {
+	let binary = '';
+	for (let i = 0; i < bytes.length; i++) {
+		binary += String.fromCharCode(bytes[i]);
+	}
+	return binary;
+}
+
+/** 将二进制字符串转换为字节数组（供 TextDecoder 使用） */
+function binaryToBytes(binary: string): Uint8Array {
+	const bytes = new Uint8Array(binary.length);
+	for (let i = 0; i < binary.length; i++) {
+		bytes[i] = binary.charCodeAt(i);
+	}
+	return bytes;
+}
+
+/**
+ * Base64URL 编码（RFC 4648 §5）：把 Base64 的 `+` `/` 分别替换为 `-` `_`，并去掉末尾填充 `=`。
+ * 常用于 JWT 各段、URL 参数等场景。
+ */
+export function encodeBase64Url(input: string | Uint8Array): string {
+	const bytes = typeof input === 'string' ? new TextEncoder().encode(input) : input;
+	return btoa(bytesToBinary(bytes)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+/** Base64URL 解码为 UTF-8 字符串（自动补全缺失的 `=` 填充） */
+export function decodeBase64Url(input: string): string {
+	const normalized = input.replace(/-/g, '+').replace(/_/g, '/');
+	const padded = normalized + '='.repeat((4 - (normalized.length % 4)) % 4);
+	return new TextDecoder().decode(binaryToBytes(atob(padded)));
+}

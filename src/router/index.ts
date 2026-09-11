@@ -15,6 +15,7 @@ const router = createRouter({
 				{ path: 'url-encode', component: () => import('@/view/tool/codec/UrlEncodeView.vue') },
 				{ path: 'unicode', component: () => import('@/view/tool/codec/UnicodeView.vue') },
 				{ path: 'encoding', component: () => import('@/view/tool/codec/EncodingView.vue') },
+				{ path: 'jwt', component: () => import('@/view/tool/codec/JwtView.vue') },
 				{ path: 'json-formatter', component: () => import('@/view/tool/formatter/JsonFormatterView.vue') },
 				{ path: 'sql-formatter', component: () => import('@/view/tool/formatter/SqlFormatterView.vue') },
 				{ path: 'case-converter', component: () => import('@/view/tool/formatter/CaseConverterView.vue') },

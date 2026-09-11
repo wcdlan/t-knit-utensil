@@ -17,6 +17,12 @@ export const toolGroups: ToolGroup[] = [
 				name: '编码探测',
 				description: '文本在不同编码间的转换与乱码测试，支持 UTF-8/GBK/Big5 等',
 				icon: icons.encoding
+			},
+			{
+				id: 'jwt',
+				name: 'JWT 解析/生成',
+				description: '解析 JWT 头部与声明、校验 HMAC 签名，或自定义声明生成 token',
+				icon: icons.jwt
 			}
 		]
 	},
