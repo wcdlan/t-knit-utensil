@@ -150,6 +150,12 @@ export const toolGroups: ToolGroup[] = [
 				name: 'Favicon 生成器',
 				description: '上传图片裁剪生成多尺寸 Favicon，支持 PNG/ICO 格式与 ZIP 打包下载',
 				icon: icons.target
+			},
+			{
+				id: 'image-base64',
+				name: '图片 Base64 互转',
+				description: '图片与 Base64 互相转换，支持复制时携带 Data URI 文件头',
+				icon: icons.imageRefresh
 			}
 		]
 	},

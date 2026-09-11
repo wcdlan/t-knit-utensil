@@ -21,6 +21,7 @@ export const icons = {
 	shieldKey: 'mdi:shield-key',
 	// 图片工具
 	image: 'mdi:image-outline',
+	imageRefresh: 'mdi:image-refresh-outline',
 	target: 'mdi:target',
 	// 文本工具
 	pencil: 'mdi:pencil-outline',

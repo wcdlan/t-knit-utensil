@@ -39,6 +39,7 @@ const router = createRouter({
 				{ path: 'ipv6', component: () => import('@/view/tool/network/Ipv6View.vue') },
 				{ path: 'subnet-calc', component: () => import('@/view/tool/network/SubnetCalcView.vue') },
 				{ path: 'favicon', component: () => import('@/view/tool/image/FaviconView.vue') },
+				{ path: 'image-base64', component: () => import('@/view/tool/image/ImageBase64View.vue') },
 				{ path: 'ai-tester', component: () => import('@/view/tool/ai/AiApiTesterView.vue') },
 				{ path: 'license-selector', component: () => import('@/view/tool/common/LicenseSelectorView.vue') },
 				{ path: 'js-obfuscator', component: () => import('@/view/tool/common/JsObfuscatorView.vue') },
