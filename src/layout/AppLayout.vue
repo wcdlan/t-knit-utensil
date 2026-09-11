@@ -5,7 +5,7 @@
 	import { siteConfig } from '@/composable/siteConfig';
 	import { toolGroups } from '@/data/tools';
 	import { icons } from '@/data/icons';
-	import { formatShortcut, matchesShortcut } from '@/utils/shortcut';
+	import { formatFeatureShortcuts, matchShortcutFeature } from '@/utils/shortcut';
 	import TkuIcon from '@/component/common/TkuIcon.vue';
 	import ToolSearchModal from '@/component/common/ToolSearchModal.vue';
 	import logoImg from '@/assets/TKU.png';
@@ -23,15 +23,18 @@
 		if (mediaQuery) collapsed.value = mediaQuery.matches;
 	}
 
-	// ---- 全局快捷键：呼出工具搜索弹窗 ----
+	// ---- 全局快捷键：按功能分发（一个功能可绑定多个触发键） ----
 	const searchVisible = ref(false);
-	/** 当前快捷键展示文本（随配置响应式更新） */
-	const shortcutText = computed(() => formatShortcut(siteConfig.shortcut));
+	/** 搜索功能当前快捷键展示文本（随配置响应式更新，支持多组） */
+	const shortcutText = computed(() => formatFeatureShortcuts(siteConfig.shortcut, 'search'));
 
 	function handleGlobalKeydown(e: KeyboardEvent) {
-		if (!matchesShortcut(e, siteConfig.shortcut)) return;
+		const featureId = matchShortcutFeature(e, siteConfig.shortcut);
+		if (!featureId) return;
 		e.preventDefault();
-		searchVisible.value = !searchVisible.value;
+		if (featureId === 'search') {
+			searchVisible.value = !searchVisible.value;
+		}
 	}
 
 	onMounted(() => {

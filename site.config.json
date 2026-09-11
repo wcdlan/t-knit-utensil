@@ -20,7 +20,13 @@
   ],
   "shortcut": {
     "enabled": true,
-    "key": "/",
-    "useCommandOnMac": true
+    "useCommandOnMac": true,
+    "features": [
+      {
+        "id": "search",
+        "label": "工具搜索",
+        "keys": ["/", "\\"]
+      }
+    ]
   }
 }

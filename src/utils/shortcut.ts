@@ -1,7 +1,7 @@
 // 全局快捷键工具：平台检测、快捷键格式化与按键匹配
-import type { ShortcutConfig } from '@/types/site';
+import type { ShortcutConfig, ShortcutFeature } from '@/types/site';
 
-export type { ShortcutConfig } from '@/types/site';
+export type { ShortcutConfig, ShortcutFeature } from '@/types/site';
 
 /** 判断当前是否为 macOS（用户代理包含 Macintosh / Mac OS X） */
 export function isMacPlatform(): boolean {
@@ -27,21 +27,35 @@ export function formatShortcutKey(key: string): string {
 	return key;
 }
 
-/** 生成快捷键的展示文本，如「Ctrl + /」或「⌘ + /」 */
-export function formatShortcut(config: ShortcutConfig): string {
+/** 生成单个绑定的展示文本，如「Ctrl + /」或「⌘ + /」 */
+export function formatBinding(config: ShortcutConfig, key: string): string {
 	const mod = shouldUseCommand(config) ? '⌘' : 'Ctrl';
-	return `${mod} + ${formatShortcutKey(config.key)}`;
+	return `${mod} + ${formatShortcutKey(key)}`;
+}
+
+/** 生成某个功能全部快捷键的展示文本，如「Ctrl + /、Ctrl + \」 */
+export function formatFeatureShortcuts(config: ShortcutConfig, featureId: string): string {
+	const feature = config.features.find((f) => f.id === featureId);
+	if (!feature || feature.keys.length === 0) return '';
+	return feature.keys.map((key) => formatBinding(config, key)).join('、');
+}
+
+/** 按功能 id 查找配置项 */
+export function findShortcutFeature(config: ShortcutConfig, featureId: string): ShortcutFeature | undefined {
+	return config.features.find((f) => f.id === featureId);
 }
 
 /**
- * 判断键盘事件是否匹配当前快捷键。
- * 修饰键按平台与配置解析：Mac 启用替换时用 metaKey（⌘），否则用 ctrlKey。
+ * 判断键盘事件命中了哪个功能的快捷键（未命中返回 null）。
+ * 一个功能可绑定多个触发键，任一匹配即视为命中；修饰键按平台与配置解析。
  */
-export function matchesShortcut(event: KeyboardEvent, config: ShortcutConfig): boolean {
-	if (!config.enabled) return false;
-	const keyMatches = event.key.toLowerCase() === config.key.toLowerCase();
-	if (!keyMatches) return false;
+export function matchShortcutFeature(event: KeyboardEvent, config: ShortcutConfig): string | null {
+	if (!config.enabled) return null;
 	// 与快捷键无关的修饰键（Alt / Shift）按下时不匹配，避免 Ctrl+Shift+/ 误触
-	if (event.altKey || event.shiftKey) return false;
-	return shouldUseCommand(config) ? event.metaKey : event.ctrlKey;
+	if (event.altKey || event.shiftKey) return null;
+	const modMatches = shouldUseCommand(config) ? event.metaKey : event.ctrlKey;
+	if (!modMatches) return null;
+	const pressedKey = event.key.toLowerCase();
+	const feature = config.features.find((f) => f.keys.some((k) => k.toLowerCase() === pressedKey));
+	return feature ? feature.id : null;
 }

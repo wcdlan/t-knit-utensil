@@ -16,14 +16,24 @@ export interface QuickLink {
 	newTab: boolean; // 新标签页打开（true）还是当前页打开（false）
 }
 
-/** 全局快捷键配置：默认 Ctrl+/（Mac 上可按需改用 Command）呼出工具搜索 */
+/** 单个功能的快捷键配置：一个功能可绑定多个触发键（如搜索支持 Ctrl+/ 与 Ctrl+\） */
+export interface ShortcutFeature {
+	/** 功能标识，如 "search"（呼出工具搜索） */
+	id: string;
+	/** 功能显示名称 */
+	label: string;
+	/** 触发键列表（不含修饰键），如 ["/", "\\"] */
+	keys: string[];
+}
+
+/** 全局快捷键配置：功能列表形式，便于后续新增功能 */
 export interface ShortcutConfig {
 	/** 是否启用全局快捷键 */
 	enabled: boolean;
-	/** 触发键（不含修饰键），如 "/"、空格等 */
-	key: string;
 	/** 在 Mac 上是否用 Command（⌘）键替代 Ctrl（⌃）键 */
 	useCommandOnMac: boolean;
+	/** 功能快捷键列表 */
+	features: ShortcutFeature[];
 }
 
 export interface SiteConfig {

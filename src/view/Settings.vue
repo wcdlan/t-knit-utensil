@@ -82,9 +82,14 @@
 		<!-- SettingsHeader：面包屑与退出 + 标题区 -->
 		<SettingsHeader @logout="handleLogout" />
 
-		<!-- 左右分栏：左侧配置组子导航，右侧当前组内容 -->
-		<div class="grid grid-cols-1 gap-6 md:grid-cols-[200px_1fr]">
-			<!-- SettingsNav：配置组子导航（站点信息 / 页脚 / 快捷连接 / 安全 / 系统信息） -->
+		<!-- SaveBar：保存按钮与保存结果提示（置于页面上方，所有配置组共用，随时可保存） -->
+		<div class="mb-6">
+			<SaveBar :error="error" :saved="saved" @save="handleSave" />
+		</div>
+
+		<!-- 左右分栏：左侧配置组子导航，右侧当前组内容（items-start 避免左侧菜单随右侧内容拉伸变高） -->
+		<div class="grid grid-cols-1 items-start gap-6 md:grid-cols-[200px_1fr]">
+			<!-- SettingsNav：配置组子导航（站点信息 / 页脚 / 快捷连接 / 快捷键 / 安全 / 系统信息） -->
 			<SettingsNav v-model:active="activeTab" />
 
 			<div class="min-w-0">
@@ -134,11 +139,6 @@
 						/>
 					</div>
 				</transition>
-
-				<!-- SaveBar：保存按钮与保存结果提示（所有配置组共用，不参与切换动画） -->
-				<div class="mt-6">
-					<SaveBar :error="error" :saved="saved" @save="handleSave" />
-				</div>
 			</div>
 		</div>
 	</div>
