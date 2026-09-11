@@ -80,6 +80,8 @@
 
 <template>
 	<div class="flex min-h-0 flex-1 flex-col space-y-4">
+		<!-- AboutPanel：工具简介与使用说明 -->
+		<AboutPanel />
 		<!-- PresetSelect：混淆强度预设选择（默认低混淆） -->
 		<PresetSelect :preset-key="presetKey" @update:preset-key="applyPreset" />
 
@@ -100,8 +102,5 @@
 
 		<!-- OptionPanel：全部混淆选项配置（切换预设后可按需微调） -->
 		<OptionPanel :options="options" @update:option="updateOption" />
-
-		<!-- AboutPanel：工具简介与使用说明 -->
-		<AboutPanel />
 	</div>
 </template>

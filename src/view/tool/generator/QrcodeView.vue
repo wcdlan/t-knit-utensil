@@ -15,12 +15,11 @@
 
 <template>
 	<div class="space-y-6">
+		<!-- AboutPanel：工具简介与使用说明 -->
+		<AboutPanel />
 		<!-- InputPanel：二维码内容文本 + 尺寸设置输入区 -->
 		<InputPanel v-model:size="size" v-model:text="text" />
 		<!-- PreviewPanel：二维码实时预览图（含加载与大小提示） -->
 		<PreviewPanel :qr-url="qrUrl" :size="size" :text="text" />
 	</div>
-
-	<!-- AboutPanel：工具简介与使用说明 -->
-	<AboutPanel />
 </template>

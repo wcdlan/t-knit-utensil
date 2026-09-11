@@ -198,6 +198,8 @@
 
 <template>
 	<div class="space-y-6" @dragover="onDragOver" @drop="handleDrop">
+		<!-- AboutPanel：工具简介与使用说明 -->
+		<AboutPanel />
 		<!-- 上传区域 -->
 		<!-- UploadArea：图片上传区域（点击或拖拽选择源图，未上传前展示） -->
 		<UploadArea v-if="!sourceImage" @file-selected="loadImageFile" />
@@ -256,8 +258,6 @@
 
 				<!-- UsageTips：使用技巧提示（如何接入网站 head 等） -->
 				<UsageTips />
-				<!-- AboutPanel：工具简介与使用说明 -->
-				<AboutPanel />
 			</div>
 		</div>
 	</div>

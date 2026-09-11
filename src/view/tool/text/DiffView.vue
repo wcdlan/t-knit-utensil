@@ -67,6 +67,8 @@
 
 <template>
 	<div class="space-y-6">
+		<!-- AboutPanel：工具简介与使用说明 -->
+		<AboutPanel />
 		<!-- InputPanel：左右两侧待比较文本输入区 -->
 		<InputPanel v-model:left="left" v-model:right="right" />
 		<!-- ActionBar：开始比较 / 清空 操作按钮 -->
@@ -75,7 +77,5 @@
 		<StatsSummary :stats="diffStats" />
 		<!-- ResultPanel：逐行差异结果展示（增删行着色高亮） -->
 		<ResultPanel :lines="diffResult" />
-		<!-- AboutPanel：工具简介与使用说明 -->
-		<AboutPanel />
 	</div>
 </template>

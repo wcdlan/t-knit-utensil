@@ -27,6 +27,8 @@
 
 <template>
 	<div class="space-y-6">
+		<!-- AboutPanel：工具简介与使用说明 -->
+		<AboutPanel />
 		<!-- AlgorithmSelect：哈希算法选择下拉框（MD5 / SHA-1 / SHA-256 / SHA-512 等） -->
 		<AlgorithmSelect v-model:model-value="algorithm" />
 		<!-- InputPanel：待哈希的文本输入框 -->
@@ -35,7 +37,5 @@
 		<ActionBar @process="generateHash" />
 		<!-- OutputPanel：哈希结果输出区（展示当前算法与摘要，可复制） -->
 		<OutputPanel :algorithm="algorithm" :output="output" @copy="copy" />
-		<!-- AboutPanel：工具简介与使用说明 -->
-		<AboutPanel />
 	</div>
 </template>

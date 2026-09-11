@@ -75,6 +75,8 @@
 
 <template>
 	<div class="flex min-h-0 flex-1 flex-col space-y-6">
+		<!-- AboutPanel：工具简介与使用说明 -->
+		<AboutPanel />
 		<!-- GenToolbar：随机 JSON 生成工具栏（生成模式选择 + 一键生成） -->
 		<GenToolbar v-model:gen-mode="genMode" :gen-mode-options="genModeOptions" @generate="generateRandom" />
 
@@ -90,8 +92,5 @@
 
 		<!-- FeedbackAlert：校验 / 格式化结果的反馈提示条（成功或错误信息） -->
 		<FeedbackAlert v-if="error" :message="alertMessage()" :type="alertType()" />
-
-		<!-- AboutPanel：工具简介与使用说明 -->
-		<AboutPanel />
 	</div>
 </template>

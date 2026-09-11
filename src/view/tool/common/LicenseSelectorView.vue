@@ -198,6 +198,8 @@
 
 <template>
 	<div class="space-y-6">
+		<!-- AboutPanel：工具简介与使用说明（全宽横条，不参与左右分栏） -->
+		<AboutPanel />
 		<!-- 左右分栏：左侧问卷，右侧推荐结果 -->
 		<div class="flex flex-col gap-6 lg:flex-row lg:items-start">
 			<!-- QuestionnairePanel：许可证选择问卷面板（按项目类型 / Copyleft 强度等问答） -->
@@ -220,7 +222,5 @@
 				@update:selected-lang="(v: string) => (selectedLang = v)"
 			/>
 		</div>
-		<!-- AboutPanel：工具简介与使用说明（全宽横条，不参与左右分栏） -->
-		<AboutPanel />
 	</div>
 </template>

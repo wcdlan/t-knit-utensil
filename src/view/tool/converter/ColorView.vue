@@ -91,6 +91,8 @@
 
 <template>
 	<div class="space-y-8">
+		<!-- AboutPanel：工具简介与使用说明 -->
+		<AboutPanel />
 		<!-- 颜色预览卡片 -->
 		<div class="flex flex-col sm:flex-row gap-6 items-start">
 			<!-- ColorPreview：颜色大色块预览（点击可弹出取色器） -->
@@ -139,9 +141,5 @@
 				/>
 			</div>
 		</div>
-
-		<!-- 颜色模型说明 -->
-		<!-- AboutPanel：工具简介与使用说明 -->
-		<AboutPanel />
 	</div>
 </template>

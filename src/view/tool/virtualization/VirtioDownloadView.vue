@@ -332,6 +332,8 @@
 
 <template>
 	<div class="space-y-6">
+		<!-- AboutPanel：工具简介与使用说明 -->
+		<AboutPanel />
 		<!-- 错误提示 -->
 		<n-alert v-if="error" closable type="error" @close="error = ''">
 			{{ error }}
@@ -376,9 +378,5 @@
 
 		<!-- 下载提示 -->
 		<p v-if="downloadProgress" class="text-xs text-blue-600">正在下载 {{ downloadProgress }}... 文件较大请耐心等待。</p>
-
-		<!-- 介绍 -->
-		<!-- AboutPanel：工具简介与使用说明 -->
-		<AboutPanel />
 	</div>
 </template>

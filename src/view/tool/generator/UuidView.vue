@@ -88,6 +88,8 @@
 
 <template>
 	<div class="space-y-6">
+		<!-- AboutPanel：工具简介与使用说明 -->
+		<AboutPanel />
 		<!-- ConfigPanel：UUID 生成配置面板（版本 / 数量 / 大小写 / v3·v5 名称与命名空间） -->
 		<ConfigPanel
 			v-model:count="count"
@@ -103,7 +105,5 @@
 		<ActionBar :uuids="uuids" @generate="generate" @copy-all="copyAll" />
 		<!-- ResultList：生成的 UUID 列表（点击单条复制） -->
 		<ResultList :uuids="uuids" @copy-one="copyOne" />
-		<!-- AboutPanel：工具简介与使用说明 -->
-		<AboutPanel />
 	</div>
 </template>

@@ -92,6 +92,8 @@
 
 <template>
 	<div class="space-y-6">
+		<!-- AboutPanel：工具简介与使用说明 -->
+		<AboutPanel />
 		<!-- AvailabilityBanner：服务端密钥生成可用性提示条（检测中 / 可用 / 不可用，可重试） -->
 		<AvailabilityBanner :check-state="checkState" :server-version="serverVersion" @retry="checkAvailability" />
 
@@ -124,8 +126,5 @@
 
 		<!-- PublicKeyOutput：公钥输出区（只读展示 + 复制 + 单独下载） -->
 		<PublicKeyOutput :generating="generating" :value="publicKey" @copy="copyPublic" @download="downloadPublic" />
-
-		<!-- AboutPanel：工具简介与使用说明 -->
-		<AboutPanel />
 	</div>
 </template>

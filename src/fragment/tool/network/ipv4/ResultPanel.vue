@@ -16,7 +16,8 @@
 
 <template>
 	<div>
-		<n-alert v-if="error" class="text-sm" type="error">
+		<!-- 错误提示条：输入非法时展示，与结果区隔离并留出呼吸边距 -->
+		<n-alert v-if="error" class="mb-4 text-sm" type="error">
 			{{ error }}
 		</n-alert>
 
@@ -60,9 +61,9 @@
 			</div>
 		</div>
 
-		<!-- 无结果占位 -->
+		<!-- 无结果占位（仅在输入为空且无错误时展示） -->
 		<div
-			v-else
+			v-if="!result && !error"
 			class="flex flex-col items-center justify-center rounded-xl border border-dashed border-slate-200 py-10 text-center"
 		>
 			<p class="text-sm text-slate-400">输入 IPv4 地址后，解析结果将显示在这里</p>

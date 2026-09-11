@@ -72,6 +72,8 @@
 
 <template>
 	<div class="space-y-6">
+		<!-- AboutPanel：工具简介与使用说明 -->
+		<AboutPanel :now="now" :now-ms="nowMs" />
 		<!-- CurrentTimePanel：实时当前时间展示（秒级 / 毫秒级时间戳 + 格式化日期，点击复制） -->
 		<CurrentTimePanel :now="now" :now-ms="nowMs" :now-str="nowStr" @copy="copy" />
 		<!-- TsToDatePanel：时间戳转日期面板（秒级 / 毫秒级输入并实时转换） -->
@@ -89,7 +91,5 @@
 			:date-result="dateResult"
 			@copy="() => copyToClipboard(dateResult || '')"
 		/>
-		<!-- AboutPanel：工具简介与使用说明 -->
-		<AboutPanel :now="now" :now-ms="nowMs" />
 	</div>
 </template>

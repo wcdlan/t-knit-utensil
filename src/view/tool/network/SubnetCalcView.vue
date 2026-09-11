@@ -59,6 +59,8 @@
 
 <template>
 	<div class="space-y-6">
+		<!-- AboutPanel：工具简介与使用说明 -->
+		<AboutPanel />
 		<!-- InputPanel：IPv4 / IPv6 CIDR 网络地址输入框 -->
 		<InputPanel v-model:model-value="input" />
 		<!-- PrefixConfigPanel：划分子网目标前缀配置（输入框 + 快捷按钮 + 合法性提示） -->
@@ -78,7 +80,5 @@
 			:truncated="result.truncated"
 			@copy="copy"
 		/>
-		<!-- AboutPanel：工具简介与使用说明 -->
-		<AboutPanel />
 	</div>
 </template>

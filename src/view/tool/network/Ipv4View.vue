@@ -30,11 +30,11 @@
 
 <template>
 	<div class="space-y-6">
+		<!-- AboutPanel：工具简介与使用说明 -->
+		<AboutPanel />
 		<!-- InputPanel：IPv4 地址 / CIDR 输入框 -->
 		<InputPanel v-model:model-value="input" />
 		<!-- ResultPanel：解析结果展示（基本属性 / 子网边界 / 其他表示 / 地址特性） -->
 		<ResultPanel :error="error" :result="result" @copy="copy" />
-		<!-- AboutPanel：工具简介与使用说明 -->
-		<AboutPanel />
 	</div>
 </template>

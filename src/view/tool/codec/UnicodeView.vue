@@ -45,6 +45,8 @@
 
 <template>
 	<div class="space-y-6">
+		<!-- AboutPanel：工具简介与使用说明 -->
+		<AboutPanel />
 		<!-- ModeSelect：文本转 Unicode / Unicode 转文本 模式切换 -->
 		<ModeSelect :mode="mode" @update:mode="(v) => (mode = v)" />
 		<!-- InputPanel：待转换文本输入框 -->
@@ -53,7 +55,5 @@
 		<ActionBar @process="process" />
 		<!-- OutputPanel：转换结果输出区（只读 + 复制按钮） -->
 		<OutputPanel :output="output" @copy="copy" />
-		<!-- AboutPanel：工具简介与使用说明 -->
-		<AboutPanel />
 	</div>
 </template>

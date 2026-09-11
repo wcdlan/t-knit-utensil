@@ -260,6 +260,8 @@
 
 <template>
 	<div class="space-y-6">
+		<!-- AboutPanel：工具简介与使用说明 -->
+		<AboutPanel />
 		<!-- HistoryPanel：历史配置记录面板（保存 / 应用 / 删除 / 清空） -->
 		<HistoryPanel
 			:has-api-key="!!apiKey.trim()"
@@ -309,8 +311,5 @@
 			:test-status="testStatus"
 			@send="sendTestMessage"
 		/>
-
-		<!-- AboutPanel：工具简介与使用说明 -->
-		<AboutPanel />
 	</div>
 </template>
