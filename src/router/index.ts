@@ -17,6 +17,7 @@ const router = createRouter({
 				{ path: 'encoding', component: () => import('@/view/tool/codec/EncodingView.vue') },
 				{ path: 'json-formatter', component: () => import('@/view/tool/formatter/JsonFormatterView.vue') },
 				{ path: 'sql-formatter', component: () => import('@/view/tool/formatter/SqlFormatterView.vue') },
+				{ path: 'case-converter', component: () => import('@/view/tool/formatter/CaseConverterView.vue') },
 				{ path: 'timestamp', component: () => import('@/view/tool/converter/TimestampView.vue') },
 				{ path: 'color', component: () => import('@/view/tool/converter/ColorView.vue') },
 				{ path: 'uuid', component: () => import('@/view/tool/generator/UuidView.vue') },

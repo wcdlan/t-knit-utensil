@@ -31,7 +31,13 @@ export const toolGroups: ToolGroup[] = [
 				description: 'JSON 格式化、压缩与校验',
 				icon: icons.clipboard
 			},
-			{ id: 'sql-formatter', name: 'SQL 格式化', description: 'SQL 语句格式化', icon: icons.database }
+			{ id: 'sql-formatter', name: 'SQL 格式化', description: 'SQL 语句格式化', icon: icons.database },
+			{
+				id: 'case-converter',
+				name: '变量名格式转换',
+				description: '解析变量名并转换为 camelCase / snake_case / kebab-case 等常用格式',
+				icon: icons.caseFormat
+			}
 		]
 	},
 	{

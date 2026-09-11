@@ -7,6 +7,7 @@ export const icons = {
 	star: 'mdi:star-four-points',
 	clipboard: 'mdi:clipboard-text-outline',
 	database: 'mdi:database-outline',
+	caseFormat: 'mdi:format-letter-case',
 	// 数据转换
 	swap: 'mdi:swap-horizontal',
 	clock: 'mdi:clock-outline',
