@@ -103,6 +103,31 @@ export const toolGroups: ToolGroup[] = [
 		]
 	},
 	{
+		id: 'network',
+		name: '网络工具',
+		icon: icons.ipNetwork,
+		tools: [
+			{
+				id: 'ipv4',
+				name: 'IPv4 解析',
+				description: '解析 IPv4 地址与 CIDR 前缀，展示掩码/网络/广播/可用主机等详细信息',
+				icon: icons.ipv4
+			},
+			{
+				id: 'ipv6',
+				name: 'IPv6 解析',
+				description: '解析 IPv6 地址与 CIDR 前缀，展示展开/压缩/网络/接口标识符等信息',
+				icon: icons.ipv6
+			},
+			{
+				id: 'subnet-calc',
+				name: '子网计算',
+				description: 'IPv4/IPv6 子网划分计算，支持自定义前缀细分并列出子网清单',
+				icon: icons.subnet
+			}
+		]
+	},
+	{
 		id: 'ssh',
 		name: 'OpenSSH',
 		icon: icons.key,

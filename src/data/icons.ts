@@ -42,6 +42,11 @@ export const icons = {
 	chevronDown: 'mdi:chevron-down',
 	// 编码
 	encoding: 'mdi:code-string',
+	// 网络工具
+	ipNetwork: 'mdi:ip-network-outline',
+	ipv4: 'mdi:ip',
+	ipv6: 'mdi:ip-outline',
+	subnet: 'mdi:vector-square',
 	// 操作
 	check: 'mdi:check',
 	close: 'mdi:close',
