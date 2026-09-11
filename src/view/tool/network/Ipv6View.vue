@@ -2,7 +2,7 @@
 	import { computed, ref } from 'vue';
 	import { copyToClipboard } from '@/utils/clipboard';
 	import { analyzeIpv6 } from '@/utils/ip';
-	import InputPanel from '@/fragment/tool/network/ipv6/InputPanel.vue';
+	import CidrInputPanel from '@/fragment/tool/network/CidrInputPanel.vue';
 	import ResultPanel from '@/fragment/tool/network/ipv6/ResultPanel.vue';
 	import AboutPanel from '@/fragment/tool/network/ipv6/AboutPanel.vue';
 	import type { Ipv6ParseResult } from '@/types/ip';
@@ -32,8 +32,13 @@
 	<div class="space-y-6">
 		<!-- AboutPanel：工具简介与使用说明 -->
 		<AboutPanel />
-		<!-- InputPanel：IPv6 地址 / CIDR 输入框 -->
-		<InputPanel v-model:model-value="input" />
+		<!-- CidrInputPanel：IPv6 地址 / CIDR 单行输入框（通用组件，传 label / placeholder / icon） -->
+		<CidrInputPanel
+			v-model:model-value="input"
+			icon="mdi:ip-outline"
+			label="IPv6 地址 / CIDR"
+			placeholder="例如 2001:db8::1 或 2001:db8::1/64"
+		/>
 		<!-- ResultPanel：解析结果展示（地址形式 / 子网信息 / 规模映射 / 地址特性） -->
 		<ResultPanel :error="error" :result="result" @copy="copy" />
 	</div>

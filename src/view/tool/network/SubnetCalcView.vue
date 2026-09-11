@@ -2,7 +2,7 @@
 	import { computed, ref, watch } from 'vue';
 	import { copyToClipboard } from '@/utils/clipboard';
 	import { calcSubnets } from '@/utils/ip';
-	import InputPanel from '@/fragment/tool/network/subnet-calc/InputPanel.vue';
+	import CidrInputPanel from '@/fragment/tool/network/CidrInputPanel.vue';
 	import PrefixConfigPanel from '@/fragment/tool/network/subnet-calc/PrefixConfigPanel.vue';
 	import ResultPanel from '@/fragment/tool/network/subnet-calc/ResultPanel.vue';
 	import SubnetListPanel from '@/fragment/tool/network/subnet-calc/SubnetListPanel.vue';
@@ -61,8 +61,13 @@
 	<div class="space-y-6">
 		<!-- AboutPanel：工具简介与使用说明 -->
 		<AboutPanel />
-		<!-- InputPanel：IPv4 / IPv6 CIDR 网络地址输入框 -->
-		<InputPanel v-model:model-value="input" />
+		<!-- CidrInputPanel：IPv4 / IPv6 CIDR 网络地址单行输入框（通用组件，传 label / placeholder / icon） -->
+		<CidrInputPanel
+			v-model:model-value="input"
+			icon="mdi:vector-square"
+			label="网络地址（CIDR）"
+			placeholder="例如 192.168.1.0/24 或 2001:db8::/48"
+		/>
 		<!-- PrefixConfigPanel：划分子网目标前缀配置（输入框 + 快捷按钮 + 合法性提示） -->
 		<PrefixConfigPanel
 			:source-prefix="sourcePrefix ?? 0"

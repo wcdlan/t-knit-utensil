@@ -2,7 +2,7 @@
 	import { computed, ref } from 'vue';
 	import { copyToClipboard } from '@/utils/clipboard';
 	import { analyzeIpv4 } from '@/utils/ip';
-	import InputPanel from '@/fragment/tool/network/ipv4/InputPanel.vue';
+	import CidrInputPanel from '@/fragment/tool/network/CidrInputPanel.vue';
 	import ResultPanel from '@/fragment/tool/network/ipv4/ResultPanel.vue';
 	import AboutPanel from '@/fragment/tool/network/ipv4/AboutPanel.vue';
 	import type { Ipv4ParseResult } from '@/types/ip';
@@ -32,8 +32,13 @@
 	<div class="space-y-6">
 		<!-- AboutPanel：工具简介与使用说明 -->
 		<AboutPanel />
-		<!-- InputPanel：IPv4 地址 / CIDR 输入框 -->
-		<InputPanel v-model:model-value="input" />
+		<!-- CidrInputPanel：IPv4 地址 / CIDR 单行输入框（通用组件，传 label / placeholder / icon） -->
+		<CidrInputPanel
+			v-model:model-value="input"
+			icon="mdi:ip"
+			label="IPv4 地址 / CIDR"
+			placeholder="例如 192.168.1.5 或 192.168.1.0/24"
+		/>
 		<!-- ResultPanel：解析结果展示（基本属性 / 子网边界 / 其他表示 / 地址特性） -->
 		<ResultPanel :error="error" :result="result" @copy="copy" />
 	</div>
