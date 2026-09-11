@@ -60,6 +60,12 @@ export const toolGroups: ToolGroup[] = [
 					'最完整的 Base64 工具：文本与任意文件（图片/文档/压缩包等）互转，支持 txt 上传拖拽、还原下载与预览',
 				icon: icons.b64Converter,
 				featured: true
+			},
+			{
+				id: 'date-converter',
+				name: '时间日期转换器',
+				description: '自动识别任意日期格式，转换为时间戳与 ISO/RFC/中文等 20 种格式，支持输入与目标时区切换',
+				icon: icons.calendarClock
 			}
 		]
 	},
@@ -225,6 +231,12 @@ export const toolGroups: ToolGroup[] = [
 				name: '键盘测试',
 				description: '完整键盘模型按键测试，展示 KeyCode / APM / 输入历史，支持组合键与 Win / Mac 布局切换',
 				icon: icons.keyboard
+			},
+			{
+				id: 'browser-info',
+				name: '浏览器信息',
+				description: '查看浏览器版本与内核、系统硬件、屏幕视口、网络与公网 IP、存储配额、电池及 50+ 项 Web 能力检测',
+				icon: icons.monitor
 			}
 		]
 	},

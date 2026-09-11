@@ -20,6 +20,7 @@ const router = createRouter({
 				{ path: 'sql-formatter', component: () => import('@/view/tool/formatter/SqlFormatterView.vue') },
 				{ path: 'case-converter', component: () => import('@/view/tool/formatter/CaseConverterView.vue') },
 				{ path: 'timestamp', component: () => import('@/view/tool/converter/TimestampView.vue') },
+				{ path: 'date-converter', component: () => import('@/view/tool/converter/DateConverterView.vue') },
 				{ path: 'color', component: () => import('@/view/tool/converter/ColorView.vue') },
 				{ path: 'base64-converter', component: () => import('@/view/tool/converter/Base64ConverterView.vue') },
 				{ path: 'uuid', component: () => import('@/view/tool/generator/UuidView.vue') },
@@ -46,6 +47,7 @@ const router = createRouter({
 				{ path: 'ai-tester', component: () => import('@/view/tool/ai/AiApiTesterView.vue') },
 				{ path: 'license-selector', component: () => import('@/view/tool/common/LicenseSelectorView.vue') },
 				{ path: 'keyboard-tester', component: () => import('@/view/tool/common/KeyboardTesterView.vue') },
+				{ path: 'browser-info', component: () => import('@/view/tool/common/BrowserInfoView.vue') },
 				{ path: 'js-obfuscator', component: () => import('@/view/tool/common/JsObfuscatorView.vue') },
 				{ path: 'virtio-download', component: () => import('@/view/tool/virtualization/VirtioDownloadView.vue') }
 			]

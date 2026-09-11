@@ -14,6 +14,7 @@ export const icons = {
 	clock: 'mdi:clock-outline',
 	palette: 'mdi:palette',
 	b64Converter: 'mdi:file-code-outline',
+	calendarClock: 'mdi:calendar-clock',
 	// 数据生成
 	lightning: 'mdi:lightning-bolt',
 	identifier: 'mdi:card-account-details-outline',
@@ -43,6 +44,8 @@ export const icons = {
 	cog: 'mdi:cog-outline',
 	tools: 'mdi:tools',
 	keyboard: 'mdi:keyboard-outline',
+	monitor: 'mdi:monitor',
+	monitorScreenshot: 'mdi:monitor-screenshot',
 	chevronRight: 'mdi:chevron-right',
 	chevronDown: 'mdi:chevron-down',
 	// 编码
