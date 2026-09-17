@@ -1,35 +1,29 @@
 <script lang="ts" setup>
 	import { computed } from 'vue';
-	import { type DataTableColumns, NAlert, NButton, NButtonGroup, NDataTable } from 'naive-ui';
+	import { type DataTableColumns, NAlert, NButton, NDataTable } from 'naive-ui';
 	import TkuIcon from '@/component/common/TkuIcon.vue';
 	import { icons } from '@/data/icons';
 	import type { CronRunItem } from '@/types/cron';
 
 	const props = defineProps<{
-		/** 下一次执行时间列表 */
+		/** 下一次执行时间列表（固定 8 条） */
 		items: CronRunItem[];
 		/** 未能生成的剩余条数（扫描达到上限时大于 0） */
 		remaining: number;
-		/** 预览条数 */
-		count: number;
-		/** 可选的预览条数档位 */
-		countOptions: number[];
 		/** 表达式是否可解析 */
 		ok: boolean;
 	}>();
 
 	const emit = defineEmits<{
-		'update:count': [value: number];
 		copy: [value: string];
 		copyAll: [];
 	}>();
 
-	/** 表格列定义 */
+	/** 表格列定义（与「字段拆解」并排展示，列宽按窄栏优化，过窄时表格横向滚动） */
 	const columns = computed<DataTableColumns<CronRunItem>>(() => [
-		{ title: '#', key: 'index', width: 56, align: 'center' },
-		{ title: '本地时间', key: 'localText', minWidth: 190, className: 'font-mono' },
-		{ title: 'UTC 时间', key: 'utcText', minWidth: 190, className: 'font-mono' },
-		{ title: '距今', key: 'relative', width: 110, className: 'text-slate-500' }
+		{ title: '本地时间', key: 'localText', minWidth: 150, className: 'font-mono' },
+		{ title: 'UTC 时间', key: 'utcText', minWidth: 150, className: 'font-mono' },
+		{ title: '距今', key: 'relative', width: 86, className: 'text-slate-500' }
 	]);
 
 	/** 行点击复制该次执行时间（本地时间文本） */
@@ -40,28 +34,16 @@
 
 <template>
 	<div class="space-y-3">
-		<!-- 预览控制条：条数档位 + 复制全部 -->
-		<div class="flex flex-wrap items-center justify-between gap-3">
-			<div class="flex items-center gap-2">
-				<span class="text-xs font-semibold text-slate-500">预览条数</span>
-				<!-- NButtonGroup：逐条切换预览数量 -->
-				<n-button-group size="small">
-					<n-button
-						v-for="option in props.countOptions"
-						:key="option"
-						:quaternary="option !== props.count"
-						:secondary="option === props.count"
-						:type="option === props.count ? 'primary' : 'default'"
-						@click="emit('update:count', option)"
-					>
-						{{ option }}
-					</n-button>
-				</n-button-group>
-			</div>
+		<!-- 面板标题：与「字段拆解」标题样式保持一致，保证并排时顶部对齐 -->
+		<div class="flex items-center justify-between gap-2">
+			<span class="text-xs font-semibold text-slate-500">
+				执行时间预览
+				<span v-if="props.items.length" class="ml-1 font-normal text-slate-400">近期 {{ props.items.length }} 次</span>
+			</span>
 			<!-- 复制全部：逐行拼接「本地时间」 -->
-			<n-button :disabled="!props.items.length" secondary size="small" @click="emit('copyAll')">
+			<n-button :disabled="!props.items.length" quaternary size="tiny" @click="emit('copyAll')">
 				<span class="flex items-center gap-1">
-					<TkuIcon :name="icons.clipboard" :size="15" />
+					<TkuIcon :name="icons.clipboard" :size="14" />
 					<span>复制全部</span>
 				</span>
 			</n-button>
@@ -94,6 +76,7 @@
 			:columns="columns"
 			:data="props.items"
 			:row-key="(row: CronRunItem) => String(row.timestampMs)"
+			:scroll-x="392"
 			:single-line="false"
 			size="small"
 			@row-click="handleRowClick"

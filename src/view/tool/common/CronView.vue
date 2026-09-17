@@ -17,6 +17,7 @@
 	import type { CronBuilderField, CronPreviewResult } from '@/types/cron';
 	import AboutPanel from '@/fragment/tool/common/cron/AboutPanel.vue';
 	import CronBuilder from '@/fragment/tool/common/cron/CronBuilder.vue';
+	import CronDescriptionPanel from '@/fragment/tool/common/cron/CronDescriptionPanel.vue';
 	import CronEditor from '@/fragment/tool/common/cron/CronEditor.vue';
 	import CronFieldBreakdown from '@/fragment/tool/common/cron/CronFieldBreakdown.vue';
 	import CronIntroPanel from '@/fragment/tool/common/cron/CronIntroPanel.vue';
@@ -26,8 +27,8 @@
 
 	/** 默认示例：每天凌晨 2:30（5 段式） */
 	const DEFAULT_EXPRESSION = '30 2 * * *';
-	/** 预览条数可选档位 */
-	const COUNT_OPTIONS = [5, 10, 20, 50];
+	/** 预览条数：固定 8 条 */
+	const PREVIEW_COUNT = 8;
 	/** 「Cron 表达式介绍」页签中展示的示例表达式 */
 	const INTRO_EXAMPLES = [
 		'*/5 * * * *',
@@ -58,8 +59,6 @@
 	const expression = ref(DEFAULT_EXPRESSION);
 	/** 当前页签 */
 	const activeTab = ref('parse');
-	/** 预览条数 */
-	const previewCount = ref(5);
 
 	/** 页签列表 */
 	const navItems = computed(() => [
@@ -90,11 +89,11 @@
 			preview.value = { items: [], remaining: 0 };
 			return;
 		}
-		preview.value = previewCronRuns(expression.value, previewCount.value);
+		preview.value = previewCronRuns(expression.value, PREVIEW_COUNT);
 	}
 
 	watch(
-		[expression, previewCount, parseOk],
+		[expression, parseOk],
 		() => {
 			if (previewTimer) clearTimeout(previewTimer);
 			previewTimer = setTimeout(refreshPreview, 200);
@@ -193,24 +192,30 @@
 				@use-template="useExpression"
 			/>
 
-			<!-- CronFieldBreakdown：中文语义描述与逐字段拆解 -->
-			<CronFieldBreakdown :parsed="parsed" @copy="copy" />
+			<!-- CronDescriptionPanel：自然语言描述，单独占满一行并居中 -->
+			<CronDescriptionPanel :parsed="parsed" @copy="copy" />
 
-			<!-- CronPreviewPanel：接下来 N 次执行时间（本地 / UTC 双列） -->
-			<CronPreviewPanel
-				:count="previewCount"
-				:count-options="COUNT_OPTIONS"
-				:items="preview.items"
-				:ok="parseOk"
-				:remaining="preview.remaining"
-				@copy="copy"
-				@copy-all="copyAllRuns"
-				@update:count="(value: number) => (previewCount = value)"
-			/>
+			<!-- 字段拆解与执行时间预览：宽屏下并排一行，窄屏自动堆叠 -->
+			<div class="grid grid-cols-1 items-start gap-6 xl:grid-cols-2">
+				<!-- CronFieldBreakdown：逐字段拆解明细 -->
+				<CronFieldBreakdown :parsed="parsed" @copy="copy" />
+
+				<!-- CronPreviewPanel：接下来 N 次执行时间（本地 / UTC 双列） -->
+				<CronPreviewPanel
+					:items="preview.items"
+					:ok="parseOk"
+					:remaining="preview.remaining"
+					@copy="copy"
+					@copy-all="copyAllRuns"
+				/>
+			</div>
 		</template>
 
 		<!-- 选单构建 -->
 		<template v-else-if="activeTab === 'build'">
+			<!-- CronDescriptionPanel：构建过程中的实时语义反馈（占满一行并居中） -->
+			<CronDescriptionPanel :parsed="parsed" @copy="copy" />
+
 			<!-- CronBuilder：逐字段选择常用取值或自定义片段 -->
 			<CronBuilder
 				:disabled-hint="builderDisabledHint"
@@ -219,7 +224,7 @@
 				@input="handleBuilderInput"
 				@select="handleBuilderSelect"
 			/>
-			<!-- CronFieldBreakdown：构建过程中的实时语义反馈 -->
+			<!-- CronFieldBreakdown：逐字段拆解明细 -->
 			<CronFieldBreakdown :parsed="parsed" @copy="copy" />
 		</template>
 
