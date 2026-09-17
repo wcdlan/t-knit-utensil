@@ -46,6 +46,7 @@ export const icons = {
 	keyboard: 'mdi:keyboard-outline',
 	monitor: 'mdi:monitor',
 	monitorScreenshot: 'mdi:monitor-screenshot',
+	cron: 'mdi:calendar-sync-outline',
 	chevronRight: 'mdi:chevron-right',
 	chevronDown: 'mdi:chevron-down',
 	// 编码

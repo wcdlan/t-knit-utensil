@@ -237,6 +237,12 @@ export const toolGroups: ToolGroup[] = [
 				name: '浏览器信息',
 				description: '查看浏览器版本与内核、系统硬件、屏幕视口、网络与公网 IP、存储配额、电池及 50+ 项 Web 能力检测',
 				icon: icons.monitor
+			},
+			{
+				id: 'cron',
+				name: 'Cron 表达式',
+				description: '解析转换 cron 表达式，中文描述、逐字段选单构建、常用表达式速查，并预览未来执行时间',
+				icon: icons.cron
 			}
 		]
 	},
