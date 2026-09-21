@@ -19,6 +19,8 @@ export const icons = {
 	palette: 'mdi:palette',
 	b64Converter: 'mdi:file-code-outline',
 	calendarClock: 'mdi:calendar-clock',
+	chmod: 'mdi:file-lock-outline',
+	filesize: 'mdi:file-swap-outline',
 	// 数据生成
 	lightning: 'mdi:lightning-bolt',
 	identifier: 'mdi:card-account-details-outline',

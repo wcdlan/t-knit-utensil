@@ -183,6 +183,7 @@ src/
   **不直接写裸 SVG 或 emoji**
 - `themeOverrides` 含 `Message` 等组件主题（浅色背景 + 主色图标/文字），`copyToClipboard` 内部的 `createDiscreteApi` 也复用同一
   `themeOverrides`，与全局视觉一致
+- 页面设计，尽量不要存在大片空白，布局要合理，符合人类使用习惯。字体大小合适，方便阅读查看。内容较多时，可以设计的紧凑一点，而不是出现大片留白
 
 ### 状态管理
 
@@ -216,7 +217,8 @@ src/
 
 - `site.config.json` — 人类可读的默认配置（纳入版本控制）
 - `site.db` — better-sqlite3 管理的运行时数据库（已 gitignore），单表 `config(id=1, value)` 存整个配置 JSON
-- `server/config.shared.ts` — 存储层（`createStore`/`resolvePassword`），被 `server/index.ts`（生产 API）与 `vite-plugin-config.ts`（dev 中间件）共享
+- `server/config.shared.ts` — 存储层（`createStore`/`resolvePassword`），被 `server/index.ts`（生产 API）与
+  `vite-plugin-config.ts`（dev 中间件）共享
 - `vite-plugin-config.ts` — Vite 插件，提供以下 API 端点：
 
 | 端点                      | 方法 | 说明                                                                                                         |
@@ -268,8 +270,11 @@ src/
 
 ### CI/CD 与 DevOps
 
-- **部署文件**：集中在 `docker/`（`Dockerfile`、`nginx.conf`）。CI 用 `docker build -f docker/Dockerfile .`（build context 为仓库根）
-- **Dockerfile**：多阶段构建（node:24-alpine 构建 → node:24-alpine 运行时，只跑 `server/index.ts` API，端口 8080；nginx 由外部 compose 编排）
-- **nginx.conf**：compose 编排参考模板。SPA 回退（`try_files ... /index.html`），gzip 开启，`/api/` 反代到 API 服务（`proxy_pass http://api:8080`）
+- **部署文件**：集中在 `docker/`（`Dockerfile`、`nginx.conf`）。CI 用 `docker build -f docker/Dockerfile .`（build context
+  为仓库根）
+- **Dockerfile**：多阶段构建（node:24-alpine 构建 → node:24-alpine 运行时，只跑 `server/index.ts` API，端口 8080；nginx 由外部
+  compose 编排）
+- **nginx.conf**：compose 编排参考模板。SPA 回退（`try_files ... /index.html`），gzip 开启，`/api/` 反代到 API 服务（
+  `proxy_pass http://api:8080`）
 - **GitLab CI**（`.gitlab-ci.yml`）：仅 Git Tag 触发，构建 dist 压缩包 + 多标签 Docker 镜像推送至私有 Nexus 仓库
 - 项目目前 **没有配置任何测试框架**

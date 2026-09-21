@@ -66,6 +66,19 @@ export const toolGroups: ToolGroup[] = [
 				name: '时间日期转换器',
 				description: '自动识别任意日期格式，转换为时间戳与 ISO/RFC/中文等 20 种格式，支持输入与目标时区切换',
 				icon: icons.calendarClock
+			},
+			{
+				id: 'file-size',
+				name: '文件大小转换',
+				description: '字节与 bit/KB/MB/GB/TB 等容量单位互转，十进制与二进制双标准对照，并给出硬盘标称容量的系统显示值',
+				icon: icons.filesize
+			},
+			{
+				id: 'chmod',
+				name: 'chmod 权限计算',
+				description:
+					'八进制 / 符号 / 勾选三种方式互转 Linux 文件权限，支持 setuid、setgid、sticky 特殊位与常用权限速查',
+				icon: icons.chmod
 			}
 		]
 	},
