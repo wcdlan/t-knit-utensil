@@ -243,6 +243,13 @@ export const toolGroups: ToolGroup[] = [
 				name: 'Cron 表达式',
 				description: '解析转换 cron 表达式，中文描述、逐字段选单构建、常用表达式速查，并预览未来执行时间',
 				icon: icons.cron
+			},
+			{
+				id: 'raid-calc',
+				name: 'RAID 存储计算器',
+				description:
+					'覆盖 RAID 0/1/3/4/5/6/10/50/60/TP 等 20 种等级的磁盘容量计算，支持热备盘选择、容量构成分析与全等级横向对比',
+				icon: icons.raid
 			}
 		]
 	},

@@ -49,6 +49,7 @@ const router = createRouter({
 				{ path: 'keyboard-tester', component: () => import('@/view/tool/common/KeyboardTesterView.vue') },
 				{ path: 'browser-info', component: () => import('@/view/tool/common/BrowserInfoView.vue') },
 				{ path: 'cron', component: () => import('@/view/tool/common/CronView.vue') },
+				{ path: 'raid-calc', component: () => import('@/view/tool/common/RaidCalcView.vue') },
 				{ path: 'js-obfuscator', component: () => import('@/view/tool/common/JsObfuscatorView.vue') },
 				{ path: 'virtio-download', component: () => import('@/view/tool/virtualization/VirtioDownloadView.vue') }
 			]

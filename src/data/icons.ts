@@ -39,6 +39,9 @@ export const icons = {
 	toolbox: 'mdi:toolbox-outline',
 	script: 'mdi:script-text-outline',
 	shuffle: 'mdi:shuffle-variant',
+	raid: 'mdi:harddisk-plus',
+	harddisk: 'mdi:harddisk',
+	shieldCheck: 'mdi:shield-check-outline',
 	// 导航
 	home: 'mdi:home-outline',
 	cog: 'mdi:cog-outline',
