@@ -10,10 +10,26 @@ export interface AuthConfig {
 }
 
 export interface QuickLink {
-	icon: string; // iconify 图标名（如 "mdi:github"）
+	icon: string; // Iconify 图标名（如 "mdi:github"），或自定义上传图标的 Data URL / 图片地址
 	name: string; // 可选，用作首页 hover 提示；允许空字符串
 	url: string;
 	newTab: boolean; // 新标签页打开（true）还是当前页打开（false）
+}
+
+/** 快捷链接图标选项（图标选择浮层数据源） */
+export interface QuickLinkIconOption {
+	/** 图标名称（悬停提示） */
+	label: string;
+	/** 图标值：Iconify 图标名（mdi: 前缀） */
+	value: string;
+}
+
+/** 快捷链接图标分组（按用途分组，便于在浮层中快速定位） */
+export interface QuickLinkIconGroup {
+	/** 分组名称 */
+	label: string;
+	/** 分组内的图标选项 */
+	options: QuickLinkIconOption[];
 }
 
 /** 单个功能的快捷键配置：一个功能可绑定多个触发键（如搜索支持 Ctrl+/ 与 Ctrl+\） */
