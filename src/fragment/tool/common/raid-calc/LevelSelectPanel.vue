@@ -50,14 +50,14 @@
 				<TkuIcon :name="icons.raid" :size="15" class="text-blue-500" />
 				<span class="text-xs font-semibold uppercase tracking-wider text-slate-500">RAID 等级</span>
 			</div>
-			<span class="text-[10px] text-slate-400">共 {{ levels.length }} 个</span>
+			<span class="text-xs text-slate-400">共 {{ levels.length }} 个</span>
 		</div>
 
 		<!-- 等级选择：按分类分组的紧凑芯片，两/三列排布，悬停查看说明 -->
 		<div class="space-y-1.5">
 			<div v-for="group in grouped" :key="group.category">
 				<div class="mb-0.5 flex items-center gap-2">
-					<span class="shrink-0 text-[10px] text-slate-400">{{ group.label }}</span>
+					<span class="shrink-0 text-xs text-slate-400">{{ group.label }}</span>
 					<span class="h-px flex-1 bg-slate-200" />
 				</div>
 				<div class="grid grid-cols-2 gap-1 xl:grid-cols-3">
@@ -80,10 +80,7 @@
 						>
 							{{ level.name }}
 						</span>
-						<span
-							:class="isValid(level.id) ? 'text-emerald-600' : 'text-red-400'"
-							class="shrink-0 text-[10px] font-medium"
-						>
+						<span :class="isValid(level.id) ? 'text-emerald-600' : 'text-red-400'" class="shrink-0 text-xs font-medium">
 							{{ isValid(level.id) ? '可用' : '不足' }}
 						</span>
 					</button>

@@ -80,7 +80,7 @@
 			</div>
 		</div>
 
-		<p class="mt-1.5 text-[10px] leading-relaxed text-slate-400">
+		<p class="mt-1.5 text-xs leading-relaxed text-slate-400">
 			{{ levelName }} 由多个 {{ subLevelName }} 子组条带而成：阵列磁盘数需为每组磁盘数的整数倍，且至少 2
 			个子组（当前阵列磁盘 {{ arrayDisks }} 块{{
 				options.length ? `，可选 ${options.join(' / ')}` : '，无合法子组配置'

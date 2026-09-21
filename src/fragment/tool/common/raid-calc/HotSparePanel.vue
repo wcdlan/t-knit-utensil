@@ -78,7 +78,7 @@
 			</div>
 		</div>
 
-		<p class="mt-2 border-t border-slate-200/70 pt-2 text-[10px] leading-relaxed text-slate-400">
+		<p class="mt-2 border-t border-slate-200/70 pt-2 text-xs leading-relaxed text-slate-400">
 			热备容量 {{ spareCapacity }} · 阵列磁盘 {{ arrayDisks }} 块；
 			{{
 				spareScope === 'global' ? '全局热备可顶替同一控制器下任一 RAID 组的坏盘' : '专用热备仅服务当前阵列'

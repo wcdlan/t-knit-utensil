@@ -12,8 +12,8 @@
 <template>
 	<div>
 		<div class="mb-1 flex items-center justify-between">
-			<span class="text-[10px] font-semibold text-slate-500">容量构成</span>
-			<span class="font-mono text-[10px] text-slate-400">总物理容量 {{ total }}</span>
+			<span class="text-xs font-semibold text-slate-500">容量构成</span>
+			<span class="font-mono text-xs text-slate-400">总物理容量 {{ total }}</span>
 		</div>
 
 		<!-- 堆叠容量条：各分段宽度按占比渲染 -->
@@ -32,8 +32,8 @@
 		<div class="mt-1.5 flex flex-wrap gap-x-3 gap-y-1">
 			<div v-for="segment in segments" :key="segment.key" class="flex items-center gap-1">
 				<span :class="segment.color" class="h-2 w-2 rounded-sm" />
-				<span class="text-[10px] text-slate-500">{{ segment.label }}</span>
-				<span class="font-mono text-[10px] font-semibold text-slate-700">{{ segment.value }}</span>
+				<span class="text-xs text-slate-500">{{ segment.label }}</span>
+				<span class="font-mono text-xs font-semibold text-slate-700">{{ segment.value }}</span>
 			</div>
 		</div>
 	</div>

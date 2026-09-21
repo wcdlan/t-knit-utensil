@@ -73,8 +73,8 @@
 					class="shrink-0 rounded-lg border border-blue-100 bg-gradient-to-br from-blue-50 to-indigo-50 p-3 xl:w-[220px]"
 				>
 					<div class="flex items-baseline justify-between gap-2">
-						<span class="text-[10px] font-semibold text-blue-700">可用容量</span>
-						<span class="font-mono text-[10px] text-blue-500">≈ {{ result.usable.binary }}</span>
+						<span class="text-xs font-semibold text-blue-700">可用容量</span>
+						<span class="font-mono text-xs text-blue-500">≈ {{ result.usable.binary }}</span>
 					</div>
 					<div class="mt-0.5 font-mono text-2xl font-bold leading-tight text-blue-700">
 						{{ result.usable.decimal }}
@@ -83,7 +83,7 @@
 						<n-tag round size="tiny" type="info">利用率 {{ formatPercent(result.efficiency) }}</n-tag>
 						<n-tag round size="tiny" type="success">容错 {{ result.faultTolerance }} 块</n-tag>
 					</div>
-					<p class="mt-1.5 text-[10px] leading-relaxed text-slate-500">{{ result.faultText }}</p>
+					<p class="mt-1.5 text-xs leading-relaxed text-slate-500">{{ result.faultText }}</p>
 				</div>
 
 				<!-- CapacityBar：可用数据 / 冗余开销 / 热备 的容量构成堆叠条 -->

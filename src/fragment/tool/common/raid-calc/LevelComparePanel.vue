@@ -41,10 +41,10 @@
 			<div class="flex items-center gap-2">
 				<TkuIcon :name="icons.chart" :size="15" class="text-blue-500" />
 				<span class="text-sm font-semibold text-slate-700">全等级容量对比</span>
-				<span class="text-[10px] text-slate-400">同一磁盘配置下各等级的容量与容错差异</span>
+				<span class="text-xs text-slate-400">同一磁盘配置下各等级的容量与容错差异</span>
 			</div>
 			<div class="flex items-center gap-3">
-				<label class="flex items-center gap-2 text-[11px] text-slate-500">
+				<label class="flex items-center gap-2 text-xs text-slate-500">
 					只看可用
 					<n-switch
 						:value="availableOnly"
@@ -58,7 +58,7 @@
 
 		<div class="max-h-[440px] overflow-auto rounded-lg border border-slate-100 lg:max-h-none lg:min-h-0 lg:flex-1">
 			<table class="w-full text-left text-sm">
-				<thead class="sticky top-0 z-10 bg-slate-50 text-[10px] uppercase tracking-wide text-slate-400">
+				<thead class="sticky top-0 z-10 bg-slate-50 text-xs uppercase tracking-wide text-slate-400">
 					<tr>
 						<th class="px-2.5 py-1.5 font-medium">等级</th>
 						<th class="px-2.5 py-1.5 font-medium">分类</th>
@@ -79,7 +79,7 @@
 					>
 						<td class="px-2.5 py-1.5">
 							<div class="flex items-center gap-1.5">
-								<span class="text-[13px] font-semibold text-slate-700">{{ result.name }}</span>
+								<span class="text-sm font-semibold text-slate-700">{{ result.name }}</span>
 								<n-tag v-if="selected === result.level" round size="tiny" type="primary">当前</n-tag>
 							</div>
 						</td>
@@ -88,19 +88,19 @@
 								{{ RAID_CATEGORY_LABELS[result.category] }}
 							</n-tag>
 						</td>
-						<td class="px-2.5 py-1.5 font-mono text-[11px] text-slate-500">{{ structure(result) }}</td>
-						<td class="px-2.5 py-1.5 font-mono text-[11px]">
+						<td class="px-2.5 py-1.5 font-mono text-xs text-slate-500">{{ structure(result) }}</td>
+						<td class="px-2.5 py-1.5 font-mono text-xs">
 							<span v-if="result.valid" class="font-semibold text-slate-700">{{ result.usable.decimal }}</span>
 							<span v-else class="text-red-500">—</span>
 						</td>
-						<td class="px-2.5 py-1.5 font-mono text-[11px] text-slate-500">
+						<td class="px-2.5 py-1.5 font-mono text-xs text-slate-500">
 							{{ result.valid ? formatPercent(result.efficiency) : '—' }}
 						</td>
 						<td class="px-2.5 py-1.5">
-							<span v-if="result.valid" :title="result.faultText" class="text-[11px] text-slate-600">
+							<span v-if="result.valid" :title="result.faultText" class="text-xs text-slate-600">
 								{{ result.faultTolerance > 0 ? `${result.faultTolerance} 块` : '无冗余' }}
 							</span>
-							<span v-else :title="result.reason" class="text-[11px] text-red-500">盘数不足</span>
+							<span v-else :title="result.reason" class="text-xs text-red-500">盘数不足</span>
 						</td>
 						<td class="px-2 py-1.5 text-right">
 							<n-button secondary size="tiny" @click.stop="emit('select', result.level)">选用</n-button>
@@ -110,7 +110,7 @@
 			</table>
 		</div>
 
-		<p class="mt-1.5 text-[10px] leading-relaxed text-slate-400">
+		<p class="mt-1.5 text-xs leading-relaxed text-slate-400">
 			「容错」表示允许同时损坏的磁盘数；SHR / SHR-2
 			按等容量磁盘计算，混合容量磁盘的实际可用容量会更高（按最小盘为基准逐层冗余）。
 		</p>

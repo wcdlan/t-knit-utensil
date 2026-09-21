@@ -58,7 +58,7 @@
 					/>
 				</div>
 			</div>
-			<p class="text-right text-[10px] text-slate-400">{{ diskUnit }} = {{ unitHint }}</p>
+			<p class="text-right text-xs text-slate-400">{{ diskUnit }} = {{ unitHint }}</p>
 
 			<div class="flex items-center justify-between gap-2">
 				<span class="shrink-0 text-xs text-slate-500">磁盘总数（含热备）</span>
@@ -76,12 +76,12 @@
 					<span class="text-xs text-slate-400">块</span>
 				</div>
 			</div>
-			<p class="text-right text-[10px] text-slate-400">阵列磁盘 = 总数 − 热备盘</p>
+			<p class="text-right text-xs text-slate-400">阵列磁盘 = 总数 − 热备盘</p>
 		</div>
 
 		<!-- 常见盘位快捷预设：一键套用主流机型盘数 -->
 		<div class="mt-2 flex items-center justify-between gap-2 border-t border-slate-200/70 pt-2">
-			<span class="shrink-0 text-[10px] text-slate-400">常见盘位</span>
+			<span class="shrink-0 text-xs text-slate-400">常见盘位</span>
 			<div class="flex flex-wrap justify-end gap-1">
 				<n-button
 					v-for="preset in DISK_COUNT_PRESETS"

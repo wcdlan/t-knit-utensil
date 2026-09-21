@@ -9,8 +9,10 @@
 		formatSpeed,
 		getRaidInterface,
 		getRaidLevel,
+		RAID_BOTTLENECK_LABELS,
 		RAID_CATEGORY_LABELS,
 		RAID_LEVELS,
+		resolveDiskSpeed,
 		toCapacity
 	} from '@/utils/raid';
 	import AboutPanel from '@/fragment/tool/common/raid-calc/AboutPanel.vue';
@@ -41,6 +43,8 @@
 	const DEFAULT_SPAN_DISKS = 4;
 	/** 默认硬盘接口：SATA 6 Gb/s（NAS / 服务器机械盘最常见） */
 	const DEFAULT_INTERFACE: RaidInterfaceId = 'sata3';
+	/** 默认单盘实测速度（MB/s）：消费级 7200 转机械盘典型顺序速度 */
+	const DEFAULT_DISK_SPEED = 200;
 	/** 容量构成分段配色（Tailwind 背景类） */
 	const SEGMENT_COLORS = {
 		usable: 'bg-blue-500',
@@ -66,6 +70,8 @@
 	const availableOnly = ref(false);
 	/** 硬盘接口类型（决定单盘链路带宽） */
 	const interfaceId = ref<RaidInterfaceId>(DEFAULT_INTERFACE);
+	/** 单盘实测顺序速度（MB/s，用户可填写） */
+	const diskSpeed = ref(DEFAULT_DISK_SPEED);
 
 	/** 当前等级元信息 */
 	const levelMeta = computed(() => getRaidLevel(level.value));
@@ -113,13 +119,15 @@
 
 	/** 当前接口规格 */
 	const currentInterface = computed(() => getRaidInterface(interfaceId.value));
+	/** 单盘速度综合结果：实测速度与链路可用带宽取小值，并给出瓶颈 */
+	const speedLimit = computed(() => resolveDiskSpeed(diskSpeed.value, currentInterface.value.usableSpeed));
 	/** 阵列顺序读聚合带宽（MB/s）：阵列磁盘均可并行读 */
 	const readSpeed = computed(() =>
-		result.value.valid ? currentInterface.value.effectiveSpeed * result.value.arrayDisks : 0
+		result.value.valid ? speedLimit.value.effectiveSpeed * result.value.arrayDisks : 0
 	);
 	/** 阵列顺序写聚合带宽（MB/s）：数据盘并行写，镜像 / 校验等级已按数据盘折算 */
 	const writeSpeed = computed(() =>
-		result.value.valid ? currentInterface.value.effectiveSpeed * result.value.dataDisks : 0
+		result.value.valid ? speedLimit.value.effectiveSpeed * result.value.dataDisks : 0
 	);
 
 	/** 容量构成分段（相对总物理容量） */
@@ -165,6 +173,7 @@
 			`阵列原始容量：${item.raw.decimal}；冗余开销：${item.overhead.decimal}；利用率：${formatPercent(item.efficiency)}`,
 			`总物理容量：${totalPhysical.value.decimal}；热备容量：${spareCapacity.value.decimal}`,
 			`单盘有效贡献：${perDiskUsable.value.decimal}；接口：${currentInterface.value.name}`,
+			`单盘速度：实测 ${formatSpeed(speedLimit.value.diskSpeed)}、链路可用 ${formatSpeed(speedLimit.value.linkSpeed)}，有效 ${formatSpeed(speedLimit.value.effectiveSpeed)}（${RAID_BOTTLENECK_LABELS[speedLimit.value.bottleneck]}）`,
 			`聚合带宽（顺序）：读约 ${formatSpeed(readSpeed.value)}、写约 ${formatSpeed(writeSpeed.value)}`,
 			`容错能力：${item.faultText}`,
 			`读性能：${item.readPerf}；写性能：${item.writePerf}`
@@ -274,17 +283,20 @@
 			</div>
 
 			<div class="flex flex-col gap-3 lg:min-h-0">
-				<!-- DiskSpecPanel：单块硬盘容量参数与接口链路带宽估算 -->
+				<!-- DiskSpecPanel：单块硬盘容量参数与接口链路 / 速度估算 -->
 				<DiskSpecPanel
 					:array-disks="arrayDisks"
 					:data-disks="result.dataDisks"
 					:disk-capacity="diskCapacity"
+					:disk-speed="diskSpeed"
 					:interface-id="interfaceId"
 					:per-disk-usable="perDiskUsable"
 					:read-speed="readSpeed"
+					:speed-limit="speedLimit"
 					:valid="result.valid"
 					:write-speed="writeSpeed"
 					@copy="copy"
+					@update:disk-speed="(v: number) => (diskSpeed = v)"
 					@update:interface-id="(v: RaidInterfaceId) => (interfaceId = v)"
 				/>
 

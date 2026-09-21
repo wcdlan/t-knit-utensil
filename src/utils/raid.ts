@@ -7,12 +7,15 @@ import type {
 	RaidCategory,
 	RaidDiskPreset,
 	RaidDiskShape,
+	RaidDiskSpeedPreset,
 	RaidDiskUnit,
 	RaidDiskUnitOption,
 	RaidInterface,
 	RaidInterfaceId,
 	RaidLevelId,
-	RaidLevelMeta
+	RaidLevelMeta,
+	RaidSpeedBottleneck,
+	RaidSpeedLimit
 } from '@/types/raid';
 
 /** 各容量单位对应的字节数（TB/GB 为十进制，TiB/GiB 为二进制） */
@@ -66,6 +69,14 @@ export const DISK_COUNT_PRESETS: RaidDiskPreset[] = [
 	{ count: 36, hint: '大规模阵列' }
 ];
 
+/** 单盘速度快捷预设：常见介质的典型顺序读写速度（MB/s） */
+export const DISK_SPEED_PRESETS: RaidDiskSpeedPreset[] = [
+	{ label: '机械盘 7200', speed: 200, hint: '消费级 3.5 寸 7200 转机械盘，顺序读写典型值约 200 MB/s' },
+	{ label: '企业级机械盘', speed: 260, hint: '企业级 2.5 寸 10K / 15K 转机械盘，典型值约 260 MB/s' },
+	{ label: 'SATA SSD', speed: 530, hint: 'SATA 接口 SSD，顺序读写接近接口上限约 530 MB/s' },
+	{ label: 'NVMe SSD', speed: 3500, hint: 'PCIe 3.0 / 4.0 x4 NVMe SSD，典型值约 3500 MB/s' }
+];
+
 /** 硬盘接口与链路规格（带宽为单盘顺序带宽，单位 MB/s） */
 export const DISK_INTERFACES: RaidInterface[] = [
 	{
@@ -73,7 +84,7 @@ export const DISK_INTERFACES: RaidInterface[] = [
 		name: 'SATA 3 Gb/s',
 		alias: 'SATA II',
 		linkSpeed: 300,
-		effectiveSpeed: 280,
+		usableSpeed: 280,
 		hint: '老式机械盘接口，已基本淘汰'
 	},
 	{
@@ -81,7 +92,7 @@ export const DISK_INTERFACES: RaidInterface[] = [
 		name: 'SATA 6 Gb/s',
 		alias: 'SATA III',
 		linkSpeed: 600,
-		effectiveSpeed: 550,
+		usableSpeed: 550,
 		hint: '机械盘与 SATA SSD 的主流接口'
 	},
 	{
@@ -89,7 +100,7 @@ export const DISK_INTERFACES: RaidInterface[] = [
 		name: 'SAS 12 Gb/s',
 		alias: 'SAS 3.0',
 		linkSpeed: 1200,
-		effectiveSpeed: 1100,
+		usableSpeed: 1100,
 		hint: '企业级机械盘 / SAS SSD，支持双端口冗余'
 	},
 	{
@@ -97,7 +108,7 @@ export const DISK_INTERFACES: RaidInterface[] = [
 		name: 'SAS 24 Gb/s',
 		alias: 'SAS 4.0',
 		linkSpeed: 2400,
-		effectiveSpeed: 2200,
+		usableSpeed: 2200,
 		hint: '新一代企业级 SAS SSD'
 	},
 	{
@@ -105,7 +116,7 @@ export const DISK_INTERFACES: RaidInterface[] = [
 		name: 'PCIe 3.0 x4',
 		alias: 'NVMe U.2 / M.2',
 		linkSpeed: 3940,
-		effectiveSpeed: 3500,
+		usableSpeed: 3500,
 		hint: 'PCIe 3.0 x4 通道，单盘约 3.5 GB/s'
 	},
 	{
@@ -113,7 +124,7 @@ export const DISK_INTERFACES: RaidInterface[] = [
 		name: 'PCIe 4.0 x4',
 		alias: 'NVMe U.2 / M.2',
 		linkSpeed: 7880,
-		effectiveSpeed: 7000,
+		usableSpeed: 7000,
 		hint: 'PCIe 4.0 x4 通道，单盘约 7 GB/s'
 	},
 	{
@@ -121,7 +132,7 @@ export const DISK_INTERFACES: RaidInterface[] = [
 		name: 'PCIe 5.0 x4',
 		alias: 'NVMe U.2 / M.2',
 		linkSpeed: 15760,
-		effectiveSpeed: 14000,
+		usableSpeed: 14000,
 		hint: 'PCIe 5.0 x4 通道，单盘约 14 GB/s'
 	}
 ];
@@ -391,6 +402,28 @@ export function formatSpeed(mbPerSecond: number): string {
 export function getRaidInterface(id: RaidInterfaceId): RaidInterface {
 	return DISK_INTERFACES.find((item) => item.id === id) ?? DISK_INTERFACES[1];
 }
+
+/**
+ * 综合单盘实测速度与链路可用带宽：
+ * 机械盘通常跑不满接口带宽（受磁盘限制），而 SSD 可能被接口带宽限制，
+ * 因此有效速度取两者较小值，并给出瓶颈来源。
+ */
+export function resolveDiskSpeed(diskSpeed: number, linkSpeed: number): RaidSpeedLimit {
+	const disk = Number.isFinite(diskSpeed) && diskSpeed > 0 ? diskSpeed : 0;
+	const link = Number.isFinite(linkSpeed) && linkSpeed > 0 ? linkSpeed : 0;
+	const effectiveSpeed = Math.min(disk, link);
+	let bottleneck: RaidSpeedBottleneck = 'balanced';
+	if (disk > link) bottleneck = 'link';
+	else if (disk < link) bottleneck = 'disk';
+	return { diskSpeed: disk, linkSpeed: link, effectiveSpeed, bottleneck };
+}
+
+/** 瓶颈来源文案 */
+export const RAID_BOTTLENECK_LABELS: Record<RaidSpeedBottleneck, string> = {
+	disk: '受磁盘本身限制',
+	link: '受接口链路限制',
+	balanced: '磁盘与链路相当'
+};
 
 /** 按等级标识取元信息（找不到时回退到第一项） */
 export function getRaidLevel(id: RaidLevelId): RaidLevelMeta {

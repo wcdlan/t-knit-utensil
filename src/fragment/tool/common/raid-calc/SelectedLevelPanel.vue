@@ -28,11 +28,11 @@
 		</div>
 
 		<!-- 可用时说明该等级的取舍，不可用时直接给出原因 -->
-		<p class="mt-1.5 text-[11px] leading-relaxed text-slate-500">
+		<p class="mt-1.5 text-xs leading-relaxed text-slate-500">
 			{{ result.valid ? meta.summary : result.reason }}
 		</p>
 
-		<div v-if="result.valid" class="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-slate-400">
+		<div v-if="result.valid" class="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-slate-400">
 			<span
 				>最少 {{ meta.minDisks }} 盘{{ meta.evenOnly ? '（偶数）' : '' }}{{ meta.needsSpan ? '（配子组）' : '' }}</span
 			>

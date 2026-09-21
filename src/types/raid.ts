@@ -185,8 +185,33 @@ export interface RaidInterface {
 	alias: string;
 	/** 链路理论带宽（MB/s） */
 	linkSpeed: number;
-	/** 单盘实测顺序带宽（MB/s，典型值） */
-	effectiveSpeed: number;
+	/** 链路可用带宽（MB/s，扣除编码开销后的典型值） */
+	usableSpeed: number;
 	/** 适用场景说明 */
+	hint: string;
+}
+
+/** 单盘速度瓶颈来源 */
+export type RaidSpeedBottleneck = 'disk' | 'link' | 'balanced';
+
+/** 单盘速度综合结果：实测速度与链路带宽取小值作为有效速度 */
+export interface RaidSpeedLimit {
+	/** 用户输入的单盘实测顺序速度（MB/s） */
+	diskSpeed: number;
+	/** 链路可用带宽（MB/s） */
+	linkSpeed: number;
+	/** 综合后的单盘有效速度 = min(实测速度, 链路可用带宽) */
+	effectiveSpeed: number;
+	/** 瓶颈来源：磁盘本身 / 接口链路 / 两者相当 */
+	bottleneck: RaidSpeedBottleneck;
+}
+
+/** 单盘速度快捷预设（常见介质典型顺序速度） */
+export interface RaidDiskSpeedPreset {
+	/** 预设名称 */
+	label: string;
+	/** 典型顺序速度（MB/s） */
+	speed: number;
+	/** 说明（悬停提示） */
 	hint: string;
 }
