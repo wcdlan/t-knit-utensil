@@ -166,10 +166,24 @@ export const toolGroups: ToolGroup[] = [
 			},
 			{
 				id: 'random-port',
-				name: '随机端口生成',
+				name: '随机端口',
 				description:
 					'生成互不重复的随机可用端口，支持区间预设、排除系统与常用端口，并内置 180+ 常用服务默认端口速查与用途介绍',
 				icon: icons.port
+			},
+			{
+				id: 'dns-lookup',
+				name: '网络解析',
+				description:
+					'A / CNAME / MX / NS / TXT / PTR 反向解析与 PING 可达性检测，支持系统默认 DNS 或指定 DNS 服务器（含自定义 IP:端口）',
+				icon: icons.dns
+			},
+			{
+				id: 'traceroute',
+				name: '路由追踪',
+				description:
+					'逐跳追踪网络路由（traceroute / tracert），展示每一跳的应答 IP、主机名与延迟，支持最大跳数、多次探测与主机名反查',
+				icon: icons.traceroute
 			}
 		]
 	},

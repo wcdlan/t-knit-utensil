@@ -2,6 +2,8 @@ import { createServer } from 'node:http';
 import { createStore, resolvePassword } from './config.shared.ts';
 import { generateSshKeyPair, getSshKeygenAvailability, installSshKeygen } from './ssh-keygen.ts';
 import { getSystemInfo } from './system-info.ts';
+import { handleDnsPing, handleDnsResolve, handleDnsServers } from './dns.ts';
+import { handleTraceCheck, handleTraceRun } from './trace.ts';
 
 const PORT = Number(process.env.PORT) || 8080;
 const root = process.cwd();
@@ -21,6 +23,15 @@ function readBody(req: import('node:http').IncomingMessage): Promise<string> {
 		req.on('end', () => resolve(raw));
 		req.on('error', reject);
 	});
+}
+
+/** 读取并解析 JSON 请求体，解析失败返回 null（由处理器给出可读错误） */
+async function readJsonBody(req: import('node:http').IncomingMessage): Promise<unknown> {
+	try {
+		return JSON.parse((await readBody(req)) || 'null');
+	} catch {
+		return null;
+	}
 }
 
 const server = createServer(async (req, res) => {
@@ -122,6 +133,41 @@ const server = createServer(async (req, res) => {
 	// GET /api/health — 健康检查
 	if (url === '/api/health') {
 		sendJSON(res, 200, { ok: true });
+		return;
+	}
+
+	// GET /api/dns/servers — 系统默认 DNS 列表与 ping 可用性（网络解析工具用）
+	if (url === '/api/dns/servers' && req.method === 'GET') {
+		const { status, body } = await handleDnsServers();
+		sendJSON(res, status, body);
+		return;
+	}
+
+	// POST /api/dns/resolve — DNS 记录解析（系统默认 DNS 或指定 DNS 服务器）
+	if (url === '/api/dns/resolve' && req.method === 'POST') {
+		const { status, body } = await handleDnsResolve(await readJsonBody(req));
+		sendJSON(res, status, body);
+		return;
+	}
+
+	// POST /api/dns/ping — 主机可达性探测（ICMP ping 或 TCP 端口探测）
+	if (url === '/api/dns/ping' && req.method === 'POST') {
+		const { status, body } = await handleDnsPing(await readJsonBody(req));
+		sendJSON(res, status, body);
+		return;
+	}
+
+	// GET /api/net/trace/check — 路由追踪命令可用性（网络工具「路由追踪」用）
+	if (url === '/api/net/trace/check' && req.method === 'GET') {
+		const { status, body } = await handleTraceCheck();
+		sendJSON(res, status, body);
+		return;
+	}
+
+	// POST /api/net/trace — 路由追踪（调用系统 traceroute / tracert 逐跳探测）
+	if (url === '/api/net/trace' && req.method === 'POST') {
+		const { status, body } = await handleTraceRun(await readJsonBody(req));
+		sendJSON(res, status, body);
 		return;
 	}
 

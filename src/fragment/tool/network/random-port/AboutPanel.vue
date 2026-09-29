@@ -1,6 +1,6 @@
 <template>
 	<div class="rounded-xl border border-blue-100 bg-gradient-to-br from-blue-50 to-indigo-50 p-5">
-		<h3 class="mb-3 text-sm font-semibold text-blue-800">端口号与随机端口生成</h3>
+		<h3 class="mb-3 text-sm font-semibold text-blue-800">端口号与随机端口</h3>
 		<p class="mb-2 text-sm leading-relaxed text-slate-600">
 			同一台主机上的服务靠 <code class="rounded bg-white/60 px-1 font-mono text-blue-700">IP + 端口</code>
 			共同定位，端口号是 16 位无符号整数，取值范围

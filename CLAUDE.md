@@ -53,10 +53,14 @@ src/
 │   ├── uuid.ts          # UuidVersion, NamespaceKey — UUID 生成器
 │   ├── regex.ts         # 正则测试相关类型
 │   ├── virtio.ts        # VirtioVersion, VirtioFile — VirtIO 下载
+│   ├── dns.ts           # DNS 解析 / PTR 反查 / PING 探测相关类型
+│   ├── trace.ts         # 路由追踪（跃点、探测、结果）相关类型
 │   └── system.ts        # SystemInfo, SshKeygenStatus — 部署机器信息 / ssh 状态
 ├── data/                # 纯静态数据（常量注册表）
 │   ├── tools.ts         # 工具定义（ToolGroup[]，getToolById），从 types 重导出类型
 │   ├── licenses.ts      # 开源许可证资料库（LICENSES，许可证选择器数据源）
+│   ├── dns.ts           # 公共 DNS 服务器预设 + 网络解析子工具页签元数据
+│   ├── trace.ts         # 路由追踪示例目标与配置选项
 │   └── icons.ts         # 图标名注册表（Iconify mdi: 前缀），导出 icons 对象 + IconKey 类型
 ├── composable/          # 组合式函数（可复用的响应式逻辑）
 │   ├── auth.ts          # useAuth() — 登录/登出，token 存 localStorage
@@ -70,6 +74,9 @@ src/
 │   ├── encoding.ts      # convertEncoding(), SUPPORTED_ENCODINGS — 编码转换（iconv-lite）
 │   ├── jsonGenerator.ts # generateRandomJson(mode, pretty) — 随机 JSON 生成
 │   ├── debounce.ts      # 防抖工具函数
+│   ├── port.ts          # 随机端口 / 区间判定 / 常用服务端口检索（纯函数）
+│   ├── dns.ts           # DNS 解析、系统 DNS 状态与 PING 探测请求封装（调用 /api/dns/* 接口）
+│   ├── trace.ts         # 路由追踪请求封装、延迟与路径文本格式化
 │   └── fakerLocales.ts  # Faker 语言区域注册表 + getFaker() 异步加载
 ├── component/           # 通用 UI 组件（多个 view 可能用到）
 │   └── common/TkuIcon.vue # Iconify 图标封装（:name 传 icons 里的图标名）
@@ -83,6 +90,7 @@ src/
 │       ├── ssh/         # ssh-keygen/
 │       ├── image/       # favicon/
 │       ├── text/        # regex/ diff/ word-count/
+│       ├── network/     # ipv4/ ipv6/ subnet-calc/ random-port/ dns-lookup/ traceroute/ + common/(InfoRow/TagRow)
 │       ├── ai/          # ai-api-tester/
 │       ├── common/      # license-selector/
 │       └── virtualization/ # virtio-download/
@@ -109,6 +117,7 @@ src/
 │       ├── ssh/         # SshKeyGenView
 │       ├── image/       # FaviconView
 │       ├── text/        # RegexView, DiffView, WordCountView
+│       ├── network/     # Ipv4View, Ipv6View, SubnetCalcView, RandomPortView, DnsLookupView, TracerouteView
 │       ├── ai/          # AiApiTesterView
 │       ├── common/      # LicenseSelectorView
 │       └── virtualization/ # VirtioDownloadView
@@ -219,6 +228,10 @@ src/
 - `site.db` — better-sqlite3 管理的运行时数据库（已 gitignore），单表 `config(id=1, value)` 存整个配置 JSON
 - `server/config.shared.ts` — 存储层（`createStore`/`resolvePassword`），被 `server/index.ts`（生产 API）与
   `vite-plugin-config.ts`（dev 中间件）共享
+- `server/dns.ts` — DNS 记录解析（系统默认或指定 `IP:端口` 的 DNS）、PTR 反查与 PING 探测（ICMP / TCP），
+  同样被 dev 中间件与生产 API 共享；`/api/dns/*` 三个端点均由它提供
+- `server/trace.ts` — 路由追踪（traceroute / tracert）：调用系统命令逐跳探测，把 Linux / macOS / Windows
+  三种输出统一解析为结构化跃点，IPv6 目标自动改用 `traceroute6`，并提供 `/api/net/trace*` 端点
 - `vite-plugin-config.ts` — Vite 插件，提供以下 API 端点：
 
 | 端点                      | 方法 | 说明                                                                                                         |
@@ -230,6 +243,11 @@ src/
 | `/api/system/info`        | GET  | 部署机器信息（os 模块读取：主机名 / 系统 / CPU / 内存 / Node 版本 / 运行时长等），系统配置页「系统信息」展示 |
 | `/api/ssh-keygen/check`   | GET  | 检测系统 ssh-keygen / OpenSSH 可用性（available + OpenSSH 版本）                                             |
 | `/api/ssh-keygen/install` | POST | 一键安装 OpenSSH（按平台 apt/dnf/yum/apk/zypper/brew + 免密 sudo 检测），完成后重新检测；已可用则直接返回    |
+| `/api/dns/servers`        | GET  | 系统默认 DNS 服务器列表 + 平台 + ping 命令可用性（网络解析工具用，`server/dns.ts`）                          |
+| `/api/dns/resolve`        | POST | DNS 记录解析（A/CNAME/MX/NS/TXT/PTR），支持系统默认或指定 DNS（含 `IP:端口`）。Body: `{name, type, server?}` |
+| `/api/dns/ping`           | POST | 主机可达性探测：ICMP（系统 ping 命令）或 TCP 端口探测。Body: `{host, mode, port, count, timeoutMs}`          |
+| `/api/net/trace/check`    | GET  | 路由追踪命令可用性（traceroute / tracert / traceroute6 + 平台），`server/trace.ts`                           |
+| `/api/net/trace`          | POST | 路由追踪：逐跳追踪网络路由并按地址族选择命令。Body: `{host, maxHops, probes, resolveNames, timeoutMs?}`      |
 
 密码读取优先级：运行时 `site.db` → 默认 `site.config.json` → `"admin"`。
 
@@ -272,8 +290,8 @@ src/
 
 - **部署文件**：集中在 `docker/`（`Dockerfile`、`nginx.conf`）。CI 用 `docker build -f docker/Dockerfile .`（build context
   为仓库根）
-- **Dockerfile**：多阶段构建（node:24-alpine 构建 → node:24-alpine 运行时，只跑 `server/index.ts` API，端口 8080；nginx 由外部
-  compose 编排）
+- **Dockerfile**：node:24-alpine 运行 `server/index.ts` API（端口 8080），并安装 `openssh-client`（SSH 工具）、
+  `iputils`（PING 的 ICMP 探测）与 `traceroute`（路由追踪，需容器具备 NET_RAW 能力）；nginx 由外部 compose 编排
 - **nginx.conf**：compose 编排参考模板。SPA 回退（`try_files ... /index.html`），gzip 开启，`/api/` 反代到 API 服务（
   `proxy_pass http://api:8080`）
 - **GitLab CI**（`.gitlab-ci.yml`）：仅 Git Tag 触发，构建 dist 压缩包 + 多标签 Docker 镜像推送至私有 Nexus 仓库

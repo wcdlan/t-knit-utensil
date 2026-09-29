@@ -6,10 +6,10 @@ ENV NODEJS_ORG_MIRROR=https://registry.npmmirror.com/-/binary/node
 # 启用 corepack 并使用 pnpm
 RUN corepack enable && corepack prepare pnpm@10.26.1 --activate
 
-# 安装原生模块编译依赖和 ssh-keygen（换阿里云源加速）
+# 安装原生模块编译依赖、ssh-keygen、ping 与 traceroute（供网络工具的 PING / 路由追踪使用，换阿里云源加速）
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
   && apk update \
-  && apk add --no-cache python3 make g++ openssh-client
+  && apk add --no-cache python3 make g++ openssh-client iputils traceroute
 
 WORKDIR /app
 

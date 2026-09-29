@@ -4,6 +4,8 @@ import type { Store } from './server/config.shared.ts';
 import { createStore, resolvePassword } from './server/config.shared.ts';
 import { generateSshKeyPair, getSshKeygenAvailability, installSshKeygen } from './server/ssh-keygen.ts';
 import { getSystemInfo } from './server/system-info.ts';
+import { handleDnsPing, handleDnsResolve, handleDnsServers } from './server/dns.ts';
+import { handleTraceCheck, handleTraceRun } from './server/trace.ts';
 
 const validTokens = new Set<string>();
 
@@ -158,6 +160,106 @@ export function configPlugin(): Plugin {
 					} catch {
 						res.statusCode = 400;
 						res.end(JSON.stringify({ ok: false, error: '请求格式错误' }));
+					}
+				});
+			});
+
+			// DNS 解析 API — 系统默认 DNS 列表与 ping 可用性（网络解析工具用）
+			server.middlewares.use('/api/dns/servers', async (_req, res) => {
+				res.setHeader('Content-Type', 'application/json');
+				const { status, body } = await handleDnsServers();
+				res.statusCode = status;
+				res.end(JSON.stringify(body));
+			});
+
+			// DNS 解析 API — 系统默认 / 指定 DNS 服务器解析记录
+			server.middlewares.use('/api/dns/resolve', async (req, res) => {
+				res.setHeader('Content-Type', 'application/json');
+				if (req.method !== 'POST') {
+					res.statusCode = 405;
+					res.end(JSON.stringify({ ok: false, error: 'Method not allowed' }));
+					return;
+				}
+				let raw = '';
+				req.on('data', (chunk) => (raw += chunk));
+				req.on('end', async () => {
+					let payload: unknown = null;
+					try {
+						payload = JSON.parse(raw);
+					} catch {
+						payload = null;
+					}
+					try {
+						const { status, body } = await handleDnsResolve(payload);
+						res.statusCode = status;
+						res.end(JSON.stringify(body));
+					} catch (e: any) {
+						res.statusCode = 500;
+						res.end(JSON.stringify({ ok: false, error: e?.message ?? String(e) }));
+					}
+				});
+			});
+
+			// PING 探测 API — ICMP ping 或 TCP 端口探测
+			server.middlewares.use('/api/dns/ping', async (req, res) => {
+				res.setHeader('Content-Type', 'application/json');
+				if (req.method !== 'POST') {
+					res.statusCode = 405;
+					res.end(JSON.stringify({ ok: false, error: 'Method not allowed' }));
+					return;
+				}
+				let raw = '';
+				req.on('data', (chunk) => (raw += chunk));
+				req.on('end', async () => {
+					let payload: unknown = null;
+					try {
+						payload = JSON.parse(raw);
+					} catch {
+						payload = null;
+					}
+					try {
+						const { status, body } = await handleDnsPing(payload);
+						res.statusCode = status;
+						res.end(JSON.stringify(body));
+					} catch (e: any) {
+						res.statusCode = 500;
+						res.end(JSON.stringify({ ok: false, error: e?.message ?? String(e) }));
+					}
+				});
+			});
+
+			// 路由追踪 API — traceroute / tracert 命令可用性检测
+			server.middlewares.use('/api/net/trace/check', async (_req, res) => {
+				res.setHeader('Content-Type', 'application/json');
+				const { status, body } = await handleTraceCheck();
+				res.statusCode = status;
+				res.end(JSON.stringify(body));
+			});
+
+			// 路由追踪 API — 逐跳探测网络路由
+			server.middlewares.use('/api/net/trace', async (req, res) => {
+				res.setHeader('Content-Type', 'application/json');
+				if (req.method !== 'POST') {
+					res.statusCode = 405;
+					res.end(JSON.stringify({ ok: false, error: 'Method not allowed' }));
+					return;
+				}
+				let raw = '';
+				req.on('data', (chunk) => (raw += chunk));
+				req.on('end', async () => {
+					let payload: unknown = null;
+					try {
+						payload = JSON.parse(raw);
+					} catch {
+						payload = null;
+					}
+					try {
+						const { status, body } = await handleTraceRun(payload);
+						res.statusCode = status;
+						res.end(JSON.stringify(body));
+					} catch (e: any) {
+						res.statusCode = 500;
+						res.end(JSON.stringify({ ok: false, error: e?.message ?? String(e) }));
 					}
 				});
 			});

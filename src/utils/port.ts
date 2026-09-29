@@ -1,5 +1,5 @@
-// 端口工具静态函数（随机端口生成 / 端口区间判定 / 常用服务端口检索）
-// 全部为纯函数，供随机端口生成工具 view 调用
+// 端口工具静态函数（随机端口 / 端口区间判定 / 常用服务端口检索）
+// 全部为纯函数，供随机端口工具 view 调用
 
 import { COMMON_PORT_GROUPS, COMMON_PORT_INDEX } from '@/data/ports';
 import type {

@@ -1,4 +1,4 @@
-// 端口工具相关类型（随机端口生成 / 常用服务默认端口速查）
+// 端口工具相关类型（随机端口 / 常用服务默认端口速查）
 
 /** 端口区间预设键 */
 export type PortRangeKey = 'dynamic' | 'registered' | 'all' | 'system' | 'custom';
@@ -17,7 +17,7 @@ export interface PortRangePreset {
 	description: string;
 }
 
-/** 随机端口生成配置 */
+/** 随机端口配置 */
 export interface RandomPortOptions {
 	/** 生成数量 */
 	count: number;
@@ -41,7 +41,7 @@ export interface RandomPortEntry {
 	service: string | null;
 }
 
-/** 随机端口生成结果 */
+/** 随机端口结果 */
 export interface RandomPortResult {
 	/** 生成的端口条目（按端口号升序） */
 	entries: RandomPortEntry[];
