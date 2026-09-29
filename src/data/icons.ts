@@ -65,10 +65,13 @@ export const icons = {
 	ipv4: 'mdi:ip',
 	ipv6: 'mdi:ip-outline',
 	subnet: 'mdi:vector-square',
+	port: 'mdi:ethernet',
+	randomPort: 'mdi:dice-multiple-outline',
 	// 操作
 	check: 'mdi:check',
 	close: 'mdi:close',
 	info: 'mdi:information-outline',
+	alert: 'mdi:alert-outline',
 	package: 'mdi:package-variant-closed',
 	lightbulb: 'mdi:lightbulb-on-outline',
 	textFormat: 'mdi:format-text',

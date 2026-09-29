@@ -44,6 +44,7 @@ const router = createRouter({
 				{ path: 'ipv4', component: () => import('@/view/tool/network/Ipv4View.vue') },
 				{ path: 'ipv6', component: () => import('@/view/tool/network/Ipv6View.vue') },
 				{ path: 'subnet-calc', component: () => import('@/view/tool/network/SubnetCalcView.vue') },
+				{ path: 'random-port', component: () => import('@/view/tool/network/RandomPortView.vue') },
 				{ path: 'favicon', component: () => import('@/view/tool/image/FaviconView.vue') },
 				{ path: 'image-base64', component: () => import('@/view/tool/image/ImageBase64View.vue') },
 				{ path: 'ai-tester', component: () => import('@/view/tool/ai/AiApiTesterView.vue') },

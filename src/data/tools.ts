@@ -163,6 +163,13 @@ export const toolGroups: ToolGroup[] = [
 				name: '子网计算',
 				description: 'IPv4/IPv6 子网划分计算，支持自定义前缀细分并列出子网清单',
 				icon: icons.subnet
+			},
+			{
+				id: 'random-port',
+				name: '随机端口生成',
+				description:
+					'生成互不重复的随机可用端口，支持区间预设、排除系统与常用端口，并内置 180+ 常用服务默认端口速查与用途介绍',
+				icon: icons.port
 			}
 		]
 	},
